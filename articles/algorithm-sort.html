@@ -1,20 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>深入理解 JavaScript 排序算法：从原理到实现 · Jaychouchannel</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/article.css">
-  <title>Algorithm Sort</title>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
+  <!-- Navigation (same as index for consistent UX) -->
+  <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
+    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-2">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
+          <i class="fa fa-rocket text-white text-xl"></i>
+        </div>
+        <span class="text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</span>
+      </a>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
+        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300">文章</a>
+        <a href="/#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
+        <a href="/#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
+      </div>
+      <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+        <i class="fa fa-bars text-2xl"></i>
+      </button>
+    </div>
+  </nav>
+
   <div id="reading-progress" aria-hidden="true"></div>
+
   <div class="article-wrapper">
     <div class="article-content">
-      <h1>Algorithm Sort</h1>
-      <p>Content for the algorithm sort article goes here...</p>
+      <h1 class="article-title">深入理解 JavaScript 排序算法：从原理到实现</h1>
+      <div class="article-meta">
+        <span>Jaychouchannel</span>
+        <span>·</span>
+        <time datetime="2023-06-15">2023-06-15</time>
+      </div>
+
+      <p>本文介绍常见排序算法（冒泡、选择、插入、归并、快速、堆排序等）的核心思想、时间与空间复杂度，并提供 JavaScript 示例以便在实际项目中使用与学习。</p>
+
+      <h2>为什么排序重要</h2>
+      <p>排序是计算机科学中的基础问题，合理选择排序算法可以在不同数据规模和数据分布下带来巨大性能差异。</p>
+
+      <h2>常见排序算法简介</h2>
+      <h3>冒泡排序（Bubble Sort）</h3>
+      <p>最简单的比较排序，稳定但时间复杂度一般为 O(n^2)。</p>
+
+      <pre><code>// 冒泡排序示例（JavaScript）
+function bubbleSort(arr) {
+  const a = arr.slice();
+  for (let i = 0; i < a.length; i++) {
+    for (let j = 0; j < a.length - 1 - i; j++) {
+      if (a[j] > a[j + 1]) {
+        [a[j], a[j + 1]] = [a[j + 1], a[j]];
+      }
+    }
+  }
+  return a;
+}</code></pre>
+
+      <h3>快速排序（Quick Sort）</h3>
+      <p>通常性能非常好，平均时间复杂度 O(n log n)。</p>
+
+      <pre><code>// 快速排序（递归版）
+function quickSort(arr) {
+  if (arr.length <= 1) return arr.slice();
+  const a = arr.slice();
+  const pivot = a[Math.floor(a.length / 2)];
+  const left = [], right = [], equal = [];
+  a.forEach(v => {
+    if (v < pivot) left.push(v);
+    else if (v > pivot) right.push(v);
+    else equal.push(v);
+  });
+  return quickSort(left).concat(equal, quickSort(right));
+}</code></pre>
+
+      <h2>归并排序（Merge Sort）</h2>
+      <p>稳定，适合链表或需要稳定排序时使用，空间复杂度 O(n)。</p>
+
+      <h2>复杂度对比与选择建议</h2>
+      <ul>
+        <li>小规模数据（n &lt; 50）：插入或简单的 O(n^2) 算法通常更快。</li>
+        <li>通用场景：快速排序或归并排序。</li>
+        <li>需要稳定排序且内存允许：使用归并排序。</li>
+      </ul>
+
+      <h2>示例：在真实项目中的使用</h2>
+      <p>在前端列表排序、后端数据预处理等多处都会用到排序函数，推荐封装测试良好的工具函数并覆盖边界情况。</p>
+
+      <h2>总结</h2>
+      <p>掌握排序的思想、复杂度与常见实现，对于写出高质量代码非常重要。阅读并动手实现这些算法能加深理解。</p>
+
+      <img src="/images/article-algorithm-1.jpg" alt="排序算法示意图" />
+
+      <div class="article-tags" style="margin-top:1rem">
+        <a href="/articles">算法</a>
+        <a href="/articles">JavaScript</a>
+      </div>
     </div>
   </div>
+
+  <footer class="bg-tech-dark py-12 border-t border-tech-blue/20 mt-12">
+    <div class="container mx-auto px-4 text-center text-gray-500">&copy; 2025 Jaychouchannel. 保留所有权利。</div>
+  </footer>
+
   <script src="/js/article.js" defer></script>
 </body>
 </html>
