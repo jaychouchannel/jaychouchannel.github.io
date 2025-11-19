@@ -311,236 +311,139 @@
         </div>
     </section>
     
-    <!-- Featured Articles Section -->
-    <section id="articles" class="py-20">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold" data-aos="fade-right">
-                    <span class="text-tech-blue">精选</span>文章
-                </h2>
-                <div class="flex space-x-2" data-aos="fade-left">
-                    <button class="category-filter active px-4 py-2 rounded-full bg-tech-blue text-white text-sm" data-category="all">
-                        全部
-                    </button>
-                    <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="algorithm">
-                        算法
-                    </button>
-                    <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="tech">
-                        技术
-                    </button>
-                    <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="travel">
-                        旅行
-                    </button>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Article 1 -->
-                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="algorithm" data-aos="fade-up" data-aos-delay="100">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/article-algorithm-1.jpg" 
-                             alt="深入理解JavaScript排序算法" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-tech-blue/20 text-tech-blue text-xs px-3 py-1 rounded-full">算法</span>
-                            <span class="text-gray-400 text-sm ml-auto">2023-06-15</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
-                            <a href="#">深入理解JavaScript排序算法：从原理到实现</a>
-                        </h3>
-                        <p class="text-gray-400 mb-4 line-clamp-3">
-                            本文详细介绍了常见的排序算法原理、时间复杂度分析以及在JavaScript中的实现方式，帮助开发者深入理解排序算法的工作机制。
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <img src="/images/avatar.jpg" 
-                                     alt="作者头像" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
-                            </div>
-                            <div class="flex items-center text-gray-400 text-sm">
-                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.2k</span>
-                                <span><i class="fa fa-comment mr-1"></i> 24</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Article 2 -->
-                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="tech" data-aos="fade-up" data-aos-delay="200">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/article-tech-1.jpg" 
-                             alt="前后端分离架构实践" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-tech-purple/20 text-tech-purple text-xs px-3 py-1 rounded-full">技术</span>
-                            <span class="text-gray-400 text-sm ml-auto">2023-07-22</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
-                            <a href="#">前后端分离架构实践：从理论到项目落地</a>
-                        </h3>
-                        <p class="text-gray-400 mb-4 line-clamp-3">
-                            探讨前后端分离架构的优势、挑战以及最佳实践，结合实际项目案例，分享如何构建高性能、可维护的前后端分离应用。
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <img src="/images/avatar.jpg" 
-                                     alt="作者头像" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
-                            </div>
-                            <div class="flex items-center text-gray-400 text-sm">
-                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.8k</span>
-                                <span><i class="fa fa-comment mr-1"></i> 36</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Article 3 -->
-                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="travel" data-aos="fade-up" data-aos-delay="300">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/article-travel-1.jpg" 
-                             alt="瑞士阿尔卑斯山之旅" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-green-500/20 text-green-500 text-xs px-3 py-1 rounded-full">旅行</span>
-                            <span class="text-gray-400 text-sm ml-auto">2023-08-10</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
-                            <a href="#">瑞士阿尔卑斯山之旅：徒步与编程的完美结合</a>
-                        </h3>
-                        <p class="text-gray-400 mb-4 line-clamp-3">
-                            记录在瑞士阿尔卑斯山的徒步旅行经历，分享如何在旅途中保持编程学习，以及大自然如何启发创造性思维。
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <img src="/images/avatar.jpg" 
-                                     alt="作者头像" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
-                            </div>
-                            <div class="flex items-center text-gray-400 text-sm">
-                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 956</span>
-                                <span><i class="fa fa-comment mr-1"></i> 18</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Article 4 -->
-                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="tech" data-aos="fade-up" data-aos-delay="100">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/article-tech-2.jpg" 
-                             alt="全栈开发学习路线" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-tech-purple/20 text-tech-purple text-xs px-3 py-1 rounded-full">技术</span>
-                            <span class="text-gray-400 text-sm ml-auto">2023-09-05</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
-                            <a href="#">2023年全栈开发学习路线：从入门到精通</a>
-                        </h3>
-                        <p class="text-gray-400 mb-4 line-clamp-3">
-                            全面梳理2023年成为全栈开发者所需掌握的技术栈、学习资源和实践项目，帮助初学者规划学习路径。
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <img src="/images/avatar.jpg" 
-                                     alt="作者头像" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
-                            </div>
-                            <div class="flex items-center text-gray-400 text-sm">
-                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 2.3k</span>
-                                <span><i class="fa fa-comment mr-1"></i> 42</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Article 5 -->
-                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="algorithm" data-aos="fade-up" data-aos-delay="200">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/article-algorithm-2.jpg" 
-                             alt="JavaScript算法" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-tech-blue/20 text-tech-blue text-xs px-3 py-1 rounded-full">算法</span>
-                            <span class="text-gray-400 text-sm ml-auto">2023-10-18</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
-                            <a href="#">JavaScript算法：基本原理与代码实现</a>
-                        </h3>
-                        <p class="text-gray-400 mb-4 line-clamp-3">
-                            详细讲解JavaScript中常用算法的基本原理、实现方式和应用场景，帮助开发者提升解决问题的能力。
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <img src="/images/avatar.jpg" 
-                                     alt="作者头像" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
-                            </div>
-                            <div class="flex items-center text-gray-400 text-sm">
-                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.5k</span>
-                                <span><i class="fa fa-comment mr-1"></i> 29</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Article 6 -->
-                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="travel" data-aos="fade-up" data-aos-delay="300">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/article-travel-2.jpg" 
-                             alt="川西秋色之旅" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-green-500/20 text-green-500 text-xs px-3 py-1 rounded-full">旅行</span>
-                            <span class="text-gray-400 text-sm ml-auto">2023-11-03</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
-                            <a href="#">川西秋色之旅：最美的风景在路上</a>
-                        </h3>
-                        <p class="text-gray-400 mb-4 line-clamp-3">
-                            记录川西高原的秋季旅行，分享绝美风景的拍摄技巧，以及如何在旅途中寻找灵感，提升创造力。
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <img src="/images/avatar.jpg" 
-                                     alt="作者头像" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm text-gray-300 ml-2">Jaychouchannel</span>
-                            </div>
-                            <div class="flex items-center text-gray-400 text-sm">
-                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.1k</span>
-                                <span><i class="fa fa-comment mr-1"></i> 22</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-12">
-                <a href="#" class="inline-block bg-tech-card hover:bg-tech-hover text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 border border-tech-blue/30">
-                    加载更多文章
-                </a>
+    <!-- Featured Articles Section (cards are clickable links to article pages) -->
+<section id="articles" class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold" data-aos="fade-right">
+                <span class="text-tech-blue">精选</span>文章
+            </h2>
+            <div class="flex space-x-2" data-aos="fade-left">
+                <button class="category-filter active px-4 py-2 rounded-full bg-tech-blue text-white text-sm" data-category="all">
+                    全部
+                </button>
+                <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="algorithm">
+                    算法
+                </button>
+                <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="tech">
+                    技术
+                </button>
+                <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="travel">
+                    旅行
+                </button>
             </div>
         </div>
-    </section>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Article 1 -->
+            <a href="/articles/algorithm-sort.html" class="article-card bg-tech-card rounded-xl overflow-hidden card-hover block" data-category="algorithm" data-aos="fade-up" data-aos-delay="100">
+                <div class="h-48 overflow-hidden">
+                    <img src="/images/article-algorithm-1.jpg" 
+                         alt="深入理解JavaScript排序算法" 
+                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-tech-blue/20 text-tech-blue text-xs px-3 py-1 rounded-full">算法</span>
+                        <span class="text-gray-400 text-sm ml-auto">2023-06-15</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300 text-white">
+                        深入理解JavaScript排序算法：从原理到实现
+                    </h3>
+                    <p class="text-gray-400 mb-4 line-clamp-3">
+                        本文详细介绍了常见的排序算法原理、时间复杂度分析以及在JavaScript中的实现方式，帮助开发者深入理解排序算法的工作机制。
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="/images/avatar.jpg" 
+                                 alt="作者头像" 
+                                 class="w-8 h-8 rounded-full object-cover">
+                            <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                        </div>
+                        <div class="flex items-center text-gray-400 text-sm">
+                            <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.2k</span>
+                            <span><i class="fa fa-comment mr-1"></i> 24</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Article 2 -->
+            <a href="/articles/tech-architecture.html" class="article-card bg-tech-card rounded-xl overflow-hidden card-hover block" data-category="tech" data-aos="fade-up" data-aos-delay="200">
+                <div class="h-48 overflow-hidden">
+                    <img src="/images/article-tech-1.jpg" 
+                         alt="前后端分离架构实践" 
+                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-tech-purple/20 text-tech-purple text-xs px-3 py-1 rounded-full">技术</span>
+                        <span class="text-gray-400 text-sm ml-auto">2023-07-22</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300 text-white">
+                        前后端分离架构实践：从理论到项目落地
+                    </h3>
+                    <p class="text-gray-400 mb-4 line-clamp-3">
+                        探讨前后端分离架构的优势、挑战以及最佳实践，结合实际项目案例，分享如何构建高性能、可维护的前后端分离应用。
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="/images/avatar.jpg" 
+                                 alt="作者头像" 
+                                 class="w-8 h-8 rounded-full object-cover">
+                            <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                        </div>
+                        <div class="flex items-center text-gray-400 text-sm">
+                            <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.8k</span>
+                            <span><i class="fa fa-comment mr-1"></i> 36</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Article 3 -->
+            <a href="/articles/travel-swiss-alps.html" class="article-card bg-tech-card rounded-xl overflow-hidden card-hover block" data-category="travel" data-aos="fade-up" data-aos-delay="300">
+                <div class="h-48 overflow-hidden">
+                    <img src="/images/article-travel-1.jpg" 
+                         alt="瑞士阿尔卑斯山之旅" 
+                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-green-500/20 text-green-500 text-xs px-3 py-1 rounded-full">旅行</span>
+                        <span class="text-gray-400 text-sm ml-auto">2023-08-10</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300 text-white">
+                        瑞士阿尔卑斯山之旅：徒步与编程的完美结合
+                    </h3>
+                    <p class="text-gray-400 mb-4 line-clamp-3">
+                        记录在瑞士阿尔卑斯山的徒步旅行经历，分享如何在旅途中保持编程学习，以及大自然如何启发创造性思维。
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="/images/avatar.jpg" 
+                                 alt="作者头像" 
+                                 class="w-8 h-8 rounded-full object-cover">
+                            <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                        </div>
+                        <div class="flex items-center text-gray-400 text-sm">
+                            <span class="mr-4"><i class="fa fa-eye mr-1"></i> 956</span>
+                            <span><i class="fa fa-comment mr-1"></i> 18</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 更多文章卡片以相同模式继续（确保 href 指向相应的 /articles/... 页面） -->
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="#" class="inline-block bg-tech-card hover:bg-tech-hover text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 border border-tech-blue/30">
+                加载更多文章
+            </a>
+        </div>
+    </div>
+</section>
     
     <!-- About Section -->
     <section id="about" class="py-20 bg-tech-card/30">
