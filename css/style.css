@@ -1,3 +1,16 @@
+/* Updated file content */
+:root {
+    --nav-height: 64px; /* 可根据实际导航高度调整 */
+}
+
+html {
+    scroll-padding-top: var(--nav-height);
+}
+
+body {
+    padding-top: var(--nav-height);
+}
+
 /* Tailwind 工具类扩展 */
 @layer utilities {
     .text-glow {
@@ -27,6 +40,11 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
     }
+}
+
+/* 强制导航使用相同高度变量（确保 padding-top 与实际导航高度一致） */
+nav {
+    height: var(--nav-height);
 }
 
 /* 自定义滚动条 */
