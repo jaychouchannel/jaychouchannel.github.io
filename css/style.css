@@ -1,0 +1,147 @@
+/* Updated file content */
+:root {
+    --nav-height: 64px; /* 可根据实际导航高度调整 */
+}
+
+html {
+    scroll-padding-top: var(--nav-height);
+}
+
+body {
+    padding-top: var(--nav-height);
+}
+
+/* Tailwind 工具类扩展 */
+@layer utilities {
+    .text-glow {
+        text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+    }
+    .text-glow-purple {
+        text-shadow: 0 0 8px rgba(157, 0, 255, 0.8);
+    }
+    .border-glow {
+        box-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+    }
+    .bg-grid {
+        background-image: 
+            linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 240, 255, 0.3);
+    }
+    .glass-effect {
+        background: rgba(18, 18, 41, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+}
+
+/* 强制导航使用相同高度变量（确保 padding-top 与实际导航高度一致） */
+nav {
+    height: var(--nav-height);
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0a0a1a;
+}
+::-webkit-scrollbar-thumb {
+    background: #00f0ff;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #9d00ff;
+}
+
+/* 代码块样式 */
+.code-block {
+    position: relative;
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    background-color: #1a1a2e;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+}
+.code-block pre {
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.code-block .language {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(0, 240, 255, 0.7);
+}
+
+/* Canvas 背景 */
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* 移动端菜单 */
+.mobile-menu {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+.mobile-menu.open {
+    transform: translateX(0);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .article-card {
+        margin-bottom: 2rem;
+    }
+    
+    .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .h-48 {
+        height: 240px;
+    }
+}
+
+@media (max-width: 480px) {
+    .text-4xl, .text-6xl {
+        font-size: 2.5rem;
+    }
+    
+    .text-xl {
+        font-size: 1.25rem;
+    }
+    
+    .p-6 {
+        padding: 1rem;
+    }
+    
+    .h-48 {
+        height: 200px;
+    }
+}
+/* 增加导航栏活跃状态样式 */
+nav a.active {
+    color: #00f0ff;
+    border-bottom: 2px solid #00f0ff;
+}
