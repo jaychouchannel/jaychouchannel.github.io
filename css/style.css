@@ -122,3 +122,8 @@
         height: 200px;
     }
 }
+/* 增加导航栏活跃状态样式 */
+nav a.active {
+    color: #00f0ff;
+    border-bottom: 2px solid #00f0ff;
+}
