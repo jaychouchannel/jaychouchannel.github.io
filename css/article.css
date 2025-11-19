@@ -1,5 +1,4 @@
 /* Article specific styles for better reading experience */
-/* 使用站点颜色变量（与 style.css 中定义的 color 一致） */
 :root {
   --article-max-width: 880px;
   --toc-width: 260px;
