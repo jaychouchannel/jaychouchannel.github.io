@@ -299,3 +299,36 @@ function initSmoothScroll() {
         });
     });
 }
+
+function initNavActiveState() {
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll("nav a");
+    
+    window.addEventListener("scroll", () => {
+        let current = "";
+        
+        sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            
+            // 当滚动到某个区域时，高亮对应的导航项
+            if (scrollY >= sectionTop - 100) {
+                current = section.getAttribute("id");
+            }
+        });
+        
+        navLinks.forEach((link) => {
+            link.classList.remove("active");
+            if (link.getAttribute("href") === `#${current}`) {
+                link.classList.add("active");
+            }
+        });
+    });
+}
+
+// 在DOMContentLoaded中调用新函数
+document.addEventListener('DOMContentLoaded', function() {
+    // ... 其他初始化函数
+    
+    initNavActiveState(); // 添加这一行
+});
