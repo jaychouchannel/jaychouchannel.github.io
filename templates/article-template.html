@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title><!--TITLE--> · Jaychouchannel</title>
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="<!--SHORT_DESC-->">
+</head>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
+  <!-- Navigation (保持与 index 一致的结构，便于一致性) -->
+  <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
+    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-2">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
+          <i class="fa fa-rocket text-white text-xl"></i>
+        </div>
+        <span class="text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</span>
+      </a>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
+        <a href="/articles" class="text-white hover:text-tech-blue transition-colors duration-300">文章</a>
+        <a href="/categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
+        <a href="/about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
+      </div>
+      <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+        <i class="fa fa-bars text-2xl"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main class="pt-20"> <!-- pt 与固定 nav 对齐，site CSS 中已有 padding-top -->
+    <section class="container mx-auto px-4 py-12">
+      <article class="max-w-3xl mx-auto bg-tech-card rounded-xl border border-tech-blue/20 overflow-hidden">
+        <header class="p-8">
+          <div class="mb-4">
+            <a href="/articles" class="text-sm text-tech-blue hover:underline">&larr; 返回文章列表</a>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-bold mb-3 text-white"><!--TITLE--></h1>
+          <div class="flex items-center text-sm text-gray-400 gap-4">
+            <div class="flex items-center">
+              <img src="/images/avatar.jpg" alt="作者" class="w-8 h-8 rounded-full object-cover mr-2">
+              <span>Jaychouchannel</span>
+            </div>
+            <span><!--DATE--></span>
+            <span>&middot;</span>
+            <span><!--READ_TIME--> 阅读</span>
+            <div class="ml-auto flex items-center gap-2">
+              <!-- 分享按钮 -->
+              <a class="text-gray-300 hover:text-tech-blue" href="#" title="分享到 Twitter"><i class="fa fa-twitter"></i></a>
+              <a class="text-gray-300 hover:text-tech-blue" href="#" title="分享到 微博"><i class="fa fa-weibo"></i></a>
+              <a class="text-gray-300 hover:text-tech-blue" href="#" title="复制链接" id="copy-link"><i class="fa fa-link"></i></a>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <!-- 标签占位 -->
+            <!--TAGS-->
+          </div>
+        </header>
+
+        <div class="p-8 border-t border-tech-blue/10 prose prose-invert max-w-none">
+          <!--ARTICLE_CONTENT-->
+        </div>
+
+        <footer class="p-8 border-t border-tech-blue/10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="flex items-center">
+                <img src="/images/avatar.jpg" alt="作者" class="w-10 h-10 rounded-full object-cover mr-3">
+                <div>
+                  <div class="font-bold">Jaychouchannel</div>
+                  <div class="text-sm text-gray-400">全栈开发者 · 分享技术与旅行</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-right">
+              <div class="text-sm text-gray-400">喜欢这篇文章？分享给朋友</div>
+              <div class="mt-2 flex gap-2">
+                <a class="bg-tech-blue/10 text-tech-blue px-3 py-2 rounded-full text-sm hover:bg-tech-blue/20" href="#">Twitter</a>
+                <a class="bg-tech-blue/10 text-tech-blue px-3 py-2 rounded-full text-sm hover:bg-tech-blue/20" href="#">Weibo</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 相关文章推荐 -->
+          <div class="mt-8">
+            <h4 class="text-lg font-bold mb-4">相关文章</h4>
+            <div class="grid md:grid-cols-3 gap-4">
+              <!--RELATED-->
+            </div>
+          </div>
+        </footer>
+      </article>
+
+      <!-- 评论占位（可以接入 Disqus/Utterances 等） -->
+      <div class="max-w-3xl mx-auto mt-8">
+        <div id="comments" class="bg-tech-card rounded-lg p-6 border border-tech-blue/10">
+          <h3 class="font-bold mb-4">评论</h3>
+          <p class="text-gray-400">评论功能占位 — 可接入第三方系统（Disqus / GitHub Issues / Utterances）</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // 复制链接小脚本
+    document.getElementById('copy-link')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigator.clipboard?.writeText(location.href).then(() => {
+        alert('链接已复制');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>瑞士阿尔卑斯山之旅 · Jaychouchannel</title>
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="记录在瑞士阿尔卑斯山的徒步旅行经历与摄影心得。">
+</head>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
+  <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
+    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-2">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
+          <i class="fa fa-rocket text-white text-xl"></i>
+        </div>
+        <span class="text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</span>
+      </a>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
+        <a href="/articles" class="text-white hover:text-tech-blue transition-colors duration-300">文章</a>
+      </div>
+      <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+        <i class="fa fa-bars text-2xl"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main class="pt-20">
+    <section class="container mx-auto px-4 py-12">
+      <article class="max-w-3xl mx-auto bg-tech-card rounded-xl border border-tech-blue/20 overflow-hidden">
+        <header class="p-8">
+          <div class="mb-4">
+            <a href="/articles" class="text-sm text-tech-blue hover:underline">&larr; 返回文章列表</a>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-bold mb-3 text-white">瑞士阿尔卑斯山之旅：徒步与编程的完美结合</h1>
+          <div class="flex items-center text-sm text-gray-400 gap-4">
+            <div class="flex items-center">
+              <img src="/images/avatar.jpg" alt="作者" class="w-8 h-8 rounded-full object-cover mr-2">
+              <span>Jaychouchannel</span>
+            </div>
+            <span>2023-08-10</span>
+            <span>&middot;</span>
+            <span>6 分钟 阅读</span>
+            <div class="ml-auto flex items-center gap-2">
+              <a class="text-gray-300 hover:text-tech-blue" href="#"><i class="fa fa-twitter"></i></a>
+              <a class="text-gray-300 hover:text-tech-blue" href="#"><i class="fa fa-weibo"></i></a>
+              <a class="text-gray-300 hover:text-tech-blue" href="#" id="copy-link-2"><i class="fa fa-link"></i></a>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a class="text-xs px-3 py-1 rounded-full bg-green-500/10 text-green-400">旅行</a>
+            <a class="text-xs px-3 py-1 rounded-full bg-tech-card text-gray-300">摄影</a>
+            <a class="text-xs px-3 py-1 rounded-full bg-tech-card text-gray-300">徒步</a>
+          </div>
+        </header>
+
+        <div class="p-8 border-t border-tech-blue/10 prose prose-invert max-w-none">
+          <p>那是一个清新的早晨，我背上背包，带着相机和笔记本电脑，踏上了阿尔卑斯的山路。对于我来说，旅行与编程并不冲突：远离城市的喧嚣反而能带来更清晰的思路。</p>
+
+          <h2>行程亮点</h2>
+          <ul>
+            <li>绝美山景与高原湖泊</li>
+            <li>夜间银河与长曝光摄影</li>
+            <li>在山间小屋里写下旅行日记与代码片段</li>
+          </ul>
+
+          <h2>装备与技巧</h2>
+          <p>轻量相机、防雨的外套、保暖层和一台能待机很久的笔记本是必须的。徒步时保证充足的水和热量，遇到信号差的区域提前同步好离线地图与笔记。</p>
+
+          <h2>摄影小贴士</h2>
+          <p>在高反光的雪地尽量使用偏振镜；拍摄夜景时用三脚架与低 ISO；拍人像时利用早晚柔光获得更好的肤色。更多摄影样张可以在我的相册页面查看。</p>
+
+          <p>如果你想看这次旅程的照片集或我在旅途中写的代码片段，我可以把相应页面也一并生成。</p>
+        </div>
+
+        <footer class="p-8 border-t border-tech-blue/10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <img src="/images/avatar.jpg" alt="作者" class="w-10 h-10 rounded-full object-cover mr-3">
+              <div>
+                <div class="font-bold">Jaychouchannel</div>
+                <div class="text-sm text-gray-400">旅行 · 摄影</div>
+              </div>
+            </div>
+
+            <div class="text-right">
+              <div class="text-sm text-gray-400">喜欢这篇文章？分享给朋友</div>
+              <div class="mt-2 flex gap-2">
+                <a class="bg-tech-blue/10 text-tech-blue px-3 py-2 rounded-full text-sm" href="#">Twitter</a>
+                <a class="bg-tech-blue/10 text-tech-blue px-3 py-2 rounded-full text-sm" href="#">Weibo</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <h4 class="text-lg font-bold mb-4">相关推荐</h4>
+            <div class="grid md:grid-cols-3 gap-4">
+              <a href="/articles/algorithm-sort.html" class="block bg-tech-card p-3 rounded-lg border border-tech-blue/10 hover:shadow-md">
+                <div class="text-sm text-gray-400">深入理解 JavaScript 排序算法</div>
+              </a>
+            </div>
+          </div>
+        </footer>
+      </article>
+
+      <div class="max-w-3xl mx-auto mt-8">
+        <div id="comments" class="bg-tech-card rounded-lg p-6 border border-tech-blue/10">
+          <h3 class="font-bold mb-4">评论</h3>
+          <p class="text-gray-400">评论功能占位 — 可接入第三方系统（Disqus / Utterances）</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('copy-link-2')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigator.clipboard?.writeText(location.href).then(() => alert('链接已复制'));
+    });
+  </script>
+</body>
+</html>
