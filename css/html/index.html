@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechVoyager | 技术与旅行的探索者</title>
+    <!-- 外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tech-blue': '#00f0ff',
+                        'tech-purple': '#9d00ff',
+                        'tech-dark': '#0a0a1a',
+                        'tech-card': '#121229',
+                        'tech-hover': '#1e1e42'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['Fira Code', 'monospace']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
+    <!-- Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
+                    <i class="fa fa-rocket text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold text-white">
+                    <span class="text-tech-blue">Tech</span>Voyager
+                </span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
+                <a href="#articles" class="text-white hover:text-tech-blue transition-colors duration-300">文章</a>
+                <a href="#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
+                <a href="#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
+                <div class="relative">
+                    <input type="text" placeholder="搜索文章..." class="bg-tech-card border border-tech-blue/30 rounded-full py-1 px-4 text-sm focus:outline-none focus:border-tech-blue w-48">
+                    <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-tech-blue">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                <i class="fa fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed top-0 left-0 h-full w-4/5 max-w-xs bg-tech-card z-50 shadow-lg">
+        <div class="p-4 border-b border-tech-blue/30 flex justify-between items-center">
+            <span class="text-xl font-bold text-white">
+                <span class="text-tech-blue">Tech</span>Voyager
+            </span>
+            <button id="close-menu-button" class="text-white focus:outline-none">
+                <i class="fa fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div class="p-4 flex flex-col space-y-4">
+            <a href="#home" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">首页</a>
+            <a href="#articles" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">文章</a>
+            <a href="#categories" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">分类</a>
+            <a href="#about" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">关于我</a>
+            <div class="relative mt-4">
+                <input type="text" placeholder="搜索文章..." class="bg-tech-dark border border-tech-blue/30 rounded-full py-2 px-4 text-sm focus:outline-none focus:border-tech-blue w-full">
+                <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-tech-blue">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Author Banner -->
+    <section class="bg-tech-card border-b border-tech-blue/30 py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple p-0.5 mr-4">
+                        <img src="/images/avatar.jpg" 
+                             alt="TechVoyager" 
+                             class="w-full h-full object-cover rounded-full">
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">TechVoyager</h2>
+                        <p class="text-tech-blue">全栈开发者 | 旅行爱好者 | 技术分享者</p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                        <i class="fa fa-github text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                        <i class="fa fa-twitter text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                        <i class="fa fa-linkedin text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                        <i class="fa fa-instagram text-white"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Home Section -->
+    <section id="home" class="relative min-h-screen flex items-center pt-16">
+        <div class="container mx-auto px-4 py-16">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="inline-block bg-tech-blue/10 text-tech-blue px-4 py-1 rounded-full text-sm font-medium mb-4">
+                        个人博客
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                        <span class="text-white">你好，我是</span>
+                        <span class="text-tech-blue text-glow">TechVoyager</span>
+                    </h1>
+                    <p class="text-xl mb-8 text-gray-300 max-w-lg">
+                        欢迎来到我的个人博客！我是一名热爱技术与旅行的全栈开发者，
+                        在这里我将分享算法学习笔记、前后端开发经验、开发工具推荐，
+                        以及旅行见闻和摄影作品。
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#articles" class="bg-gradient-to-r from-tech-blue to-tech-purple text-white px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity duration-300 border-glow">
+                            浏览文章
+                        </a>
+                        <a href="#about" class="bg-transparent border border-tech-blue text-tech-blue px-8 py-3 rounded-full font-medium hover:bg-tech-blue/10 transition-colors duration-300">
+                            了解更多
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute inset-0 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
+                        <img src="/images/hero-image.jpg" 
+                             alt="编程与旅行" 
+                             class="relative z-10 rounded-lg shadow-2xl animate-float">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                <div class="bg-tech-card p-6 rounded-lg border border-tech-blue/20 text-center">
+                    <div class="text-4xl font-bold text-tech-blue mb-2 counter" data-target="120">0</div>
+                    <div class="text-gray-400">发布文章</div>
+                </div>
+                <div class="bg-tech-card p-6 rounded-lg border border-tech-blue/20 text-center">
+                    <div class="text-4xl font-bold text-tech-blue mb-2 counter" data-target="25">0</div>
+                    <div class="text-gray-400">技术分类</div>
+                </div>
+                <div class="bg-tech-card p-6 rounded-lg border border-tech-blue/20 text-center">
+                    <div class="text-4xl font-bold text-tech-blue mb-2 counter" data-target="18">0</div>
+                    <div class="text-gray-400">旅行目的地</div>
+                </div>
+                <div class="bg-tech-card p-6 rounded-lg border border-tech-blue/20 text-center">
+                    <div class="text-4xl font-bold text-tech-blue mb-2 counter" data-target="5000">0</div>
+                    <div class="text-gray-400">网站访问量</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Categories Section -->
+    <section id="categories" class="py-20 bg-tech-card/30">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    <span class="text-tech-blue">内容</span>分类
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    探索不同领域的知识与经验分享，从技术到旅行，从工具到生活。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Algorithm Category -->
+                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/category-algorithm.jpg" 
+                             alt="算法分享" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-tech-blue/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-code text-tech-blue"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">算法分享</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            深入探讨各种算法原理与实现，从基础到高级，帮助你提升编程思维能力。
+                        </p>
+                        <a href="#" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
+                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Frontend & Backend Category -->
+                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/category-tech.jpg" 
+                             alt="前后端分享" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-tech-purple/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-server text-tech-purple"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">前后端分享</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            分享前后端开发技术、框架使用经验、性能优化技巧和最佳实践。
+                        </p>
+                        <a href="#" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
+                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Travel Category -->
+                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/category-travel.jpg" 
+                             alt="旅行分享" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-plane text-green-500"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">旅行分享</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            记录旅途中的美景与人文，分享旅行攻略、摄影技巧和心得体会。
+                        </p>
+                        <a href="#" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
+                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Tools Category -->
+                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="400">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/category-tools.jpg" 
+                             alt="开发工具分享" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-wrench text-yellow-500"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">开发工具分享</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            介绍各种提高开发效率的工具、插件和工作流，让编程更加轻松愉快。
+                        </p>
+                        <a href="#" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
+                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Articles Section -->
+    <section id="articles" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold" data-aos="fade-right">
+                    <span class="text-tech-blue">精选</span>文章
+                </h2>
+                <div class="flex space-x-2" data-aos="fade-left">
+                    <button class="category-filter active px-4 py-2 rounded-full bg-tech-blue text-white text-sm" data-category="all">
+                        全部
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="algorithm">
+                        算法
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="tech">
+                        技术
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="travel">
+                        旅行
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="algorithm" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/article-algorithm-1.jpg" 
+                             alt="深入理解JavaScript排序算法" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-tech-blue/20 text-tech-blue text-xs px-3 py-1 rounded-full">算法</span>
+                            <span class="text-gray-400 text-sm ml-auto">2023-06-15</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
+                            <a href="#">深入理解JavaScript排序算法：从原理到实现</a>
+                        </h3>
+                        <p class="text-gray-400 mb-4 line-clamp-3">
+                            本文详细介绍了常见的排序算法原理、时间复杂度分析以及在JavaScript中的实现方式，帮助开发者深入理解排序算法的工作机制。
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="/images/avatar.jpg" 
+                                     alt="作者头像" 
+                                     class="w-8 h-8 rounded-full object-cover">
+                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                            </div>
+                            <div class="flex items-center text-gray-400 text-sm">
+                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.2k</span>
+                                <span><i class="fa fa-comment mr-1"></i> 24</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article 2 -->
+                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="tech" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/article-tech-1.jpg" 
+                             alt="前后端分离架构实践" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-tech-purple/20 text-tech-purple text-xs px-3 py-1 rounded-full">技术</span>
+                            <span class="text-gray-400 text-sm ml-auto">2023-07-22</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
+                            <a href="#">前后端分离架构实践：从理论到项目落地</a>
+                        </h3>
+                        <p class="text-gray-400 mb-4 line-clamp-3">
+                            探讨前后端分离架构的优势、挑战以及最佳实践，结合实际项目案例，分享如何构建高性能、可维护的前后端分离应用。
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="/images/avatar.jpg" 
+                                     alt="作者头像" 
+                                     class="w-8 h-8 rounded-full object-cover">
+                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                            </div>
+                            <div class="flex items-center text-gray-400 text-sm">
+                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.8k</span>
+                                <span><i class="fa fa-comment mr-1"></i> 36</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article 3 -->
+                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="travel" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/article-travel-1.jpg" 
+                             alt="瑞士阿尔卑斯山之旅" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-green-500/20 text-green-500 text-xs px-3 py-1 rounded-full">旅行</span>
+                            <span class="text-gray-400 text-sm ml-auto">2023-08-10</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
+                            <a href="#">瑞士阿尔卑斯山之旅：徒步与编程的完美结合</a>
+                        </h3>
+                        <p class="text-gray-400 mb-4 line-clamp-3">
+                            记录在瑞士阿尔卑斯山的徒步旅行经历，分享如何在旅途中保持编程学习，以及大自然如何启发创造性思维。
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="/images/avatar.jpg" 
+                                     alt="作者头像" 
+                                     class="w-8 h-8 rounded-full object-cover">
+                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                            </div>
+                            <div class="flex items-center text-gray-400 text-sm">
+                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 956</span>
+                                <span><i class="fa fa-comment mr-1"></i> 18</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article 4 -->
+                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="tech" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/article-tech-2.jpg" 
+                             alt="全栈开发学习路线" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-tech-purple/20 text-tech-purple text-xs px-3 py-1 rounded-full">技术</span>
+                            <span class="text-gray-400 text-sm ml-auto">2023-09-05</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
+                            <a href="#">2023年全栈开发学习路线：从入门到精通</a>
+                        </h3>
+                        <p class="text-gray-400 mb-4 line-clamp-3">
+                            全面梳理2023年成为全栈开发者所需掌握的技术栈、学习资源和实践项目，帮助初学者规划学习路径。
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="/images/avatar.jpg" 
+                                     alt="作者头像" 
+                                     class="w-8 h-8 rounded-full object-cover">
+                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                            </div>
+                            <div class="flex items-center text-gray-400 text-sm">
+                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 2.3k</span>
+                                <span><i class="fa fa-comment mr-1"></i> 42</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article 5 -->
+                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="algorithm" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/article-algorithm-2.jpg" 
+                             alt="JavaScript算法" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-tech-blue/20 text-tech-blue text-xs px-3 py-1 rounded-full">算法</span>
+                            <span class="text-gray-400 text-sm ml-auto">2023-10-18</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
+                            <a href="#">JavaScript算法：基本原理与代码实现</a>
+                        </h3>
+                        <p class="text-gray-400 mb-4 line-clamp-3">
+                            详细讲解JavaScript中常用算法的基本原理、实现方式和应用场景，帮助开发者提升解决问题的能力。
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="/images/avatar.jpg" 
+                                     alt="作者头像" 
+                                     class="w-8 h-8 rounded-full object-cover">
+                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                            </div>
+                            <div class="flex items-center text-gray-400 text-sm">
+                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.5k</span>
+                                <span><i class="fa fa-comment mr-1"></i> 29</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article 6 -->
+                <div class="article-card bg-tech-card rounded-xl overflow-hidden card-hover" data-category="travel" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="/images/article-travel-2.jpg" 
+                             alt="川西秋色之旅" 
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-green-500/20 text-green-500 text-xs px-3 py-1 rounded-full">旅行</span>
+                            <span class="text-gray-400 text-sm ml-auto">2023-11-03</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300">
+                            <a href="#">川西秋色之旅：最美的风景在路上</a>
+                        </h3>
+                        <p class="text-gray-400 mb-4 line-clamp-3">
+                            记录川西高原的秋季旅行，分享绝美风景的拍摄技巧，以及如何在旅途中寻找灵感，提升创造力。
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="/images/avatar.jpg" 
+                                     alt="作者头像" 
+                                     class="w-8 h-8 rounded-full object-cover">
+                                <span class="text-sm text-gray-300 ml-2">TechVoyager</span>
+                            </div>
+                            <div class="flex items-center text-gray-400 text-sm">
+                                <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.1k</span>
+                                <span><i class="fa fa-comment mr-1"></i> 22</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-tech-card hover:bg-tech-hover text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 border border-tech-blue/30">
+                    加载更多文章
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-tech-card/30">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/3 mb-10 md:mb-0" data-aos="fade-right">
+                    <div class="relative w-64 h-64 mx-auto">
+                        <div class="absolute inset-0 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
+                        <img src="/images/avatar-large.jpg" 
+                             alt="TechVoyager" 
+                             class="relative z-10 w-full h-full object-cover rounded-full border-4 border-tech-blue">
+                    </div>
+                </div>
+                <div class="md:w-2/3 md:pl-16" data-aos="fade-left">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                        关于 <span class="text-tech-blue">TechVoyager</span>
+                    </h2>
+                    <p class="text-gray-300 mb-6 text-lg">
+                        你好！我是TechVoyager，一名热爱技术与旅行的全栈开发者。我热衷于探索新技术，分享编程心得，同时也喜欢游历世界各地，记录旅途中的美好时光。
+                    </p>
+                    <p class="text-gray-300 mb-8 text-lg">
+                        在这个博客中，我将分享算法学习笔记、前后端开发经验、开发工具推荐，以及旅行见闻和摄影作品。希望通过这些内容，能够与更多志同道合的朋友交流学习，共同成长。
+                    </p>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-tech-purple">技能栈</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">JavaScript</span>
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">TypeScript</span>
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">React</span>
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Node.js</span>
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Python</span>
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Docker</span>
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">MongoDB</span>
+                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Git</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                            <i class="fa fa-github text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                            <i class="fa fa-twitter text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                            <i class="fa fa-linkedin text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
+                            <i class="fa fa-instagram text-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-gradient-to-r from-tech-dark to-tech-card">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
+                <h2 class="text-3xl font-bold mb-6">
+                    订阅 <span class="text-tech-blue">技术周刊</span>
+                </h2>
+                <p class="text-gray-300 mb-8">
+                    每周收到精选技术文章、开发工具推荐和旅行故事，不错过任何精彩内容。
+                </p>
+                <form class="flex flex-col sm:flex-row gap-4">
+                    <input type="email" placeholder="输入你的邮箱地址" class="flex-1 bg-tech-dark border border-tech-blue/30 rounded-full py-3 px-6 text-white focus:outline-none focus:border-tech-blue">
+                    <button type="submit" class="bg-gradient-to-r from-tech-blue to-tech-purple text-white px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity duration-300 border-glow whitespace-nowrap">
+                        订阅周刊
+                    </button>
+                </form>
+                <p class="text-gray-500 text-sm mt-4">
+                    我们尊重您的隐私，不会向第三方分享您的信息。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-tech-dark py-12 border-t border-tech-blue/20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
+                            <i class="fa fa-rocket text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">
+                            <span class="text-tech-blue">Tech</span>Voyager
+                        </span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        探索技术与旅行的无限可能，记录成长历程，分享编程心得。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
+                            <i class="fa fa-github"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-white">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">首页</a></li>
+                        <li><a href="#articles" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">文章</a></li>
+                        <li><a href="#categories" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">分类</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">关于我</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-white">内容分类</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">算法分享</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">前后端分享</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">旅行分享</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">开发工具分享</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-white">联系我</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope text-tech-blue mr-2"></i>
+                            <a href="mailto:contact@techvoyager.com" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">contact@techvoyager.com</a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-map-marker text-tech-blue mr-2"></i>
+                            <span class="text-gray-400">北京市朝阳区</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-tech-blue/20 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                    &copy; 2023 TechVoyager. 保留所有权利。
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-tech-blue text-sm transition-colors duration-300">隐私政策</a>
+                    <a href="#" class="text-gray-500 hover:text-tech-blue text-sm transition-colors duration-300">使用条款</a>
+                    <a href="#" class="text-gray-500 hover:text-tech-blue text-sm transition-colors duration-300">Cookie政策</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- AI Chat Assistant -->
+    <div id="ai-assistant" class="fixed bottom-6 right-6 z-40">
+        <button id="chat-button" class="w-14 h-14 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center shadow-lg hover:opacity-90 transition-opacity duration-300 border-glow">
+            <i class="fa fa-comments text-white text-xl"></i>
+        </button>
+        
+        <div id="chat-window" class="hidden absolute bottom-16 right-0 w-80 md:w-96 bg-tech-card rounded-xl shadow-2xl overflow-hidden border border-tech-blue/30">
+            <div class="p-4 bg-tech-dark border-b border-tech-blue/30 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center mr-3">
+                        <i class="fa fa-robot text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white">AI助手</h3>
+                        <p class="text-xs text-tech-blue">在线</p>
+                    </div>
+                </div>
+                <button id="close-chat" class="text-gray-400 hover:text-white focus:outline-none">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="chat-messages" class="p-4 h-80 overflow-y-auto">
+                <div class="flex mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center mr-2 flex-shrink-0">
+                        <i class="fa fa-robot text-white text-xs"></i>
+                    </div>
+                    <div class="bg-tech-dark rounded-lg p-3 max-w-[80%]">
+                        <p class="text-gray-300 text-sm">
+                            你好！我是TechVoyager的AI助手，有什么可以帮助你的吗？
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-tech-blue/30">
+                <div class="flex">
+                    <input type="text" id="chat-input" placeholder="输入你的问题..." class="flex-1 bg-tech-dark border border-tech-blue/30 rounded-l-full py-2 px-4 text-sm focus:outline-none focus:border-tech-blue">
+                    <button id="send-message" class="bg-tech-blue hover:bg-tech-blue/80 text-white px-4 py-2 rounded-r-full transition-colors duration-300">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <button class="quick-question bg-tech-dark text-xs px-3 py-1 rounded-full border border-tech-blue/30 hover:bg-tech-hover transition-colors duration-300">
+                        推荐算法文章
+                    </button>
+                    <button class="quick-question bg-tech-dark text-xs px-3 py-1 rounded-full border border-tech-blue/30 hover:bg-tech-hover transition-colors duration-300">
+                        旅行攻略
+                    </button>
+                    <button class="quick-question bg-tech-dark text-xs px-3 py-1 rounded-full border border-tech-blue/30 hover:bg-tech-hover transition-colors duration-300">
+                        开发工具推荐
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入主脚本 -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
