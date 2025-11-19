@@ -1,0 +1,216 @@
+/* Article specific styles for better reading experience */
+/* 使用站点颜色变量（与 style.css 中定义的 color 一致） */
+:root {
+  --article-max-width: 880px;
+  --toc-width: 260px;
+  --nav-height: 64px; /* 若你 site 的 nav-height 不同，调整这里 */
+}
+
+/* Reading progress bar (fixed under the nav) */
+#reading-progress {
+  position: fixed;
+  left: 0;
+  top: var(--nav-height);
+  height: 4px;
+  width: 0%;
+  background: linear-gradient(90deg, rgba(0,240,255,1), rgba(157,0,255,1));
+  z-index: 60;
+  transition: width 0.1s linear;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Article wrapper */
+.article-wrapper {
+  max-width: var(--article-max-width);
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Header/title/meta */
+.article-title {
+  font-size: 2.25rem;
+  line-height: 1.05;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+.article-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  color: #9aa3b2; /* muted */
+  font-size: 0.95rem;
+}
+.article-tags {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.article-tags a {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(18,18,41,0.6);
+  color: var(--tech-blue, #00f0ff);
+  border: 1px solid rgba(0,240,255,0.08);
+  text-decoration: none;
+}
+
+/* Prose content customizations */
+.article-content {
+  color: #d1d7dd;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.article-content h2 {
+  font-size: 1.5rem;
+  margin-top: 1.8rem;
+  margin-bottom: 0.6rem;
+  color: #ffffff;
+}
+.article-content h3 {
+  font-size: 1.15rem;
+  margin-top: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #e6eef6;
+}
+.article-content p {
+  margin-bottom: 1rem;
+}
+.article-content ul, .article-content ol {
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Blockquote */
+.article-content blockquote {
+  border-left: 4px solid rgba(0,240,255,0.15);
+  padding-left: 1rem;
+  color: #bcd;
+  background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0));
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+/* Images */
+.article-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto;
+  border-radius: 8px;
+  cursor: zoom-in;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.article-content img:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Code blocks */
+.article-content pre {
+  position: relative;
+  background: #0e0f1a;
+  border: 1px solid rgba(0,240,255,0.06);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow: auto;
+  margin: 1rem 0;
+}
+.article-content pre code {
+  background: transparent;
+  color: #d6deea;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Copy button for code blocks */
+.code-copy-btn {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  background: rgba(0,0,0,0.5);
+  color: #e6eef6;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  transition: background .15s;
+  z-index: 10;
+}
+.code-copy-btn:hover { background: rgba(0,0,0,0.7); }
+
+/* Table styling */
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.article-content table th,
+.article-content table td {
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.6rem 0.75rem;
+}
+.article-content table th {
+  background: rgba(0,0,0,0.12);
+  text-align: left;
+}
+
+/* TOC (table of contents) */
+.toc {
+  position: sticky;
+  top: calc(var(--nav-height) + 1rem);
+  width: var(--toc-width);
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(18,18,41,0.6);
+  border: 1px solid rgba(0,240,255,0.04);
+  font-size: 0.95rem;
+  color: #cfefff;
+  max-height: calc(100vh - (var(--nav-height) + 4rem));
+  overflow: auto;
+}
+.toc h4 { font-weight: 700; margin-bottom: 0.6rem; color: #fff; }
+.toc ul { list-style: none; padding-left: 0; margin: 0; }
+.toc a {
+  display: block;
+  padding: 0.35rem 0.4rem;
+  color: #cfefff;
+  text-decoration: none;
+  border-radius: 6px;
+}
+.toc a:hover, .toc a.active { background: rgba(0,240,255,0.06); color: #00f0ff; }
+
+/* Lightbox */
+.img-lightbox {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background: rgba(0,0,0,0.85);
+}
+.img-lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+.img-lightbox .caption {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+/* Responsive: hide toc on small screens */
+@media (max-width: 1024px) {
+  .toc { display: none; }
+  :root { --toc-width: 0; }
+}
