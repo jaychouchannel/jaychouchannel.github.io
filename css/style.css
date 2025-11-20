@@ -74,13 +74,96 @@ nav {
 .brand-title { line-height: 1; }
 .brand-sub { opacity: 0.9; }
 
+/* Brand inline (title + small subtitle) for compact nav */
+.nav-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+.nav-brand .brand-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+.nav-brand .brand-sub {
+    font-size: 0.78rem;
+    color: rgba(226,232,240,0.65);
+    margin-top: 2px;
+}
+
+/* 在窄屏下隐藏副标题以节省空间 */
+@media (max-width: 640px) {
+    .nav-brand .brand-sub { display: none; }
+}
+
 /* Nav links region */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* 增加按钮间距 */
+}
+
 .nav-links a {
     color: var(--text-primary);
-    padding: 0.4rem 0.6rem;
+    padding: 0.45rem 0.8rem; /* 稍微增大内边距，使点击区域更舒适 */
     border-radius: 6px;
     transition: all 0.22s ease;
 }
+
+/* 现代化按钮形状与动效 */
+.nav-links a {
+    position: relative;
+    border-radius: 999px; /* pill */
+    padding: 0.5rem 0.95rem;
+    background: transparent;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+    transition: width 260ms ease, height 260ms ease, opacity 260ms ease;
+    opacity: 0;
+}
+
+.nav-links a:hover::after,
+.nav-links a:focus::after {
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    opacity: 1;
+}
+
+/* active visual (kept in addition to nav a.active styles) */
+.nav-links a.active {
+    color: #fff;
+    background: linear-gradient(90deg, rgba(59,130,246,0.14), rgba(139,92,246,0.08));
+    box-shadow: 0 6px 18px rgba(59,130,246,0.08);
+}
+
+/* sliding indicator under nav links (controlled by JS) */
+.nav-indicator {
+    position: absolute;
+    height: 3px;
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-purple));
+    bottom: 6px;
+    left: 0;
+    width: 0;
+    border-radius: 3px;
+    transition: transform 260ms cubic-bezier(.22,.9,.32,1), width 260ms cubic-bezier(.22,.9,.32,1);
+    will-change: transform, width;
+}
+
+/* ensure nav container is positioned for indicator */
+.nav-container { position: relative; }
 .nav-links a:hover {
     color: var(--tech-blue);
     transform: translateY(-3px);
@@ -88,7 +171,8 @@ nav {
 }
 nav a.active {
     color: var(--tech-blue);
-    border-bottom: 2px solid var(--tech-blue);
+    /* remove underline/border for modern look; keep subtle shadow for depth */
+    border-bottom: none;
     box-shadow: 0 6px 18px rgba(59,130,246,0.06);
 }
 
@@ -213,7 +297,7 @@ nav a.active {
 
     /* Hide large search on small screens */
     .nav-actions { display: none !important; }
-    .nav-links { gap: 0.6rem; }
+    .nav-links { gap: 1rem; }
 }
 
 @media (max-width: 480px) {
@@ -236,5 +320,5 @@ nav a.active {
 /* 增加导航栏活跃状态样式 */
 nav a.active {
     color: #00f0ff;
-    border-bottom: 2px solid #00f0ff;
+    border-bottom: none;
 }

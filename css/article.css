@@ -65,15 +65,28 @@
   overflow: hidden;
   border: 3px solid transparent;
   background: linear-gradient(to right, var(--tech-blue), var(--tech-purple)) border-box;
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  /* 修复 mask 语法：使用两个相同的颜色停止，保证兼容性 */
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  position: relative; /* Ensure it can be stacked above siblings */
+  z-index: 50; /* 把头像放到最顶层 */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45); /* 轻微阴影增强悬浮感 */
 }
 
 .avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* 小尺寸头像（用于列表、卡片内） */
+.author-avatar-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .author-name {
