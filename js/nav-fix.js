@@ -1,55 +1,59 @@
-// nav-fix.js
-// 动态同步导航高度到 CSS 变量 --nav-height，修复固定导航遮挡问题
-// 同时实现简单的移动端菜单开/关逻辑（如果存在 .mobile-menu）
-// 需在模板中以 <script src="/js/nav-fix.js" defer></script> 引入
-
+// 动态同步导航高度到 CSS 变量 --nav-height，并实现移动菜单开/关逻辑
 (function () {
-  'use strict';
-
-  function syncNavHeight() {
-    var nav = document.querySelector('nav');
+  function setNavHeight() {
+    var nav = document.getElementById('site-nav');
     if (!nav) return;
-    // 获取实际高度（包括边框与内边距）
-    var height = nav.offsetHeight;
-    // 最小值保护（防止 0）
-    if (!height || height < 48) height = 64;
-    // 写回到 :root CSS 变量
-    document.documentElement.style.setProperty('--nav-height', height + 'px');
-    // 兼容性：同步 html scroll-padding-top 和 body padding-top（防止被遮挡）
-    document.documentElement.style.scrollPaddingTop = height + 'px';
-    document.body.style.paddingTop = height + 'px';
+    // Use scrollHeight to include wrapping content; offsetHeight is fine too
+    var h = nav.offsetHeight || nav.scrollHeight || 64;
+    if (h < 48) h = 64;
+    document.documentElement.style.setProperty('--nav-height', h + 'px');
+    // Also ensure body padding top (defensive)
+    document.body.style.paddingTop = h + 'px';
   }
 
-  function initMobileMenuToggle() {
+  function setupMobileMenu() {
     var btn = document.getElementById('mobile-menu-button');
-    var menu = document.querySelector('.mobile-menu');
-    if (!btn) return;
+    var menu = document.getElementById('mobile-menu');
+    var closeBtn = document.getElementById('mobile-close');
 
-    btn.addEventListener('click', function () {
-      var expanded = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-      if (!menu) {
-        // 如果没有显式 .mobile-menu 元素，可以尝试切换 body 类以供样式处理
-        document.body.classList.toggle('mobile-menu-open');
-      } else {
-        menu.classList.toggle('open');
+    function openMenu() {
+      if (menu) menu.classList.add('open');
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+      if (menu) menu.setAttribute('aria-hidden', 'false');
+      document.documentElement.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      if (menu) menu.classList.remove('open');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+      if (menu) menu.setAttribute('aria-hidden', 'true');
+      document.documentElement.style.overflow = '';
+    }
+
+    if (btn && menu) {
+      btn.addEventListener('click', function (e) {
+        var opened = btn.getAttribute('aria-expanded') === 'true';
+        if (opened) closeMenu();
+        else openMenu();
+      });
+    }
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+    // click outside to close
+    document.addEventListener('click', function (e) {
+      if (!menu || !menu.classList.contains('open')) return;
+      var inside = menu.contains(e.target) || (btn && btn.contains(e.target));
+      if (!inside) closeMenu();
+    }, true);
+
+    // close on escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeMenu();
       }
     });
-
-    // 点击菜单外部区域时自动关闭（若存在 .mobile-menu）
-    document.addEventListener('click', function (e) {
-      if (!menu || !btn) return;
-      if (menu.classList.contains('open')) {
-        var isClickInside = menu.contains(e.target) || btn.contains(e.target);
-        if (!isClickInside) {
-          menu.classList.remove('open');
-          btn.setAttribute('aria-expanded', 'false');
-        }
-      }
-    }, true);
   }
 
-  // 防抖 helper
+  // debounce util
   function debounce(fn, wait) {
     var t;
     return function () {
@@ -59,11 +63,16 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    syncNavHeight();
-    initMobileMenuToggle();
+    setNavHeight();
+    setupMobileMenu();
+    // observe nav size changes (logo font load, dynamic wrap)
+    var nav = document.getElementById('site-nav');
+    if (nav && window.ResizeObserver) {
+      var ro = new ResizeObserver(debounce(setNavHeight, 80));
+      ro.observe(nav);
+    }
   });
 
-  // 在 resize 或字体加载变动时重新测量（例如 logo 文本换行）
-  window.addEventListener('resize', debounce(syncNavHeight, 120));
-  window.addEventListener('load', debounce(syncNavHeight, 120));
+  window.addEventListener('load', function () { setNavHeight(); });
+  window.addEventListener('resize', debounce(setNavHeight, 120));
 })();
