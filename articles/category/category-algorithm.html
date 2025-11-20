@@ -9,23 +9,32 @@
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <meta name="description" content="算法类文章汇总 — 深入理解排序、图、树与常见算法实战。">
   <style>
-    /* 调整文章列表为紧凑的网格布局 */
+    /* 左侧文章区域增加外边框，强化边界 */
+    .article-wrapper {
+      border: 1px solid rgba(255, 255, 255, 0.1); /* 黑色系边框（根据整体风格调整透明度） */
+      border-radius: 8px;
+      padding: 1.5rem; /* 增加内边距，让边框更明显 */
+      margin-right: 1.5rem; /* 与右侧边栏保持距离 */
+    }
+
+    /* 文章列表网格布局 - 强制一行3个 */
     .article-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
+      gap: 1.2rem; /* 减小间距，避免换行 */
       margin-bottom: 2rem;
     }
     
     .article-card {
       flex: 1;
-      min-width: 280px;
-      max-width: calc(33.333% - 1rem);
+      min-width: 260px; /* 缩小最小宽度，确保3个能放下 */
+      max-width: calc(33.333% - 0.8rem); /* 精确计算宽度，减去间距 */
     }
     
+    /* 响应式调整：大屏幕保持3个，中屏2个，小屏1个 */
     @media (max-width: 1024px) {
       .article-card {
-        max-width: calc(50% - 1rem);
+        max-width: calc(50% - 0.6rem);
       }
     }
     
@@ -33,31 +42,36 @@
       .article-card {
         max-width: 100%;
       }
+      .article-wrapper {
+        margin-right: 0;
+        padding: 1rem;
+      }
     }
     
-    /* 紧凑的文章卡片样式 */
+    /* 紧凑卡片样式 - 加粗边框 */
     .compact-card {
       display: flex;
       flex-direction: column;
       height: 100%;
+      border: 1px solid rgba(59, 130, 246, 0.3); /* 加粗边框（原0.2 → 0.3透明度，视觉更粗） */
     }
     
     .card-image-container {
-      height: 160px;
+      height: 140px; /* 略缩图片高度，让卡片更紧凑 */
       overflow: hidden;
     }
     
     .card-content {
-      padding: 1rem;
+      padding: 0.8rem; /* 减小内边距 */
       flex: 1;
       display: flex;
       flex-direction: column;
     }
     
     .card-title {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
+      font-size: 1rem; /* 略小字体 */
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
     }
     
     .card-meta {
@@ -65,26 +79,24 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
     
     .author-avatar-small {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      object-cover: cover;
+      width: 22px;
+      height: 22px;
     }
     
-    /* 调整侧边栏作者头像大小 */
+    /* 侧边栏作者头像保持小巧 */
     .author-avatar {
-      width: 80px !important;
-      height: 80px !important;
-      margin: 0 auto 1rem !important;
+      width: 70px !important;
+      height: 70px !important;
+      margin: 0 auto 0.8rem !important;
     }
   </style>
 </head>
 <body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
-  <!-- 导航栏（保持站点一致性） -->
+  <!-- 导航栏（保持一致） -->
   <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
     <div class="container mx-auto px-4 py-2 flex justify-between items-center">
       <a href="/" class="flex items-center space-x-2">
@@ -107,9 +119,9 @@
 
   <div id="reading-progress" aria-hidden="true"></div>
 
-  <!-- 主容器：左侧文章列表 / 右侧作者名片 -->
-  <div class="main-container">
-    <!-- 左侧：文章列表（宽度被 article.css 控制为70%） -->
+  <!-- 主容器 -->
+  <div class="main-container" style="padding-top: 6rem;"> <!-- 调整顶部距离，避免被导航栏遮挡 -->
+    <!-- 左侧：文章列表（增加外边框） -->
     <div class="article-wrapper">
       <div class="article-content">
         <!-- 分类头部 -->
@@ -138,159 +150,159 @@
           </div>
         </div>
 
-        <!-- 文章卡片列表（紧凑网格布局） -->
+        <!-- 文章卡片列表（一行3个） -->
         <div class="article-grid">
           <!-- Article Card 1 -->
-          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover border border-tech-blue/20 compact-card">
+          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover compact-card">
             <a href="/articles/algorithm-sort.html" class="block text-decoration-none h-full">
               <div class="card-image-container">
                 <img src="/images/article-algorithm-1.jpg" alt="深入理解JavaScript排序算法" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
               </div>
               <div class="card-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span class="bg-tech-blue/20 text-tech-blue text-xs px-3 py-1 rounded-full">算法 · 排序</span>
-                  <span class="text-gray-400 text-sm">2023-06-15</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                  <span class="bg-tech-blue/20 text-tech-blue text-xs px-2 py-1 rounded-full">算法 · 排序</span>
+                  <span class="text-gray-400 text-xs">2023-06-15</span>
                 </div>
                 <h3 class="card-title font-bold text-white">深入理解 JavaScript 排序算法：从原理到实现</h3>
-                <p class="text-gray-400 text-sm line-clamp-2" style="margin-bottom:0.75rem;">
+                <p class="text-gray-400 text-xs line-clamp-2" style="margin-bottom:0.5rem;">
                   介绍冒泡、快速、归并等常见排序算法，分析时间复杂度并提供 JavaScript 示例实现。
                 </p>
                 <div class="card-meta">
                   <div style="display:flex; align-items:center;">
                     <img src="/images/avatar.jpg" alt="作者头像" class="author-avatar-small">
-                    <span class="text-gray-300 ml-2">Jaychouchannel</span>
+                    <span class="text-gray-300 ml-2 text-xs">Jaychouchannel</span>
                   </div>
-                  <div class="text-gray-400"><i class="fa fa-eye mr-1"></i>1.2k</div>
+                  <div class="text-gray-400 text-xs"><i class="fa fa-eye mr-1"></i>1.2k</div>
                 </div>
               </div>
             </a>
           </article>
 
           <!-- Article Card 2 -->
-          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover border border-tech-blue/20 compact-card">
+          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover compact-card">
             <a href="/articles/algorithm-graph.html" class="block text-decoration-none h-full">
               <div class="card-image-container">
                 <img src="/images/article-graph-1.jpg" alt="图论入门与实战" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
               </div>
               <div class="card-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span class="bg-tech-purple/20 text-tech-purple text-xs px-3 py-1 rounded-full">算法 · 图论</span>
-                  <span class="text-gray-400 text-sm">2024-02-08</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                  <span class="bg-tech-purple/20 text-tech-purple text-xs px-2 py-1 rounded-full">算法 · 图论</span>
+                  <span class="text-gray-400 text-xs">2024-02-08</span>
                 </div>
                 <h3 class="card-title font-bold text-white">图论入门与实战：最短路与联通性</h3>
-                <p class="text-gray-400 text-sm line-clamp-2" style="margin-bottom:0.75rem;">
+                <p class="text-gray-400 text-xs line-clamp-2" style="margin-bottom:0.5rem;">
                   从邻接矩阵/邻接表开始，覆盖 BFS/DFS、Dijkstra、Kruskal 等常见算法。
                 </p>
                 <div class="card-meta">
                   <div style="display:flex; align-items:center;">
                     <img src="/images/avatar.jpg" alt="作者头像" class="author-avatar-small">
-                    <span class="text-gray-300 ml-2">Jaychouchannel</span>
+                    <span class="text-gray-300 ml-2 text-xs">Jaychouchannel</span>
                   </div>
-                  <div class="text-gray-400"><i class="fa fa-eye mr-1"></i>980</div>
+                  <div class="text-gray-400 text-xs"><i class="fa fa-eye mr-1"></i>980</div>
                 </div>
               </div>
             </a>
           </article>
 
           <!-- Article Card 3 -->
-          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover border border-tech-blue/20 compact-card">
+          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover compact-card">
             <a href="/articles/algorithm-dp.html" class="block text-decoration-none h-full">
               <div class="card-image-container">
                 <img src="/images/article-dp-1.jpg" alt="动态规划实战" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
               </div>
               <div class="card-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span class="bg-green-500/20 text-green-500 text-xs px-3 py-1 rounded-full">算法 · 动态规划</span>
-                  <span class="text-gray-400 text-sm">2024-11-01</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                  <span class="bg-green-500/20 text-green-500 text-xs px-2 py-1 rounded-full">算法 · 动态规划</span>
+                  <span class="text-gray-400 text-xs">2024-11-01</span>
                 </div>
                 <h3 class="card-title font-bold text-white">动态规划思路拆解：转移方程与状态压缩</h3>
-                <p class="text-gray-400 text-sm line-clamp-2" style="margin-bottom:0.75rem;">
+                <p class="text-gray-400 text-xs line-clamp-2" style="margin-bottom:0.5rem;">
                   用大量示例帮你练就把递归转化为状态转移方程的能力，覆盖常见题型。
                 </p>
                 <div class="card-meta">
                   <div style="display:flex; align-items:center;">
                     <img src="/images/avatar.jpg" alt="作者头像" class="author-avatar-small">
-                    <span class="text-gray-300 ml-2">Jaychouchannel</span>
+                    <span class="text-gray-300 ml-2 text-xs">Jaychouchannel</span>
                   </div>
-                  <div class="text-gray-400"><i class="fa fa-eye mr-1"></i>720</div>
+                  <div class="text-gray-400 text-xs"><i class="fa fa-eye mr-1"></i>720</div>
                 </div>
               </div>
             </a>
           </article>
 
-          <!-- Article Card 4 (新增示例) -->
-          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover border border-tech-blue/20 compact-card">
+          <!-- Article Card 4 -->
+          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover compact-card">
             <a href="/articles/algorithm-tree.html" class="block text-decoration-none h-full">
               <div class="card-image-container">
                 <img src="/images/article-tree-1.jpg" alt="二叉树进阶技巧" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
               </div>
               <div class="card-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span class="bg-yellow-500/20 text-yellow-500 text-xs px-3 py-1 rounded-full">算法 · 树结构</span>
-                  <span class="text-gray-400 text-sm">2024-09-15</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                  <span class="bg-yellow-500/20 text-yellow-500 text-xs px-2 py-1 rounded-full">算法 · 树结构</span>
+                  <span class="text-gray-400 text-xs">2024-09-15</span>
                 </div>
                 <h3 class="card-title font-bold text-white">二叉树进阶技巧：遍历与重构算法</h3>
-                <p class="text-gray-400 text-sm line-clamp-2" style="margin-bottom:0.75rem;">
+                <p class="text-gray-400 text-xs line-clamp-2" style="margin-bottom:0.5rem;">
                   深入解析二叉树的前中后序遍历与重构方法，包含递归与迭代实现。
                 </p>
                 <div class="card-meta">
                   <div style="display:flex; align-items:center;">
                     <img src="/images/avatar.jpg" alt="作者头像" class="author-avatar-small">
-                    <span class="text-gray-300 ml-2">Jaychouchannel</span>
+                    <span class="text-gray-300 ml-2 text-xs">Jaychouchannel</span>
                   </div>
-                  <div class="text-gray-400"><i class="fa fa-eye mr-1"></i>650</div>
+                  <div class="text-gray-400 text-xs"><i class="fa fa-eye mr-1"></i>650</div>
                 </div>
               </div>
             </a>
           </article>
 
-          <!-- Article Card 5 (新增示例) -->
-          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover border border-tech-blue/20 compact-card">
+          <!-- Article Card 5 -->
+          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover compact-card">
             <a href="/articles/algorithm-search.html" class="block text-decoration-none h-full">
               <div class="card-image-container">
                 <img src="/images/article-search-1.jpg" alt="搜索算法优化" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
               </div>
               <div class="card-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span class="bg-red-500/20 text-red-500 text-xs px-3 py-1 rounded-full">算法 · 搜索</span>
-                  <span class="text-gray-400 text-sm">2024-07-22</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                  <span class="bg-red-500/20 text-red-500 text-xs px-2 py-1 rounded-full">算法 · 搜索</span>
+                  <span class="text-gray-400 text-xs">2024-07-22</span>
                 </div>
                 <h3 class="card-title font-bold text-white">搜索算法优化：从线性到二分查找</h3>
-                <p class="text-gray-400 text-sm line-clamp-2" style="margin-bottom:0.75rem;">
+                <p class="text-gray-400 text-xs line-clamp-2" style="margin-bottom:0.5rem;">
                   详解各种搜索算法的适用场景与性能对比，教你如何选择最优搜索策略。
                 </p>
                 <div class="card-meta">
                   <div style="display:flex; align-items:center;">
                     <img src="/images/avatar.jpg" alt="作者头像" class="author-avatar-small">
-                    <span class="text-gray-300 ml-2">Jaychouchannel</span>
+                    <span class="text-gray-300 ml-2 text-xs">Jaychouchannel</span>
                   </div>
-                  <div class="text-gray-400"><i class="fa fa-eye mr-1"></i>580</div>
+                  <div class="text-gray-400 text-xs"><i class="fa fa-eye mr-1"></i>580</div>
                 </div>
               </div>
             </a>
           </article>
 
-          <!-- Article Card 6 (新增示例) -->
-          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover border border-tech-blue/20 compact-card">
+          <!-- Article Card 6 -->
+          <article class="article-card bg-tech-card rounded-xl overflow-hidden card-hover compact-card">
             <a href="/articles/algorithm-greedy.html" class="block text-decoration-none h-full">
               <div class="card-image-container">
                 <img src="/images/article-greedy-1.jpg" alt="贪心算法实践" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
               </div>
               <div class="card-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span class="bg-pink-500/20 text-pink-500 text-xs px-3 py-1 rounded-full">算法 · 贪心</span>
-                  <span class="text-gray-400 text-sm">2024-05-30</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                  <span class="bg-pink-500/20 text-pink-500 text-xs px-2 py-1 rounded-full">算法 · 贪心</span>
+                  <span class="text-gray-400 text-xs">2024-05-30</span>
                 </div>
                 <h3 class="card-title font-bold text-white">贪心算法实践：问题拆解与证明</h3>
-                <p class="text-gray-400 text-sm line-clamp-2" style="margin-bottom:0.75rem;">
+                <p class="text-gray-400 text-xs line-clamp-2" style="margin-bottom:0.5rem;">
                   通过经典问题解析贪心算法的设计思路，学习如何证明解法的正确性。
                 </p>
                 <div class="card-meta">
                   <div style="display:flex; align-items:center;">
                     <img src="/images/avatar.jpg" alt="作者头像" class="author-avatar-small">
-                    <span class="text-gray-300 ml-2">Jaychouchannel</span>
+                    <span class="text-gray-300 ml-2 text-xs">Jaychouchannel</span>
                   </div>
-                  <div class="text-gray-400"><i class="fa fa-eye mr-1"></i>490</div>
+                  <div class="text-gray-400 text-xs"><i class="fa fa-eye mr-1"></i>490</div>
                 </div>
               </div>
             </a>
@@ -298,14 +310,14 @@
 
         </div>
 
-        <!-- 分页或加载更多 -->
+        <!-- 分页 -->
         <div style="text-align:center; margin-top:2rem;">
           <a href="#" class="back-home-btn" style="padding:0.6rem 1.25rem;">加载更多文章</a>
         </div>
       </div>
     </div>
 
-    <!-- 右侧侧边栏（作者名片 + 推荐/热门/标签） -->
+    <!-- 右侧侧边栏 -->
     <aside class="sidebar">
       <!-- 个人名片 -->
       <div class="author-card">
@@ -324,30 +336,29 @@
         <a href="#" class="social-icon" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
         <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
       </div>
-    </div>
 
-    <!-- 本类别热门文章 -->
-    <div class="related-articles" style="margin-bottom:1.25rem;">
-      <h3 class="sidebar-title">本类热门</h3>
-      <ul class="related-list">
-        <li class="related-item">
-          <a href="/articles/algorithm-sort.html" class="related-link">
-            <span class="related-text">深入理解 JavaScript 排序算法：从原理到实现</span>
-          </a>
-        </li>
-        <li class="related-item">
-          <a href="/articles/algorithm-graph.html" class="related-link">
-            <span class="related-text">图论入门与实战：最短路与联通性</span>
-          </a>
-        </li>
-        <li class="related-item">
-          <a href="/articles/algorithm-dp.html" class="related-link">
-            <span class="related-text">动态规划思路拆解：转移方程与状态压缩</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </aside>
-</div>
+      <!-- 本类别热门文章 -->
+      <div class="related-articles" style="margin-bottom:1.25rem;">
+        <h3 class="sidebar-title">本类热门</h3>
+        <ul class="related-list">
+          <li class="related-item">
+            <a href="/articles/algorithm-sort.html" class="related-link">
+              <span class="related-text">深入理解 JavaScript 排序算法：从原理到实现</span>
+            </a>
+          </li>
+          <li class="related-item">
+            <a href="/articles/algorithm-graph.html" class="related-link">
+              <span class="related-text">图论入门与实战：最短路与联通性</span>
+            </a>
+          </li>
+          <li class="related-item">
+            <a href="/articles/algorithm-dp.html" class="related-link">
+              <span class="related-text">动态规划思路拆解：转移方程与状态压缩</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
 </body>
 </html>
