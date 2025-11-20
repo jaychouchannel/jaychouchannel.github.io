@@ -21,7 +21,7 @@
     .article-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.2rem; /* 减小间距，避免换行 */
+      gap: 5.0rem; /* 减小间距，避免换行 */
       margin-bottom: 2rem;
     }
     
@@ -57,7 +57,7 @@
     }
     
     .card-image-container {
-      height: 140px; /* 略缩图片高度，让卡片更紧凑 */
+      height: 100px; /* 略缩图片高度，让卡片更紧凑 */
       overflow: hidden;
     }
     
@@ -93,6 +93,56 @@
       height: 70px !important;
       margin: 0 auto 0.8rem !important;
     }
+
+    /* 移动端顶部展开菜单 */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: var(--nav-height); /* 放在导航栏下方，避免与导航重叠 */
+      left: 0;
+      right: 0;
+      background: rgba(12, 18, 28, 0.98);
+      color: #fff;
+      transform: translateY(-100%);
+      transition: transform 260ms ease;
+      z-index: 60;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      /* 限制最大高度，防止覆盖整个视口 */
+      max-height: calc(100vh - var(--nav-height));
+      overflow-y: auto;
+    }
+
+    .mobile-menu-overlay.open {
+      transform: translateY(0);
+    }
+
+    .mobile-menu-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .mobile-menu-inner a {
+      color: #e6eef8;
+      font-size: 1.05rem;
+      padding: 0.55rem 0.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .mobile-menu-inner a:hover {
+      background: rgba(59,130,246,0.08);
+      color: #fff;
+    }
+
+    /* 在较大屏幕隐藏移动菜单覆盖层 */
+    @media (min-width: 768px) {
+      .mobile-menu-overlay { display: none; }
+    }
   </style>
 </head>
 <body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
@@ -105,13 +155,13 @@
         </div>
         <div class="leading-tight">
           <div class="brand-title text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</div>
-          <div class="brand-sub text-xs text-gray-300">算法 · 前端 · 旅行</div>
+          <div class="brand-sub text-xs text-gray-300">算法 · 前端 · 旅</div>
         </div>
       </a>
 
       <div class="nav-links hidden md:flex items-center space-x-6">
         <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
-        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300 active">文章</a>
+        <a href="/#articles" class="text-tech-blue font-medium transition-colors duration-300">文章</a>
         <a href="/#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
         <a href="/#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
       </div>
@@ -130,6 +180,20 @@
       </button>
     </div>
   </nav>
+
+  <!-- 移动端顶部展开菜单（点击汉堡按钮展开/收起） -->
+  <div id="mobile-menu" class="mobile-menu-overlay" aria-hidden="true">
+    <div class="mobile-menu-inner">
+      <a href="/" class="menu-item">首页</a>
+      <a href="/articles" class="menu-item">文章</a>
+      <a href="/#categories" class="menu-item">分类</a>
+      <a href="/#about" class="menu-item">关于我</a>
+      <form role="search" action="/search" method="get" style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+        <input aria-label="搜索文章" name="q" type="search" placeholder="搜索文章..." style="flex:1; padding:0.5rem; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit;">
+        <button aria-label="搜索按钮" style="padding:0.5rem 0.75rem; border-radius:6px; background:rgba(59,130,246,0.18); border:none; color:#fff;">搜</button>
+      </form>
+    </div>
+  </div>
 
   <div id="reading-progress" aria-hidden="true"></div>
 
@@ -374,5 +438,43 @@
       </div>
     </aside>
   </div>
+    <script>
+      (function(){
+        var btn = document.getElementById('mobile-menu-button');
+        var menu = document.getElementById('mobile-menu');
+        if (!btn || !menu) return;
+        btn.addEventListener('click', function(){
+          var expanded = btn.getAttribute('aria-expanded') === 'true';
+          if (expanded) {
+            btn.setAttribute('aria-expanded','false');
+            menu.classList.remove('open');
+            menu.setAttribute('aria-hidden','true');
+          } else {
+            btn.setAttribute('aria-expanded','true');
+            menu.classList.add('open');
+            menu.setAttribute('aria-hidden','false');
+          }
+        });
+
+        // 点击菜单项后收起菜单（移动端友好）
+        menu.addEventListener('click', function(e){
+          var t = e.target;
+          if (t.tagName === 'A' || t.tagName === 'BUTTON' || t.tagName === 'INPUT') {
+            btn.setAttribute('aria-expanded','false');
+            menu.classList.remove('open');
+            menu.setAttribute('aria-hidden','true');
+          }
+        });
+
+        // 窗口尺寸变化时确保菜单状态同步
+        window.addEventListener('resize', function(){
+          if (window.innerWidth >= 768) {
+            btn.setAttribute('aria-expanded','false');
+            menu.classList.remove('open');
+            menu.setAttribute('aria-hidden','true');
+          }
+        });
+      })();
+    </script>
 </body>
 </html>

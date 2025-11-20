@@ -24,7 +24,7 @@
 
       <div class="nav-links hidden md:flex items-center space-x-6">
         <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
-        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300 active">文章</a>
+        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300">文章</a>
         <a href="/#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
         <a href="/#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
       </div>
@@ -101,11 +101,10 @@ function quickSort(arr) {
         <p>稳定，适合链表或需要稳定排序时使用，空间复杂度 O(n)。</p>
 
         <h2>复杂度对比与选择建议</h2>
-        <ul>
-          <li>小规模数据（n &lt; 50）：插入或简单的 O(n^2) 算法通常更快。</li>
-          <li>通用场景：快速排序或归并排序。</li>
-          <li>需要稳定排序且内存允许：使用归并排序。</li>
-        </ul>
+        <p>小规模数据（n &lt; 50）：插入或简单的 O(n^2) 算法通常更快。</p>
+        <p>通用场景：快速排序或归并排序。</p>
+        <p>需要稳定排序且内存允许：使用归并排序。</p>
+        
 
         <h2>示例：在真实项目中的使用</h2>
         <p>在前端列表排序、后端数据预处理等多处都会用到排序函数，推荐封装测试良好的工具函数并覆盖边界情况。</p>
@@ -127,11 +126,11 @@ function quickSort(arr) {
       <!-- 个人名片 -->
       <div class="author-card">
         <div class="author-avatar">
-          <img src="/images/avatar.jpg" alt="Jaychouchannel" class="avatar-img">
+          <img src="avatar.jpg" alt="TechVoyager" class="avatar-img">
         </div>
         <div class="author-info">
           <h3 class="author-name">Jaychouchannel</h3>
-          <p class="author-bio">前端技术探索者 | 算法爱好者</p>
+          <p class="author-bio">前端技术探索 | 算法爱好者</p>
           <a href="/" class="back-home-btn">
             <i class="fa fa-home mr-1"></i> 回到主页
           </a>
