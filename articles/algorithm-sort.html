@@ -9,22 +9,36 @@
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
-  <!-- 导航栏 -->
+  <!-- 改进后的导航栏（视觉与交互增强） -->
   <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
-    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-      <a href="/" class="flex items-center space-x-2">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
+    <div class="container nav-container mx-auto px-4 py-2 flex justify-between items-center">
+      <a href="/" class="flex items-center nav-logo space-x-3" aria-label="回到首页">
+        <div class="w-10 h-10 rounded-full nav-logo-badge flex items-center justify-center">
           <i class="fa fa-rocket text-white text-xl"></i>
         </div>
-        <span class="text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</span>
+        <div class="leading-tight">
+          <div class="brand-title text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</div>
+          <div class="brand-sub text-xs text-gray-300">算法 · 前端 · 旅行</div>
+        </div>
       </a>
-      <div class="hidden md:flex items-center space-x-6">
+
+      <div class="nav-links hidden md:flex items-center space-x-6">
         <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
-        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300">文章</a>
+        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300 active">文章</a>
         <a href="/#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
         <a href="/#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
       </div>
-      <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+
+      <div class="nav-actions hidden lg:flex items-center space-x-3">
+        <form role="search" class="nav-search" action="/search" method="get" style="display:flex; align-items:center;">
+          <input aria-label="搜索文章" name="q" type="search" placeholder="搜索文章..." class="nav-search-input" />
+          <button class="nav-search-btn" aria-label="搜索按钮"><i class="fa fa-search"></i></button>
+        </form>
+
+        <a href="/articles" class="back-home-btn" style="padding:0.45rem 0.9rem; font-size:0.9rem;">文章列表</a>
+      </div>
+
+      <button id="mobile-menu-button" class="mobile-menu-button md:hidden text-white focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
         <i class="fa fa-bars text-2xl"></i>
       </button>
     </div>
@@ -44,7 +58,7 @@
           <time datetime="2023-06-15">2023-06-15</time>
         </div>
 
-        <p>本文介绍常见排序算法（冒泡、选择、插入、归并、快速、堆排序等）的核心思想、时间与空间复杂度，并提供 JavaScript 示例以便在实际项目中使用与学习。</p>
+        <p>本文介绍常见排序算法（冒泡、选择、插入、归并、快速、堆排序等）的核心思想、时间与空间复杂度，并提供 JavaScript 示例以便在实际项目中[...]
 
         <h2>为什么排序重要</h2>
         <p>排序是计算机科学中的基础问题，合理选择排序算法可以在不同数据规模和数据分布下带来巨大性能差异。</p>

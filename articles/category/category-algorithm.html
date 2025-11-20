@@ -96,22 +96,36 @@
   </style>
 </head>
 <body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
-  <!-- 导航栏（保持一致） -->
+  <!-- 改进后的导航栏（视觉与交互增强） -->
   <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
-    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-      <a href="/" class="flex items-center space-x-2">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
+    <div class="container nav-container mx-auto px-4 py-2 flex justify-between items-center">
+      <a href="/" class="flex items-center nav-logo space-x-3" aria-label="回到首页">
+        <div class="w-10 h-10 rounded-full nav-logo-badge flex items-center justify-center">
           <i class="fa fa-rocket text-white text-xl"></i>
         </div>
-        <span class="text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</span>
+        <div class="leading-tight">
+          <div class="brand-title text-xl font-bold text-white"><span class="text-tech-blue">Jaychou</span>channel</div>
+          <div class="brand-sub text-xs text-gray-300">算法 · 前端 · 旅行</div>
+        </div>
       </a>
-      <div class="hidden md:flex items-center space-x-6">
+
+      <div class="nav-links hidden md:flex items-center space-x-6">
         <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
-        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300">文章</a>
+        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300 active">文章</a>
         <a href="/#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
         <a href="/#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
       </div>
-      <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+
+      <div class="nav-actions hidden lg:flex items-center space-x-3">
+        <form role="search" class="nav-search" action="/search" method="get" style="display:flex; align-items:center;">
+          <input aria-label="搜索文章" name="q" type="search" placeholder="搜索文章..." class="nav-search-input" />
+          <button class="nav-search-btn" aria-label="搜索按钮"><i class="fa fa-search"></i></button>
+        </form>
+
+        <a href="/about" class="back-home-btn" style="padding:0.45rem 0.9rem; font-size:0.9rem;">关于作者</a>
+      </div>
+
+      <button id="mobile-menu-button" class="mobile-menu-button md:hidden text-white focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
         <i class="fa fa-bars text-2xl"></i>
       </button>
     </div>

@@ -47,6 +47,95 @@ nav {
     height: var(--nav-height);
 }
 
+/* Enhanced navigation styles */
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Logo badge */
+.nav-logo-badge {
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-purple));
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.12);
+}
+
+/* Brand text */
+.brand-title { line-height: 1; }
+.brand-sub { opacity: 0.9; }
+
+/* Nav links region */
+.nav-links a {
+    color: var(--text-primary);
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    transition: all 0.22s ease;
+}
+.nav-links a:hover {
+    color: var(--tech-blue);
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+nav a.active {
+    color: var(--tech-blue);
+    border-bottom: 2px solid var(--tech-blue);
+    box-shadow: 0 6px 18px rgba(59,130,246,0.06);
+}
+
+/* Search area inside nav */
+.nav-search {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.03);
+    border-radius: 999px;
+    padding: 0.2rem;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+.nav-search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    padding: 0.35rem 0.6rem;
+    width: 180px;
+}
+.nav-search-input::placeholder { color: rgba(226,232,240,0.45); }
+.nav-search-btn {
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-purple));
+    color: white;
+    border: none;
+    padding: 0.45rem 0.6rem;
+    border-radius: 999px;
+    margin-right: 0.15rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mobile menu button */
+.mobile-menu-button {
+    background: linear-gradient(90deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 0.45rem 0.6rem;
+    border-radius: 10px;
+}
+
+/* Custom hover for mobile button */
+.mobile-menu-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+}
+
 /* 自定义滚动条 */
 ::-webkit-scrollbar {
     width: 8px;
@@ -121,6 +210,10 @@ nav {
     .h-48 {
         height: 240px;
     }
+
+    /* Hide large search on small screens */
+    .nav-actions { display: none !important; }
+    .nav-links { gap: 0.6rem; }
 }
 
 @media (max-width: 480px) {
