@@ -1,73 +1,166 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>深入理解 JavaScript 排序算法：从原理到实现 · Jaychouchannel</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/article.css">
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 引入 FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- 配置 Tailwind 主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tech-dark': '#0f172a',
+            'tech-card': '#1e293b',
+            'tech-blue': '#38bdf8',
+            'tech-purple': '#818cf8',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow': '0 0 15px rgba(56, 189, 248, 0.5)',
+            'nav': '0 4px 30px rgba(0, 0, 0, 0.1)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+    }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
+      background-color: #38bdf8; transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .prose h2 { margin-top: 2rem; margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700; color: #f1f5f9; border-left: 4px solid #38bdf8; padding-left: 1rem; }
+    .prose h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1.25rem; font-weight: 600; color: #e2e8f0; }
+    .prose p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+    .prose pre { background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid #334155; }
+    .prose code { font-family: monospace; color: #38bdf8; }
+    
+    .group:hover .fa-rocket {
+      transform: rotate(45deg) translate(-2px, -2px);
+      transition: transform 0.3s ease;
+    }
+  </style>
 </head>
-<body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
-  <!-- 改进后的导航栏（视觉与交互增强） -->
-  <nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
-    <div class="container nav-container mx-auto px-4 py-2 flex justify-between items-center">
-      <a href="/" class="flex items-center nav-logo space-x-3" aria-label="回到首页">
-        <div class="w-10 h-10 rounded-full nav-logo-badge flex items-center justify-center">
-          <i class="fa fa-rocket text-white text-xl"></i>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen flex flex-col">
+
+  <!-- 导航栏 -->
+  <nav class="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 lg:px-8 h-16 flex justify-between items-center">
+      <a href="/" class="group flex items-center space-x-3 focus:outline-none" aria-label="回到首页">
+        <div class="relative w-10 h-10 flex items-center justify-center">
+          <div class="absolute inset-0 bg-gradient-to-tr from-tech-blue to-tech-purple rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-300 blur-md"></div>
+          <div class="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-full flex items-center justify-center shadow-lg group-hover:border-tech-blue/50 transition-colors duration-300">
+            <i class="fa-solid fa-rocket text-tech-blue text-lg transform transition-transform"></i>
+          </div>
         </div>
-        <div class="nav-brand leading-tight">
-          <span class="brand-title"><span class="text-tech-blue">Jaychou</span>channel</span>
-          <span class="brand-sub">算法 · 前端 · 旅行</span>
+        <div class="flex flex-col">
+          <span class="text-lg font-bold tracking-tight text-white leading-none group-hover:text-tech-blue transition-colors duration-300">
+            Jaychou<span class="text-tech-blue">channel</span>
+          </span>
+          <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Tech & Algorithm</span>
         </div>
       </a>
 
-      <div class="nav-links hidden md:flex items-center space-x-6">
-        <a href="/" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
-        <a href="/articles" class="text-tech-blue font-medium transition-colors duration-300">文章</a>
-        <a href="/#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
-        <a href="/#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="/" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors py-1">首页</a>
+        <a href="/articles" class="nav-link text-sm font-medium text-tech-blue py-1">文章</a>
+        <a href="/#categories" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors py-1">分类</a>
+        <a href="/#about" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors py-1">关于我</a>
       </div>
 
-      <div class="nav-actions hidden lg:flex items-center space-x-3">
-        <form role="search" class="nav-search" action="/search" method="get" style="display:flex; align-items:center;">
-          <input aria-label="搜索文章" name="q" type="search" placeholder="搜索文章..." class="nav-search-input" />
-          <button class="nav-search-btn" aria-label="搜索按钮"><i class="fa fa-search"></i></button>
-        </form>
-
-        <a href="/articles" class="back-home-btn" style="padding:0.45rem 0.9rem; font-size:0.9rem;">文章列表</a>
+      <div class="hidden lg:flex items-center space-x-4">
+        <div class="relative group">
+          <input type="text" placeholder="搜索..." 
+                 class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-full py-1.5 pl-9 pr-4 w-40 focus:w-60 focus:border-tech-blue focus:ring-1 focus:ring-tech-blue/50 focus:bg-slate-800 transition-all duration-300 outline-none placeholder-slate-500">
+          <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-tech-blue transition-colors text-xs"></i>
+        </div>
+        <a href="https://github.com/jaychouchannel" target="_blank" class="text-slate-400 hover:text-white transition-colors">
+          <i class="fa-brands fa-github text-xl"></i>
+        </a>
       </div>
 
-      <button id="mobile-menu-button" class="mobile-menu-button md:hidden text-white focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
-        <i class="fa fa-bars text-2xl"></i>
+      <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none p-2">
+        <i class="fa-solid fa-bars text-xl"></i>
       </button>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-slate-800">
+      <div class="px-4 pt-2 pb-4 space-y-1">
+        <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">首页</a>
+        <a href="/articles" class="block px-3 py-2 rounded-md text-base font-medium text-tech-blue bg-slate-800/50">文章</a>
+        <a href="/#categories" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">分类</a>
+        <a href="/#about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">关于我</a>
+      </div>
     </div>
   </nav>
 
-  <div id="reading-progress" aria-hidden="true"></div>
+  <div id="reading-progress" class="fixed top-0 left-0 h-1 bg-tech-blue z-[60] w-0 transition-all duration-100" aria-hidden="true"></div>
 
-  <!-- 主内容区（双栏布局） -->
-  <div class="main-container">
-    <!-- 左侧文章区域 -->
-    <div class="article-wrapper">
-      <div class="article-content">
-        <h1 class="article-title">深入理解 JavaScript 排序算法：从原理到实现</h1>
-        <div class="article-meta">
-          <span>Jaychouchannel</span>
-          <span>·</span>
-          <time datetime="2023-06-15">2023-06-15</time>
-        </div>
+  <!-- 主体布局 -->
+  <div class="flex-grow pt-24 pb-12">
+    <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- 左侧文章区域 -->
+        <main class="lg:col-span-8">
+          <article class="bg-tech-card/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 md:p-10 shadow-xl">
+            <header class="mb-8 border-b border-slate-700/50 pb-8">
+              <div class="flex items-center space-x-2 text-tech-blue text-sm font-semibold mb-3">
+                <span class="bg-tech-blue/10 px-2 py-0.5 rounded text-xs uppercase tracking-wider">Algorithm</span>
+                <span class="text-slate-500">•</span>
+                <span class="text-slate-400">15 min read</span>
+              </div>
+              <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">深入理解 JavaScript 排序算法：从原理到实现</h1>
+              <div class="flex items-center text-sm text-slate-400">
+                <div class="flex items-center mr-6">
+                  <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-tech-blue to-purple-500 flex items-center justify-center mr-2 text-white text-xs font-bold">J</div>
+                  <span>Jaychouchannel</span>
+                </div>
+                <time datetime="2023-06-15" class="flex items-center">
+                  <i class="fa-regular fa-calendar mr-2"></i> 2023-06-15
+                </time>
+              </div>
+            </header>
 
-        <p>本文介绍常见排序算法（冒泡、选择、插入、归并、快速、堆排序等）的核心思想、时间与空间复杂度，并提供 JavaScript 示例以便在实际项目中[...]
+            <div class="prose prose-invert max-w-none">
+              <p class="text-lg leading-relaxed text-slate-300">
+                本文介绍常见排序算法（冒泡、选择、插入、归并、快速、堆排序等）的核心思想、时间与空间复杂度，并提供 JavaScript 示例以便在实际项目中灵活运用。
+              </p>
 
-        <h2>为什么排序重要</h2>
-        <p>排序是计算机科学中的基础问题，合理选择排序算法可以在不同数据规模和数据分布下带来巨大性能差异。</p>
+              <h2>为什么排序重要</h2>
+              <p>排序是计算机科学中的基础问题，合理选择排序算法可以在不同数据规模和数据分布下带来巨大性能差异。无论是数据库索引还是前端大量数据的展示，高效的排序都是性能优化的关键。</p>
 
-        <h2>常见排序算法简介</h2>
-        <h3>冒泡排序（Bubble Sort）</h3>
-        <p>最简单的比较排序，稳定但时间复杂度一般为 O(n^2)。</p>
+              <h2>常见排序算法简介</h2>
+              
+              <h3>1. 冒泡排序（Bubble Sort）</h3>
+              <p>最简单的比较排序，稳定但时间复杂度一般为 O(n²)。它重复地走访过要排序的元素列，依次比较两个相邻的元素。</p>
 
-        <pre><code>// 冒泡排序示例（JavaScript）
+              <pre><code class="language-javascript">// 冒泡排序示例（JavaScript）
 function bubbleSort(arr) {
   const a = arr.slice();
   for (let i = 0; i < a.length; i++) {
@@ -80,117 +173,173 @@ function bubbleSort(arr) {
   return a;
 }</code></pre>
 
-        <h3>快速排序（Quick Sort）</h3>
-        <p>通常性能非常好，平均时间复杂度 O(n log n)。</p>
+              <h3>2. 快速排序（Quick Sort）</h3>
+              <p>通常性能非常好，平均时间复杂度 O(n log n)。</p>
 
-        <pre><code>// 快速排序（递归版）
+              <pre><code class="language-javascript">// 快速排序（递归版）
 function quickSort(arr) {
   if (arr.length <= 1) return arr.slice();
   const a = arr.slice();
   const pivot = a[Math.floor(a.length / 2)];
   const left = [], right = [], equal = [];
+  
   a.forEach(v => {
     if (v < pivot) left.push(v);
     else if (v > pivot) right.push(v);
     else equal.push(v);
   });
+  
   return quickSort(left).concat(equal, quickSort(right));
 }</code></pre>
 
-        <h2>归并排序（Merge Sort）</h2>
-        <p>稳定，适合链表或需要稳定排序时使用，空间复杂度 O(n)。</p>
+              <h2>3. 归并排序（Merge Sort）</h2>
+              <p>稳定，适合链表或需要稳定排序时使用，空间复杂度 O(n)。</p>
 
-        <h2>复杂度对比与选择建议</h2>
-        <p>小规模数据（n &lt; 50）：插入或简单的 O(n^2) 算法通常更快。</p>
-        <p>通用场景：快速排序或归并排序。</p>
-        <p>需要稳定排序且内存允许：使用归并排序。</p>
-        
+              <figure class="my-8">
+                <img src="https://placehold.co/800x400/1e293b/38bdf8?text=Merge+Sort+Visualization" alt="归并排序可视化" class="rounded-lg shadow-lg border border-slate-700 w-full" onerror="this.style.display='none'">
+                <figcaption class="text-center text-sm text-slate-500 mt-2">图：归并排序的分治过程示意</figcaption>
+              </figure>
 
-        <h2>示例：在真实项目中的使用</h2>
-        <p>在前端列表排序、后端数据预处理等多处都会用到排序函数，推荐封装测试良好的工具函数并覆盖边界情况。</p>
+              <h2>复杂度对比与选择建议</h2>
+              <ul class="list-disc list-inside text-slate-300 space-y-2 mb-6">
+                <li><strong class="text-tech-blue">小规模数据（n < 50）：</strong> 插入排序或简单的 O(n²) 算法通常更快。</li>
+                <li><strong class="text-tech-blue">通用场景：</strong> 快速排序（Quick Sort）通常是首选。</li>
+              </ul>
+            </div>
 
-        <h2>总结</h2>
-        <p>掌握排序的思想、复杂度与常见实现，对于写出高质量代码非常重要。阅读并动手实现这些算法能加深理解。</p>
+            <div class="mt-10 pt-6 border-t border-slate-700/50 flex flex-wrap gap-2">
+              <a href="#" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-tech-blue text-sm rounded-full transition-colors">#算法</a>
+              <a href="#" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-tech-blue text-sm rounded-full transition-colors">#JavaScript</a>
+            </div>
+          </article>
 
-        <img src="/images/article-algorithm-1.jpg" alt="排序算法示意图" />
+          <div class="mt-8 bg-tech-card/30 border border-slate-800 rounded-2xl p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">评论</h3>
+            <div class="text-slate-500 text-sm text-center py-8">
+              Giscus 评论组件加载区域
+            </div>
+          </div>
+        </main>
 
-        <div class="article-tags" style="margin-top:1rem">
-          <a href="/articles">算法</a>
-          <a href="/articles">JavaScript</a>
-        </div>
+        <!-- 右侧侧边栏 (LG 屏幕下占 4 列) -->
+        <aside class="lg:col-span-4">
+          <!-- 
+             核心修改点：
+             创建一个内部容器，包裹所有需要固定的模块。
+             将 sticky top-24 加在这个容器上。
+          -->
+          <div class="sticky top-24 space-y-6">
+            
+            <!-- 1. 作者名片 (移除原本的 sticky) -->
+            <div class="bg-tech-card/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-lg">
+              <div class="flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-tech-blue to-purple-600 mb-4">
+                  <img src="/images/avatar.jpg" alt="Avatar" class="w-full h-full rounded-full object-cover border-2 border-slate-900">
+                </div>
+                <h3 class="text-xl font-bold text-white">Jaychouchannel</h3>
+                <p class="text-slate-400 text-sm mt-1 mb-4">前端技术探索 | 算法爱好者</p>
+                
+                <div class="flex justify-center space-x-4 mb-6">
+                  <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-tech-blue hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
+                  <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-400 hover:text-white transition-all"><i class="fa-brands fa-twitter"></i></a>
+                  <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+
+                <a href="/" class="w-full py-2 px-4 border border-slate-600 text-slate-300 rounded-lg hover:border-tech-blue hover:text-tech-blue hover:bg-tech-blue/5 transition-all text-sm font-medium">
+                  <i class="fa-solid fa-home mr-2"></i>回到主页
+                </a>
+              </div>
+            </div>
+
+            <!-- 2. 相关推荐 -->
+            <div class="bg-tech-card/30 border border-slate-800 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-white mb-4 border-l-4 border-tech-blue pl-3">相关推荐</h3>
+              <ul class="space-y-4">
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-blue transition-colors line-clamp-2">JavaScript 异步编程全解析：Promise 与 Async/Await</span>
+                    <span class="text-xs text-slate-500 mt-1 block">2023-05-20</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-blue transition-colors line-clamp-2">数据结构在前端的实践：树与图的遍历算法</span>
+                    <span class="text-xs text-slate-500 mt-1 block">2023-04-12</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-blue transition-colors line-clamp-2">深入理解 V8 引擎的垃圾回收机制</span>
+                    <span class="text-xs text-slate-500 mt-1 block">2023-03-08</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 3. 新增：教程资料 (结构同相关推荐) -->
+            <div class="bg-tech-card/30 border border-slate-800 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-white mb-4 border-l-4 border-tech-purple pl-3">教程资料</h3>
+              <ul class="space-y-4">
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-purple transition-colors">MDN Web Docs - JavaScript 教程</span>
+                    <span class="text-xs text-slate-500 mt-1 block">权威的前端开发文档</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-purple transition-colors">JavaScript.info (现代 JavaScript 教程)</span>
+                    <span class="text-xs text-slate-500 mt-1 block">内容详尽的开源教程</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-purple transition-colors">LeetCode 算法题库</span>
+                    <span class="text-xs text-slate-500 mt-1 block">算法练习与实战</span>
+                  </a>
+                </li>
+                <!-- 预留链接供填充 -->
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-400 italic group-hover:text-tech-purple transition-colors">[ 待添加更多资料链接 ]</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </div> <!-- End of sticky container -->
+        </aside>
+
       </div>
     </div>
-
-    <!-- 右侧侧边栏 -->
-    <aside class="sidebar">
-      <!-- 个人名片 -->
-      <div class="author-card">
-        <div class="author-avatar">
-          <img src="/images/avatar.jpg" alt="TechVoyager" class="avatar-img">
-        </div>
-        <div class="author-info">
-          <h3 class="author-name">Jaychouchannel</h3>
-          <p class="author-bio">前端技术探索 | 算法爱好者</p>
-          <a href="/" class="back-home-btn">
-            <i class="fa fa-home mr-1"></i> 回到主页
-          </a>
-        </div>
-        <div class="author-social">
-          <a href="#" class="social-icon"><i class="fa fa-github"></i></a>
-          <a href="#" class="social-icon"><i class="fa fa-twitter"></i></a>
-          <a href="#" class="social-icon"><i class="fa fa-linkedin"></i></a>
-        </div>
-      </div>
-
-      <!-- 相关文章 -->
-      <div class="related-articles">
-        <h3 class="sidebar-title">相关推荐</h3>
-        <ul class="related-list">
-          <li class="related-item">
-            <a href="#" class="related-link">
-              <span class="related-text">JavaScript 异步编程全解析</span>
-            </a>
-          </li>
-          <li class="related-item">
-            <a href="#" class="related-link">
-              <span class="related-text">数据结构在前端的实践：树与图</span>
-            </a>
-          </li>
-          <li class="related-item">
-            <a href="#" class="related-link">
-              <span class="related-text">深入理解 V8 引擎的垃圾回收机制</span>
-            </a>
-          </li>
-          <li class="related-item">
-            <a href="#" class="related-link">
-              <span class="related-text">前端性能优化：从理论到实践</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </aside>
   </div>
 
-  <footer class="bg-tech-dark py-12 border-t border-tech-blue/20 mt-12">
-    <div class="container mx-auto px-4 text-center text-gray-500">&copy; 2025 Jaychouchannel. 保留所有权利。</div>
+  <footer class="bg-slate-900 border-t border-slate-800 mt-auto">
+    <div class="container mx-auto px-4 py-10 text-center">
+      <p class="text-slate-500 text-sm">&copy; 2025 Jaychouchannel. 保留所有权利。</p>
+    </div>
   </footer>
 
-  <script src="/js/article.js" defer></script>
-  <script src="https://giscus.app/client.js"
-        data-repo="jaychouchannel/jaychouchannel.github.io"
-        data-repo-id="R_kgDOQYkrvg"
-        data-category="[在此输入分类名]"
-        data-category-id="[在此输入分类 ID]"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
-  
+  <script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const icon = btn.querySelector('i');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+      if (menu.classList.contains('hidden')) {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      } else {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      }
+    });
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      document.getElementById('reading-progress').style.width = scrolled + '%';
+    });
+  </script>
 </body>
 </html>
