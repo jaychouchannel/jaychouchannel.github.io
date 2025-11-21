@@ -73,10 +73,14 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.45); /* 轻微阴影增强悬浮感 */
 }
 
-.avatar-img {
+/* 确保 author-avatar 容器内的 img 完全填充并裁切为圆形 */
+.author-avatar > img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
 }
 
 /* 小尺寸头像（用于列表、卡片内） */
@@ -87,6 +91,7 @@
   overflow: hidden;
   display: inline-block;
   vertical-align: middle;
+  object-fit: cover; /* 保证图片裁切并居中填充 */
 }
 
 .author-name {
