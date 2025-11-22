@@ -1,19 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaychouchannel | Welcome to my channel!</title>
+    <title>Jaychou Channel | 探索技术与生活的边界</title>
+    
     <!-- 外部资源 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    
-    <!-- 自定义样式 -->
-    <link rel="stylesheet" href="/css/style.css">
     
     <!-- Tailwind 配置 -->
     <script>
@@ -21,652 +17,470 @@
             theme: {
                 extend: {
                     colors: {
-                        'tech-blue': '#00f0ff',
-                        'tech-purple': '#9d00ff',
-                        'tech-dark': '#0a0a1a',
-                        'tech-card': '#121229',
-                        'tech-hover': '#1e1e42'
+                        'tech-dark': '#0f172a',  // 页面主背景
+                        'tech-card': '#1e293b',  // 卡片背景
+                        'tech-blue': '#38bdf8',  // 主色调 (天蓝)
+                        'tech-purple': '#818cf8', // 辅助色 (靛蓝)
+                        'tech-green': '#34d399',  // 随笔色 (青绿)
+                        'tech-yellow': '#fbbf24', // 工具色 (琥珀)
                     },
                     fontFamily: {
                         'sans': ['Inter', 'system-ui', 'sans-serif'],
-                        'mono': ['Fira Code', 'monospace']
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(56, 189, 248, 0.3)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
                     },
                     animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite'
+                        'float': 'float 6s ease-in-out infinite',
+                        'blob': 'blob 7s infinite',
+                        'spin-slow': 'spin 8s linear infinite',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' }
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
                         }
                     }
                 }
             }
         }
     </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+        }
+
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
+            background-color: #38bdf8; transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* 卡片样式 */
+        .category-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.3);
+        }
+        .category-card img {
+            transition: transform 0.5s ease;
+        }
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+        .category-overlay {
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.2));
+        }
+
+        /* CD 唱片特定样式 */
+        .cd-disk {
+            background: conic-gradient(
+                #333 0%, #555 10%, #333 20%, 
+                #222 40%, #444 50%, #222 60%, 
+                #333 80%, #555 90%, #333 100%
+            );
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.1);
+        }
+        .cd-disk::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            pointer-events: none;
+        }
+        .paused { animation-play-state: paused !important; }
+
+        /* 进度条样式 */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            background: #38bdf8;
+            cursor: pointer;
+            margin-top: -4px; 
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            cursor: pointer;
+            background: #475569;
+            border-radius: 1px;
+        }
+    </style>
 </head>
-<body class="bg-tech-dark text-gray-200 font-sans min-h-screen">
-    <!-- Canvas Background -->
-    <canvas id="bg-canvas"></canvas>
-    
-<!-- Navigation -->
-<nav class="fixed top-0 left-0 w-full z-50 glass-effect border-b border-tech-blue/30">
-    <div class="container mx-auto px-4 py-2 flex justify-between items-center"> <!-- 减小py值从3到2，让导航栏更紧凑 -->
-        <a href="#" class="flex items-center space-x-2">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
-                <i class="fa fa-rocket text-white text-xl"></i>
+<body class="bg-tech-dark text-slate-200 font-sans min-h-screen selection:bg-tech-blue selection:text-white overflow-x-hidden">
+
+    <!-- 背景装饰光斑 -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-tech-blue/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-tech-purple/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 lg:px-8 h-16 flex justify-between items-center">
+            <a href="#" class="group flex items-center space-x-3 focus:outline-none">
+                <div class="relative w-9 h-9 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-tech-blue to-tech-purple rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-300 blur-md"></div>
+                    <div class="relative w-full h-full bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center shadow-lg group-hover:border-tech-blue/50 transition-colors duration-300">
+                        <i class="fa-solid fa-rocket text-tech-blue text-sm transform group-hover:rotate-45 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <span class="text-lg font-bold tracking-tight text-white">
+                    Jaychou<span class="text-tech-blue">channel</span>
+                </span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">首页</a>
+                <a href="#categories" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">分类</a>
+                <a href="#articles" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">文章</a>
+                <a href="#about" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">关于我</a>
             </div>
-            <span class="text-xl font-bold text-white">
-                <span class="text-tech-blue">Jaychou</span>channel
-            </span>
-        </a>
-        
-        <!-- 丰富的桌面导航 -->
-        <div class="hidden md:flex items-center space-x-6"> <!-- 减小间距从8到6 -->
-            <a href="#home" class="text-white hover:text-tech-blue transition-colors duration-300">首页</a>
-            <a href="#articles" class="text-white hover:text-tech-blue transition-colors duration-300">文章</a>
-            <a href="#featured" class="text-white hover:text-tech-blue transition-colors duration-300">热门</a> <!-- 新增 -->
-            <a href="#categories" class="text-white hover:text-tech-blue transition-colors duration-300">分类</a>
-            <a href="#tags" class="text-white hover:text-tech-blue transition-colors duration-300">标签</a> <!-- 新增 -->
-            <a href="#resources" class="text-white hover:text-tech-blue transition-colors duration-300">资源</a> <!-- 新增 -->
-            <a href="#about" class="text-white hover:text-tech-blue transition-colors duration-300">关于我</a>
-            <div class="relative">
-                <input type="text" placeholder="搜索文章..." class="bg-tech-card border border-tech-blue/30 rounded-full py-1 px-4 text-sm focus:outline-none focus:border-tech-blue w-40"> <!-- 减小宽度从48到40 -->
-                <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-tech-blue">
-                    <i class="fa fa-search"></i>
+
+            <div class="flex items-center space-x-4">
+                <div class="hidden lg:block relative group">
+                    <input type="text" placeholder="搜索..." class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-full py-1.5 pl-9 pr-4 w-32 focus:w-48 transition-all duration-300 outline-none focus:border-tech-blue focus:ring-1 focus:ring-tech-blue/30">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
-        
-        <!-- Mobile Menu Button -->
-        <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-            <i class="fa fa-bars text-2xl"></i>
-        </button>
-    </div>
-</nav>
 
-<!-- 丰富的移动端菜单 -->
-<div id="mobile-menu" class="mobile-menu fixed top-0 left-0 h-full w-4/5 max-w-xs bg-tech-card z-50 shadow-lg">
-    <div class="p-4 border-b border-tech-blue/30 flex justify-between items-center">
-        <span class="text-xl font-bold text-white">
-            <span class="text-tech-blue">Jaychou</span>channel
-        </span>
-        <button id="close-menu-button" class="text-white focus:outline-none">
-            <i class="fa fa-times text-2xl"></i>
-        </button>
-    </div>
-    <div class="p-4 flex flex-col space-y-4">
-        <a href="#home" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">首页</a>
-        <a href="#articles" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">文章</a>
-        <a href="#featured" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">热门</a> <!-- 新增 -->
-        <a href="#categories" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">分类</a>
-        <a href="#tags" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">标签</a> <!-- 新增 -->
-        <a href="#resources" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">资源</a> <!-- 新增 -->
-        <a href="#about" class="text-white hover:text-tech-blue transition-colors duration-300 py-2 border-b border-gray-800">关于我</a>
-        <div class="relative mt-4">
-            <input type="text" placeholder="搜索文章..." class="bg-tech-dark border border-tech-blue/30 rounded-full py-2 px-4 text-sm focus:outline-none focus:border-tech-blue w-full">
-            <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-tech-blue">
-                <i class="fa fa-search"></i>
-            </button>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 absolute w-full left-0 top-16 z-40">
+            <div class="px-4 py-4 space-y-2">
+                <a href="#home" class="block px-3 py-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white">首页</a>
+                <a href="#categories" class="block px-3 py-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white">分类</a>
+                <a href="#articles" class="block px-3 py-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white">文章</a>
+                <a href="#about" class="block px-3 py-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-white">关于我</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================ -->
+    <!-- CD 播放器 (右上角, 左盘右控) -->
+    <!-- ============================ -->
+    <div id="cd-player" class="fixed top-20 right-4 md:right-8 z-40 flex flex-row items-center gap-4 transition-all duration-300 hover:translate-y-1 p-2 rounded-xl">
+        
+        <!-- 1. 左边：CD 唱片主体 -->
+        <div id="cd-disc-container" class="relative w-24 h-24 cd-disk shadow-lg animate-spin-slow paused flex-shrink-0 cursor-pointer group border-2 border-slate-700/50" title="点击播放/暂停">
+            <img id="cd-cover" src="https://placehold.co/200x200/111/FFF?text=Music" class="absolute inset-[15%] w-[70%] h-[70%] rounded-full object-cover opacity-90 hover:opacity-100 transition-opacity" alt="Album Art">
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="w-4 h-4 bg-slate-900 rounded-full border-2 border-slate-600 z-10"></div> 
+            </div>
+        </div>
+        
+        <!-- 2. 右边：控制条 + 进度条 -->
+        <div class="bg-slate-800/90 backdrop-blur-md border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex flex-col gap-2 min-w-[160px]">
+            <!-- 歌曲信息 -->
+            <div class="flex justify-between items-baseline mb-1">
+                <div class="text-xs text-white font-bold truncate w-24" id="song-title">Jaychou's Mix</div>
+                <div class="text-[10px] text-tech-blue animate-pulse" id="play-status">PAUSED</div>
+            </div>
+
+            <!-- 进度条 (视觉装饰) -->
+            <div class="w-full h-1 bg-slate-600 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-tech-blue to-tech-purple w-1/3 transition-all duration-1000"></div>
+            </div>
+            
+            <!-- 控制按钮 -->
+            <div class="flex items-center justify-center gap-4 text-slate-300 mt-1">
+                <button id="prev-btn" class="hover:text-white text-sm"><i class="fa-solid fa-backward-step"></i></button>
+                <button id="play-btn" class="w-8 h-8 rounded-full bg-tech-blue text-white flex items-center justify-center hover:bg-blue-400 shadow-lg transition-transform hover:scale-105">
+                    <i class="fa-solid fa-play text-xs ml-0.5"></i>
+                </button>
+                <button id="next-btn" class="hover:text-white text-sm"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+
+            <!-- 音频标签 -->
+            <audio id="audio-element" src="/music/2.flac" preload="none"></audio>
         </div>
     </div>
-</div>
-    
-    <!-- Author Banner -->
-    <section class="bg-tech-card border-b border-tech-blue/30 py-6">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <div class="flex items-center mb-4 md:mb-0">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple p-0.5 mr-4">
-                        <img src="/images/avatar.jpg" 
-                             alt="TechVoyager" 
-                             class="w-full h-full object-cover rounded-full">
+
+
+    <!-- Hero 区域 -->
+    <section id="home" class="relative min-h-[90vh] flex items-center pt-20 pb-10 overflow-hidden">
+        <div class="container mx-auto px-4 lg:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <!-- 文字区 -->
+                <div class="lg:w-1/2 text-center lg:text-left" data-aos="fade-right">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full border border-tech-blue/30 bg-tech-blue/10 text-tech-blue text-xs font-semibold mb-6 animate-pulse">
+                        <span class="w-2 h-2 rounded-full bg-tech-blue mr-2"></span> Hello, World!
                     </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-white">Jaychouchannel</h2>
-                        <p class="text-tech-blue">全栈开发者 | 技术分享者 | 软件工程在读</p>
+                    <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+                        用代码构建<br>
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-tech-blue to-tech-purple">未来的想象力</span>
+                    </h1>
+                    <p class="text-lg text-slate-400 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                        这里是 Jaychouchannel。我专注于分享高质量的算法解析、前沿技术栈实践，以及那些代码之外的随笔与思考。
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="#categories" class="px-8 py-3 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple text-white font-semibold shadow-lg hover:shadow-tech-blue/40 transition-all hover:-translate-y-1">
+                            开始探索
+                        </a>
+                        <a href="#about" class="px-8 py-3 rounded-full border border-slate-600 text-slate-300 hover:text-white hover:border-tech-blue hover:bg-tech-blue/5 transition-all">
+                            关于博主
+                        </a>
                     </div>
                 </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                        <i class="fa fa-github text-white"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                        <i class="fa fa-twitter text-white"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                        <i class="fa fa-linkedin text-white"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-tech-dark flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                        <i class="fa fa-instagram text-white"></i>
-                    </a>
+                <!-- 视觉区 -->
+                <div class="lg:w-1/2 relative" data-aos="fade-left">
+                    <div class="relative w-full max-w-md mx-auto aspect-square animate-float">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-tech-blue to-tech-purple rounded-full blur-[80px] opacity-20"></div>
+                        <img src="https://placehold.co/600x600/1e293b/38bdf8?text=Coding+Space" alt="Hero" class="relative z-10 w-full h-full object-cover rounded-3xl border border-slate-700/50 shadow-2xl">
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-<!-- Home Section -->
-<section id="home" class="relative min-h-[80vh] flex items-center pt-8"> <!-- 减小pt从16到8，min-h从100vh到80vh -->
-    <div class="container mx-auto px-4 py-8"> <!-- 减小py从16到8 -->
-        <div class="flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-6 md:mb-0" data-aos="fade-right" data-aos-duration="1000"> <!-- 减小mb从10到6 -->
-                <div class="inline-block bg-tech-blue/10 text-tech-blue px-4 py-1 rounded-full text-sm font-medium mb-3"> <!-- 减小mb从4到3 -->
-                    个人博客
-                </div>
-                <h1 class="text-3xl md:text-5xl font-bold mb-4"> <!-- 减小字体大小和mb -->
-                    <span class="text-white">你好，我是</span>
-                    <span class="text-tech-blue text-glow">Jaychouchannel</span>
-                </h1>
-                <p class="text-lg mb-6 text-gray-300 max-w-lg"> <!-- 减小字体大小和mb -->
-                    欢迎来到我的个人博客！分享算法、开发经验、工具推荐与旅行见闻。
-                </p>
-                <div class="flex flex-wrap gap-3"> <!-- 减小gap从4到3 -->
-                    <a href="#articles" class="bg-gradient-to-r from-tech-blue to-tech-purple text-white px-6 py-2 rounded-full font-medium hover:opacity-90 transition-opacity duration-300 border-glow"> <!-- 减小按钮尺寸 -->
-                        浏览文章
-                    </a>
-                    <a href="#about" class="bg-transparent border border-tech-blue text-tech-blue px-6 py-2 rounded-full font-medium hover:bg-tech-blue/10 transition-colors duration-300"> <!-- 减小按钮尺寸 -->
-                        了解更多
-                    </a>
-                </div>
-            </div>
-            <div class="md:w-1/2 flex justify-center" data-aos="fade-left" data-aos-duration="1000">
-                <div class="relative w-full max-w-sm"> <!-- 减小图片容器大小 -->
-                    <div class="absolute inset-0 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
-                    <img src="/images/hero-image.jpg" 
-                         alt="编程与旅行" 
-                         class="relative z-10 rounded-lg shadow-2xl animate-float">
-                </div>
-            </div>
-        </div>
-        
-        <!-- Stats 统计区域上移 -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200"> <!-- 减小gap和mt -->
-            <!-- 统计内容保持不变 -->
-            <div class="bg-tech-card p-4 rounded-lg border border-tech-blue/20 text-center"> <!-- 减小p从6到4 -->
-                <div class="text-3xl font-bold text-tech-blue mb-1 counter" data-target="120">0</div> <!-- 减小字体和mb -->
-                <div class="text-gray-400 text-sm">发布文章</div> <!-- 减小字体 -->
-            </div>
-            <div class="bg-tech-card p-4 rounded-lg border border-tech-blue/20 text-center">
-                <div class="text-3xl font-bold text-tech-blue mb-1 counter" data-target="25">0</div>
-                <div class="text-gray-400 text-sm">技术分类</div>
-            </div>
-            <div class="bg-tech-card p-4 rounded-lg border border-tech-blue/20 text-center">
-                <div class="text-3xl font-bold text-tech-blue mb-1 counter" data-target="18">0</div>
-                <div class="text-gray-400 text-sm">旅行目的地</div>
-            </div>
-            <div class="bg-tech-card p-4 rounded-lg border border-tech-blue/20 text-center">
-                <div class="text-3xl font-bold text-tech-blue mb-1 counter" data-target="5000">0</div>
-                <div class="text-gray-400 text-sm">网站访问量</div>
-            </div>
-        </div>
-    </div>
-</section>
-    
-    <!-- Categories Section -->
-    <section id="categories" class="py-20 bg-tech-card/30">
-        <div class="container mx-auto px-4">
+
+    <!-- 分类推荐 (重点修改区域) -->
+    <section id="categories" class="py-20 relative bg-slate-900/50">
+        <div class="container mx-auto px-4 lg:px-8">
             <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">
-                    <span class="text-tech-blue">内容</span>分类
-                </h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">
-                    探索不同领域的知识与经验分享，从技术到旅行，从工具到生活。
-                </p>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">内容分类</h2>
+                <p class="text-slate-400 mt-2">四大核心板块，满足你的不同需求</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Algorithm Category -->
-                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/category/category-algorithm.jpg" 
-                             alt="算法分享" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 rounded-full bg-tech-blue/20 flex items-center justify-center mr-3">
-                                <i class="fa fa-code text-tech-blue"></i>
-                            </div>
-                            <h3 class="text-xl font-bold">算法分享</h3>
-                        </div>
-                        <p class="text-gray-400 mb-4">
-                            深入探讨各种算法原理与实现，从基础到高级，帮助你提升编程思维能力。
-                        </p>
-                        <a href="/articles/category/category-algorithm.html" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
-                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Frontend & Backend Category -->
-                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="200">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/category/category-tech.jpg" 
-                             alt="前后端分享" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 rounded-full bg-tech-purple/20 flex items-center justify-center mr-3">
-                                <i class="fa fa-server text-tech-purple"></i>
-                            </div>
-                            <h3 class="text-xl font-bold">技术栈分享</h3>
-                        </div>
-                        <p class="text-gray-400 mb-4">
-                            分享前后端开发技术、框架使用经验、性能优化技巧和最佳实践。
-                        </p>
-                        <a href="/articles/category/category-tech.html" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
-                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-                
 
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <!-- Tools Category -->
-                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="400">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/category/category-tools.jpg" 
-                             alt="开发工具分享" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                <!-- 1. 算法 -->
+                <a href="/articles/category/category-algorithm.html" class="category-card group block h-64 bg-slate-800" data-aos="fade-up" data-aos-delay="100">
+                    <!-- 背景图片 -->
+                    <img src="https://placehold.co/400x600/1e293b/38bdf8?text=Algorithm" alt="Algorithm" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80">
+                    <!-- 遮罩与内容 -->
+                    <div class="absolute inset-0 category-overlay flex flex-col justify-end p-6">
+                        <div class="w-10 h-10 rounded-lg bg-tech-blue text-white flex items-center justify-center mb-3 shadow-lg">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">算法</h3>
+                        <p class="text-xs text-slate-300 line-clamp-2">排序、图论、动态规划，深入底层逻辑。</p>
+                    </div>
+                </a>
+
+                <!-- 2. 技术栈 -->
+                <a href="#" class="category-card group block h-64 bg-slate-800" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://placehold.co/400x600/1e293b/818cf8?text=Tech+Stack" alt="Tech Stack" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80">
+                    <div class="absolute inset-0 category-overlay flex flex-col justify-end p-6">
+                        <div class="w-10 h-10 rounded-lg bg-tech-purple text-white flex items-center justify-center mb-3 shadow-lg">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">技术栈</h3>
+                        <p class="text-xs text-slate-300 line-clamp-2">前端框架、后端架构、数据库实战经验。</p>
+                    </div>
+                </a>
+
+                <!-- 3. 工具 -->
+                <a href="#" class="category-card group block h-64 bg-slate-800" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://placehold.co/400x600/1e293b/fbbf24?text=Tools" alt="Tools" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80">
+                    <div class="absolute inset-0 category-overlay flex flex-col justify-end p-6">
+                        <div class="w-10 h-10 rounded-lg bg-tech-yellow text-white flex items-center justify-center mb-3 shadow-lg">
+                            <i class="fa-solid fa-wrench"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">工具</h3>
+                        <p class="text-xs text-slate-300 line-clamp-2">提升效率的开发神器与工作流配置。</p>
+                    </div>
+                </a>
+
+                <!-- 4. 随笔 -->
+                <a href="#" class="category-card group block h-64 bg-slate-800" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://placehold.co/400x600/1e293b/34d399?text=Essays" alt="Essays" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80">
+                    <div class="absolute inset-0 category-overlay flex flex-col justify-end p-6">
+                        <div class="w-10 h-10 rounded-lg bg-tech-green text-white flex items-center justify-center mb-3 shadow-lg">
+                            <i class="fa-solid fa-feather"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">随笔</h3>
+                        <p class="text-xs text-slate-300 line-clamp-2">生活感悟、旅行见闻与非技术类思考。</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+    <!-- 精选文章 -->
+    <section id="articles" class="py-20 bg-tech-card/30">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2">精选文章</h2>
+                    <p class="text-slate-400 text-sm">近期发布的深度好文</p>
+                </div>
+                <a href="#" class="text-tech-blue text-sm hover:underline">查看全部 <i class="fa-solid fa-arrow-right ml-1"></i></a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <article class="tech-card rounded-2xl overflow-hidden group" data-aos="fade-up">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="/images/article-algorithm-1.jpg" alt="Sort" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/600x400/1e293b/38bdf8?text=Algorithm'">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-slate-900/80 backdrop-blur text-tech-blue text-xs px-2 py-1 rounded border border-tech-blue/20">算法</span>
+                        </div>
                     </div>
                     <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
-                                <i class="fa fa-wrench text-yellow-500"></i>
-                            </div>
-                            <h3 class="text-xl font-bold">开发工具分享</h3>
+                        <div class="text-xs text-slate-500 mb-3">2023-06-15 · 1.2k 阅读</div>
+                        <h3 class="text-lg font-bold text-white mb-3 group-hover:text-tech-blue transition-colors line-clamp-2">深入理解 JavaScript 排序算法：从原理到实现</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">详细介绍了常见的排序算法原理、时间复杂度分析以及在 JavaScript 中的实现方式。</p>
+                        <a href="/articles/algorithm-sort.html" class="text-sm text-white hover:text-tech-blue font-medium">阅读全文</a>
+                    </div>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="tech-card rounded-2xl overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="/images/article-tech-1.jpg" alt="Arch" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/600x400/1e293b/818cf8?text=Architecture'">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-slate-900/80 backdrop-blur text-tech-purple text-xs px-2 py-1 rounded border border-tech-purple/20">架构</span>
                         </div>
-                        <p class="text-gray-400 mb-4">
-                            介绍各种提高开发效率的工具、插件和工作流，让编程更加轻松愉快。
-                        </p>
-                        <a href="/articles/category/category-tools.html" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
-                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
-                        </a>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-slate-500 mb-3">2023-07-22 · 1.8k 阅读</div>
+                        <h3 class="text-lg font-bold text-white mb-3 group-hover:text-tech-purple transition-colors line-clamp-2">前后端分离架构实践：从理论到项目落地</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">探讨前后端分离架构的优势、挑战以及最佳实践，结合实际项目案例分享。</p>
+                        <a href="#" class="text-sm text-white hover:text-tech-purple font-medium">阅读全文</a>
+                    </div>
+                </article>
+
+                <!-- Article 3 -->
+                <article class="tech-card rounded-2xl overflow-hidden group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="/images/article-travel-1.jpg" alt="Travel" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/600x400/1e293b/22c55e?text=Swiss+Alps'">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-slate-900/80 backdrop-blur text-green-500 text-xs px-2 py-1 rounded border border-green-500/20">旅行</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-slate-500 mb-3">2023-08-10 · 956 阅读</div>
+                        <h3 class="text-lg font-bold text-white mb-3 group-hover:text-green-500 transition-colors line-clamp-2">瑞士阿尔卑斯山之旅：徒步与编程的完美结合</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">记录在瑞士阿尔卑斯山的徒步旅行经历，分享如何在旅途中保持创造性思维。</p>
+                        <a href="#" class="text-sm text-white hover:text-green-500 font-medium">阅读全文</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 关于我 -->
+    <section id="about" class="py-20">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-3xl p-8 lg:p-12 flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/3 flex justify-center">
+                    <div class="relative w-48 h-48">
+                        <img src="https://placehold.co/300x300/1e293b/ffffff?text=Jaychou" alt="Avatar" class="relative z-10 w-full h-full rounded-full object-cover border-4 border-slate-700 shadow-2xl">
                     </div>
                 </div>
-
-                                <!-- Travel Category -->
-                <div class="bg-tech-card rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="300">
-                    <div class="h-48 overflow-hidden">
-                        <img src="/images/category/category-travel.jpg" 
-                             alt="旅行分享" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
-                                <i class="fa fa-plane text-green-500"></i>
-                            </div>
-                            <h3 class="text-xl font-bold">旅行分享</h3>
-                        </div>
-                        <p class="text-gray-400 mb-4">
-                            记录旅途中的美景与人文，分享旅行攻略、摄影技巧和心得体会。
-                        </p>
-                        <a href="/articles/category/category-travel.html" class="text-tech-blue hover:text-tech-purple transition-colors duration-300 flex items-center">
-                            浏览文章 <i class="fa fa-arrow-right ml-2"></i>
-                        </a>
+                <div class="md:w-2/3 text-center md:text-left">
+                    <h2 class="text-3xl font-bold text-white mb-4">关于 <span class="text-tech-blue">Jaychouchannel</span></h2>
+                    <p class="text-slate-300 mb-6 leading-relaxed">
+                        我是一名热衷于探索新技术的开发者。在这个频道，我记录成长的足迹，分享踩过的坑，也希望能结识更多志同道合的朋友。
+                    </p>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-tech-blue hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-blue-400 hover:text-white transition-all"><i class="fa-brands fa-twitter"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- Featured Articles Section (cards are clickable links to article pages) -->
-<section id="articles" class="py-20">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold" data-aos="fade-right">
-                <span class="text-tech-blue">精选</span>文章
-            </h2>
-            <div class="flex space-x-2" data-aos="fade-left">
-                <button class="category-filter active px-4 py-2 rounded-full bg-tech-blue text-white text-sm" data-category="all">
-                    全部
-                </button>
-                <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="algorithm">
-                    算法
-                </button>
-                <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="tech">
-                    技术栈
-                </button>
-                <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="tools">
-                    工具
-                </button>
-                <button class="category-filter px-4 py-2 rounded-full bg-tech-card text-gray-300 text-sm hover:bg-tech-hover transition-colors duration-300" data-category="travel">
-                    旅行
-                </button>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Article 1 -->
-            <a href="/articles/algorithm-sort.html" class="article-card bg-tech-card rounded-xl overflow-hidden card-hover block" data-category="algorithm" data-aos="fade-up" data-aos-delay="100">
-                <div class="h-48 overflow-hidden">
-                    <img src="/images/article-algorithm-1.jpg" 
-                         alt="深入理解JavaScript排序算法" 
-                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center mb-3">
-                        <span class="bg-tech-blue/20 text-tech-blue text-xs px-3 py-1 rounded-full">算法</span>
-                        <span class="text-gray-400 text-sm ml-auto">2023-06-15</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300 text-white">
-                        深入理解JavaScript排序算法：从原理到实现
-                    </h3>
-                    <p class="text-gray-400 mb-4 line-clamp-3">
-                        本文详细介绍了常见的排序算法原理、时间复杂度分析以及在JavaScript中的实现方式，帮助开发者深入理解排序算法的工作机制。
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <img src="/images/avatar.jpg" 
-                                 alt="作者头像" 
-                                 class="w-8 h-8 rounded-full object-cover">
-                            <span class="text-sm text-gray-300 ml-2">Jaychouchannel</span>
-                        </div>
-                        <div class="flex items-center text-gray-400 text-sm">
-                            <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.2k</span>
-                            <span><i class="fa fa-comment mr-1"></i> 24</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Article 2 -->
-            <a href="/articles/tech-architecture.html" class="article-card bg-tech-card rounded-xl overflow-hidden card-hover block" data-category="tech" data-aos="fade-up" data-aos-delay="200">
-                <div class="h-48 overflow-hidden">
-                    <img src="/images/article-tech-1.jpg" 
-                         alt="前后端分离架构实践" 
-                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center mb-3">
-                        <span class="bg-tech-purple/20 text-tech-purple text-xs px-3 py-1 rounded-full">技术</span>
-                        <span class="text-gray-400 text-sm ml-auto">2023-07-22</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300 text-white">
-                        前后端分离架构实践：从理论到项目落地
-                    </h3>
-                    <p class="text-gray-400 mb-4 line-clamp-3">
-                        探讨前后端分离架构的优势、挑战以及最佳实践，结合实际项目案例，分享如何构建高性能、可维护的前后端分离应用。
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <img src="/images/avatar.jpg" 
-                                 alt="作者头像" 
-                                 class="w-8 h-8 rounded-full object-cover">
-                            <span class="text-sm text-gray-300 ml-2">Jaychouchannel</span>
-                        </div>
-                        <div class="flex items-center text-gray-400 text-sm">
-                            <span class="mr-4"><i class="fa fa-eye mr-1"></i> 1.8k</span>
-                            <span><i class="fa fa-comment mr-1"></i> 36</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            
-            <!-- Article 3 -->
-            <a href="/articles/travel-swiss-alps.html" class="article-card bg-tech-card rounded-xl overflow-hidden card-hover block" data-category="travel" data-aos="fade-up" data-aos-delay="300">
-                <div class="h-48 overflow-hidden">
-                    <img src="/images/article-travel-1.jpg" 
-                         alt="瑞士阿尔卑斯山之旅" 
-                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center mb-3">
-                        <span class="bg-green-500/20 text-green-500 text-xs px-3 py-1 rounded-full">旅行</span>
-                        <span class="text-gray-400 text-sm ml-auto">2023-08-10</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 hover:text-tech-blue transition-colors duration-300 text-white">
-                        瑞士阿尔卑斯山之旅：徒步与编程的完美结合
-                    </h3>
-                    <p class="text-gray-400 mb-4 line-clamp-3">
-                        记录在瑞士阿尔卑斯山的徒步旅行经历，分享如何在旅途中保持编程学习，以及大自然如何启发创造性思维。
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <img src="/images/avatar.jpg" 
-                                 alt="作者头像" 
-                                 class="w-8 h-8 rounded-full object-cover">
-                            <span class="text-sm text-gray-300 ml-2">Jaychouchannel</span>
-                        </div>
-                        <div class="flex items-center text-gray-400 text-sm">
-                            <span class="mr-4"><i class="fa fa-eye mr-1"></i> 956</span>
-                            <span><i class="fa fa-comment mr-1"></i> 18</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
 
-            <!-- 更多文章卡片以相同模式继续（确保 href 指向相应的 /articles/... 页面） -->
-        </div>
-        
-        <div class="text-center mt-12">
-            <a href="#" class="inline-block bg-tech-card hover:bg-tech-hover text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 border border-tech-blue/30">
-                加载更多文章
-            </a>
-        </div>
-    </div>
-</section>
-    
-    <!-- About Section -->
-    <section id="about" class="py-20 bg-tech-card/30">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/3 mb-10 md:mb-0" data-aos="fade-right">
-                    <div class="relative w-64 h-64 mx-auto">
-                        <div class="absolute inset-0 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
-                        <img src="/images/avatar.jpg" 
-                             alt="TechVoyager" 
-                             class="relative z-10 w-full h-full object-cover rounded-full border-4 border-tech-blue">
-                    </div>
-                </div>
-                <div class="md:w-2/3 md:pl-16" data-aos="fade-left">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-6">
-                        关于 <span class="text-tech-blue">Jaychouchannel</span>
-                    </h2>
-                    <p class="text-gray-300 mb-6 text-lg">
-                        你好！我是Jaychouchannel，一名热爱技术与旅行的全栈开发者。我热衷于探索新技术，分享编程心得，同时也喜欢游历世界各地，记录旅途中的美好时光。
-                    </p>
-                    <p class="text-gray-300 mb-8 text-lg">
-                        在这个博客中，我将分享算法学习笔记、前后端开发经验、开发工具推荐，以及旅行见闻和摄影作品。希望通过这些内容，能够与更多志同道合的朋友交流学习，共同成长。
-                    </p>
-                    
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold mb-4 text-tech-purple">技能栈</h3>
-                        <div class="flex flex-wrap gap-3">
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">JavaScript</span>
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">TypeScript</span>
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">React</span>
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Node.js</span>
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Python</span>
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Docker</span>
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">MongoDB</span>
-                            <span class="bg-tech-card px-4 py-2 rounded-full text-sm border border-tech-blue/30">Git</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                            <i class="fa fa-github text-white"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                            <i class="fa fa-twitter text-white"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                            <i class="fa fa-linkedin text-white"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-tech-card flex items-center justify-center hover:bg-tech-blue transition-colors duration-300">
-                            <i class="fa fa-instagram text-white"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Newsletter Section -->
-    <section class="py-20 bg-gradient-to-r from-tech-dark to-tech-card">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
-                <h2 class="text-3xl font-bold mb-6">
-                    订阅 <span class="text-tech-blue">技术周刊</span>
-                </h2>
-                <p class="text-gray-300 mb-8">
-                    每周收到精选技术文章、开发工具推荐和旅行故事，不错过任何精彩内容。
-                </p>
-                <form class="flex flex-col sm:flex-row gap-4">
-                    <input type="email" placeholder="输入你的邮箱地址" class="flex-1 bg-tech-dark border border-tech-blue/30 rounded-full py-3 px-6 text-white focus:outline-none focus:border-tech-blue">
-                    <button type="submit" class="bg-gradient-to-r from-tech-blue to-tech-purple text-white px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity duration-300 border-glow whitespace-nowrap">
-                        订阅周刊
-                    </button>
-                </form>
-                <p class="text-gray-500 text-sm mt-4">
-                    我们尊重您的隐私，不会向第三方分享您的信息。
-                </p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer class="bg-tech-dark py-12 border-t border-tech-blue/20">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center">
-                            <i class="fa fa-rocket text-white text-xl"></i>
-                        </div>
-                        <span class="text-xl font-bold text-white">
-                            <span class="text-tech-blue">Jaychou</span>channel
-                        </span>
-                    </div>
-                    <p class="text-gray-400 mb-4">
-                        探索技术与旅行的无限可能，记录成长历程，分享编程心得。
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
-                            <i class="fa fa-github"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
-                            <i class="fa fa-linkedin"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">
-                            <i class="fa fa-instagram"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-bold mb-4 text-white">快速链接</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#home" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">首页</a></li>
-                        <li><a href="#articles" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">文章</a></li>
-                        <li><a href="#categories" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">分类</a></li>
-                        <li><a href="#about" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">关于我</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-bold mb-4 text-white">内容分类</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">算法分享</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">前后端分享</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">旅行分享</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">开发工具分享</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-bold mb-4 text-white">联系我</h3>
-                    <ul class="space-y-2">
-                        <li class="flex items-center">
-                            <i class="fa fa-envelope text-tech-blue mr-2"></i>
-                            <a href="mailto:contact@techvoyager.com" class="text-gray-400 hover:text-tech-blue transition-colors duration-300">contact@techvoyager.com</a>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fa fa-map-marker text-tech-blue mr-2"></i>
-                            <span class="text-gray-400">Wuhan, in China</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-tech-blue/20 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                    &copy; 2025 Jaychouchannel. 保留所有权利。
-                </p>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-500 hover:text-tech-blue text-sm transition-colors duration-300">隐私政策</a>
-                    <a href="#" class="text-gray-500 hover:text-tech-blue text-sm transition-colors duration-300">使用条款</a>
-                    <a href="#" class="text-gray-500 hover:text-tech-blue text-sm transition-colors duration-300">Cookie政策</a>
-                </div>
-            </div>
+    <!-- 页脚 -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-12 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-slate-600 text-sm">&copy; 2025 Jaychouchannel. 保留所有权利。</p>
         </div>
     </footer>
-    
-    <!-- AI Chat Assistant -->
-    <div id="ai-assistant" class="fixed bottom-6 right-6 z-40">
-        <button id="chat-button" class="w-14 h-14 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center shadow-lg hover:opacity-90 transition-opacity duration-300 border-glow">
-            <i class="fa fa-comments text-white text-xl"></i>
+
+    <!-- 悬浮 AI 助手 -->
+    <div id="ai-assistant-container" class="fixed bottom-8 right-8 z-50">
+        <button id="chat-toggle-btn" class="w-14 h-14 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full shadow-lg flex items-center justify-center text-white text-xl hover:scale-110 transition-transform">
+            <i class="fa-solid fa-comments"></i>
         </button>
-        
-        <div id="chat-window" class="hidden absolute bottom-16 right-0 w-80 md:w-96 bg-tech-card rounded-xl shadow-2xl overflow-hidden border border-tech-blue/30">
-            <div class="p-4 bg-tech-dark border-b border-tech-blue/30 flex justify-between items-center">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center mr-3">
-                        <i class="fa fa-robot text-white"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">AI助手</h3>
-                        <p class="text-xs text-tech-blue">在线</p>
-                    </div>
-                </div>
-                <button id="close-chat" class="text-gray-400 hover:text-white focus:outline-none">
-                    <i class="fa fa-times"></i>
-                </button>
-            </div>
-            
-            <div id="chat-messages" class="p-4 h-80 overflow-y-auto">
-                <div class="flex mb-4">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple flex items-center justify-center mr-2 flex-shrink-0">
-                        <i class="fa fa-robot text-white text-xs"></i>
-                    </div>
-                    <div class="bg-tech-dark rounded-lg p-3 max-w-[80%]">
-                        <p class="text-gray-300 text-sm">
-                            你好！我是Jaychouchannel的AI助手，有什么可以帮助你的吗？
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="p-4 border-t border-tech-blue/30">
-                <div class="flex">
-                    <input type="text" id="chat-input" placeholder="输入你的问题..." class="flex-1 bg-tech-dark border border-tech-blue/30 rounded-l-full py-2 px-4 text-sm focus:outline-none focus:border-tech-blue">
-                    <button id="send-message" class="bg-tech-blue hover:bg-tech-blue/80 text-white px-4 py-2 rounded-r-full transition-colors duration-300">
-                        <i class="fa fa-paper-plane"></i>
-                    </button>
-                </div>
-                <div class="mt-2 flex flex-wrap gap-2">
-                    <button class="quick-question bg-tech-dark text-xs px-3 py-1 rounded-full border border-tech-blue/30 hover:bg-tech-hover transition-colors duration-300">
-                        推荐算法文章
-                    </button>
-                    <button class="quick-question bg-tech-dark text-xs px-3 py-1 rounded-full border border-tech-blue/30 hover:bg-tech-hover transition-colors duration-300">
-                        旅行攻略
-                    </button>
-                    <button class="quick-question bg-tech-dark text-xs px-3 py-1 rounded-full border border-tech-blue/30 hover:bg-tech-hover transition-colors duration-300">
-                        开发工具推荐
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
-    
-    <!-- 引入主脚本 -->
-    <script src="/js/main.js"></script>
+
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // CD Player Logic
+        const audio = document.getElementById('audio-element');
+        const playBtn = document.getElementById('play-btn');
+        const disc = document.getElementById('cd-disc-container');
+        const icon = playBtn.querySelector('i');
+        const progressBar = document.getElementById('progress-bar');
+        const playStatus = document.getElementById('play-status');
+        let isPlaying = false;
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                disc.classList.add('paused');
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+                playStatus.innerText = "PAUSED";
+                playStatus.classList.remove('text-green-400');
+                playStatus.classList.add('text-tech-blue');
+            } else {
+                audio.play().catch(e => alert("请上传音乐文件或设置 src"));
+                disc.classList.remove('paused');
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-pause');
+                playStatus.innerText = "PLAYING";
+                playStatus.classList.remove('text-tech-blue');
+                playStatus.classList.add('text-green-400');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+        disc.addEventListener('click', togglePlay);
+
+        // 模拟进度条
+        setInterval(() => {
+            if (isPlaying) {
+                let currentWidth = parseFloat(progressBar.style.width) || 33;
+                if (currentWidth >= 100) currentWidth = 0;
+                progressBar.style.width = (currentWidth + 1) + '%';
+            }
+        }, 1000);
+
+        // 移动端菜单
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
