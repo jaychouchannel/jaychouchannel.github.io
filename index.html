@@ -142,8 +142,8 @@
 
     <!-- 背景装饰光斑 -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-tech-blue/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob"></div>
-        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-tech-purple/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div id="bg-blob-1" class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-tech-blue/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob" style="will-change: transform, opacity; pointer-events: none;"></div>
+        <div id="bg-blob-2" class="absolute top-[20%] right-[-10%] w-96 h-96 bg-tech-purple/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000" style="will-change: transform, opacity; pointer-events: none;"></div>
     </div>
 
     <!-- 导航栏 -->
@@ -239,7 +239,7 @@
 
 
     <!-- Hero 区域 -->
-    <section id="home" class="relative min-h-[90vh] flex items-center pt-20 pb-10 overflow-hidden">
+    <section id="home" class="relative min-h-[75vh] flex items-center pt-20 pb-8 overflow-hidden">
         <div class="container mx-auto px-4 lg:px-8 relative z-10">
             <div class="flex flex-col lg:flex-row items-center gap-12">
                 <!-- 文字区 -->
@@ -262,12 +262,38 @@
                             关于博主
                         </a>
                     </div>
+                    <!-- 统计徽章 -->
+                    <div class="mt-8 flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-6 justify-center lg:justify-start">
+                        <div class="px-4 py-3 bg-slate-900/60 border border-slate-700 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-white">120+</div>
+                            <div class="text-xs text-slate-400">深度文章</div>
+                        </div>
+                        <div class="px-4 py-3 bg-slate-900/60 border border-slate-700 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-white">6</div>
+                            <div class="text-xs text-slate-400">分类专题</div>
+                        </div>
+                        <div class="px-4 py-3 bg-slate-900/60 border border-slate-700 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-white">35k</div>
+                            <div class="text-xs text-slate-400">月均阅读</div>
+                        </div>
+                    </div>
                 </div>
                 <!-- 视觉区 -->
                 <div class="lg:w-1/2 relative" data-aos="fade-left">
                     <div class="relative w-full max-w-md mx-auto aspect-square animate-float">
                         <div class="absolute inset-0 bg-gradient-to-tr from-tech-blue to-tech-purple rounded-full blur-[80px] opacity-20"></div>
                         <img src="https://placehold.co/600x600/1e293b/38bdf8?text=Coding+Space" alt="Hero" class="relative z-10 w-full h-full object-cover rounded-3xl border border-slate-700/50 shadow-2xl">
+                    </div>
+                    <!-- 浮动最新文章卡片 -->
+                    <div class="absolute right-6 bottom-6 w-64 bg-gradient-to-br from-slate-900/80 to-slate-800/60 border border-slate-700 rounded-xl p-4 shadow-2xl backdrop-blur-sm">
+                        <div class="flex items-start gap-3">
+                            <img src="https://placehold.co/80x80/0f172a/38bdf8?text=New" alt="thumb" class="w-16 h-12 object-cover rounded-md">
+                            <div>
+                                <div class="text-sm font-semibold text-white line-clamp-2">深入理解 JavaScript 排序算法：从原理到实现</div>
+                                <div class="text-xs text-slate-400 mt-1">阅读 · 1.2k</div>
+                            </div>
+                        </div>
+                        <a href="/articles/algorithm-sort.html" class="mt-3 inline-block text-xs text-tech-blue hover:underline">阅读全文</a>
                     </div>
                 </div>
             </div>
@@ -409,20 +435,20 @@
                 <!-- 左侧：头像与快速联系方式 -->
                 <div class="md:w-1/3 flex flex-col items-center md:items-start">
                     <div class="relative w-44 h-44 mb-6">
-                        <img src="https://placehold.co/300x300/1e293b/ffffff?text=Jaychou" alt="Avatar" class="relative z-10 w-full h-full rounded-full object-cover border-4 border-slate-700 shadow-2xl">
+                        <img src="/images/avatar.jpg" alt="Avatar" class="relative z-10 w-full h-full rounded-full object-cover border-4 border-slate-700 shadow-2xl">
                     </div>
                     <h3 class="text-2xl font-bold text-white mb-1">Jaychouchannel</h3>
                     <p class="text-slate-400 text-sm mb-4">前端工程师 · 算法爱好者 · 内容作者</p>
 
                     <div class="w-full grid grid-cols-2 gap-3 mb-4">
                         <a href="https://github.com/jaychouchannel" target="_blank" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white transition-all text-sm"><i class="fa-brands fa-github"></i> GitHub</a>
-                        <a href="https://www.linkedin.com/" target="_blank" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-blue-700 text-slate-300 hover:text-white transition-all text-sm"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+                        <a href="https://www.linkedin.com/in/ruyi-wen-08980a384" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-blue-700 text-slate-300 hover:text-white transition-all text-sm"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
                     </div>
 
                     <div class="w-full space-y-3 text-sm text-slate-300">
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-envelope text-tech-blue"></i>
-                            <a href="mailto:hello@jaychouchannel.com" class="hover:text-tech-blue">hello@jaychouchannel.com</a>
+                            <a href="mailto:jaychouchannel24@gmail.com" class="hover:text-tech-blue">jaychouchannel24@gmail.com</a>
                         </div>
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-location-dot text-tech-blue"></i>
@@ -514,22 +540,22 @@
         // 1. 播放列表数据 (你可以替换 src 为你的本地文件或 URL)
         const playlist = [
             {
-                title: "Mojito - Jay Style",
-                artist: "Jay Chou",
-                cover: "https://placehold.co/200x200/1e293b/38bdf8?text=Mojito",
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // 示例音频
+                title: "可愛女人 - Jaychou",
+                artist: "Jaychou",
+                cover: "/images/cover/Jay.png",
+                src: "/music/可愛女人.flac" // 示例音频
             },
             {
                 title: "Night Code",
                 artist: "Dev",
                 cover: "https://placehold.co/200x200/0f172a/818cf8?text=Code",
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+                src: "/music/we%20don't%20talk%20any%20more.flac"
             },
             {
                 title: "Relaxing Tech",
                 artist: "Unknown",
                 cover: "https://placehold.co/200x200/1e293b/34d399?text=Relax",
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+                src: "/music/天涯过客.flac"
             }
         ];
 
@@ -685,6 +711,54 @@
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
+
+        /* =========================================
+           背景滚动动态效果（基于滚动位置的轻量动画）
+           - 使用 requestAnimationFrame 优化更新频率
+           - 根据页面滚动百分比移动并微调不透明度与旋转
+           ========================================= */
+        (function(){
+            const blob1 = document.getElementById('bg-blob-1');
+            const blob2 = document.getElementById('bg-blob-2');
+            if (!blob1 || !blob2) return;
+
+            let lastY = window.scrollY;
+            let ticking = false;
+
+            function onScroll(){
+                lastY = window.scrollY;
+                if (!ticking) {
+                    window.requestAnimationFrame(update);
+                    ticking = true;
+                }
+            }
+
+            function update(){
+                const y = lastY;
+                const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
+                const pct = Math.min(1, y / max);
+
+                // blob1: 向左上偏移并稍微向下
+                const t1x = -60 * pct; // px
+                const t1y = 40 * pct;  // px
+                const r1  = 15 * pct;  // deg
+                blob1.style.transform = `translate(${t1x}px, ${t1y}px) rotate(${r1}deg)`;
+                blob1.style.opacity = `${0.3 + pct * 0.5}`;
+
+                // blob2: 向右下偏移并逆向旋转
+                const t2x = 80 * pct;
+                const t2y = -30 * pct;
+                const r2  = -20 * pct;
+                blob2.style.transform = `translate(${t2x}px, ${t2y}px) rotate(${r2}deg)`;
+                blob2.style.opacity = `${0.25 + pct * 0.45}`;
+
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            // 初始化一次
+            update();
+        })();
 
     </script>
 </body>
