@@ -204,29 +204,36 @@
         </div>
         
         <!-- 2. 右边：控制条 + 进度条 -->
-        <div class="bg-slate-800/90 backdrop-blur-md border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex flex-col gap-2 min-w-[160px]">
-            <!-- 歌曲信息 -->
+<div class="bg-slate-800/90 backdrop-blur-md border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex flex-col gap-2 min-w-[200px] w-64 transition-all duration-300">
             <div class="flex justify-between items-baseline mb-1">
-                <div class="text-xs text-white font-bold truncate w-24" id="song-title">Jaychou's Mix</div>
-                <div class="text-[10px] text-tech-blue animate-pulse" id="play-status">PAUSED</div>
+                <div class="text-xs text-white font-bold truncate pr-2" id="song-title">Jaychou's Mix</div>
+                <div class="text-[10px] text-tech-blue font-mono" id="play-status">PAUSED</div>
             </div>
 
-            <!-- 进度条 (视觉装饰) -->
-            <div class="w-full h-1 bg-slate-600 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-full bg-gradient-to-r from-tech-blue to-tech-purple w-1/3 transition-all duration-1000"></div>
+            <div class="relative group">
+                <div class="flex justify-between text-[10px] text-slate-400 mb-1 font-mono">
+                    <span id="curr-time">0:00</span>
+                    <span id="total-duration">0:00</span>
+                </div>
+                
+                <div id="progress-container" class="w-full h-1.5 bg-slate-600 rounded-full overflow-hidden cursor-pointer relative">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-tech-blue to-tech-purple w-0 transition-all duration-100 ease-linear relative">
+                        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                </div>
             </div>
             
-            <!-- 控制按钮 -->
-            <div class="flex items-center justify-center gap-4 text-slate-300 mt-1">
-                <button id="prev-btn" class="hover:text-white text-sm"><i class="fa-solid fa-backward-step"></i></button>
-                <button id="play-btn" class="w-8 h-8 rounded-full bg-tech-blue text-white flex items-center justify-center hover:bg-blue-400 shadow-lg transition-transform hover:scale-105">
-                    <i class="fa-solid fa-play text-xs ml-0.5"></i>
+            <div class="flex items-center justify-center gap-6 text-slate-300 mt-2">
+                <button id="prev-btn" class="hover:text-white hover:scale-110 transition-all"><i class="fa-solid fa-backward-step"></i></button>
+                
+                <button id="play-btn" class="w-10 h-10 rounded-full bg-gradient-to-br from-tech-blue to-tech-purple text-white flex items-center justify-center hover:shadow-glow hover:scale-105 transition-all">
+                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
                 </button>
-                <button id="next-btn" class="hover:text-white text-sm"><i class="fa-solid fa-forward-step"></i></button>
+                
+                <button id="next-btn" class="hover:text-white hover:scale-110 transition-all"><i class="fa-solid fa-forward-step"></i></button>
             </div>
 
-            <!-- 音频标签 -->
-            <audio id="audio-element" src="/music/2.flac" preload="none"></audio>
+            <audio id="audio-element" preload="metadata"></audio>
         </div>
     </div>
 
@@ -433,54 +440,188 @@
     </div>
 
     <script>
+        // 初始化动画库
         AOS.init({ duration: 800, once: true });
 
-        // CD Player Logic
+        /* =========================================
+           CD 播放器完整逻辑 (Playlist & Controls)
+           ========================================= */
+        
+        // 1. 播放列表数据 (你可以替换 src 为你的本地文件或 URL)
+        const playlist = [
+            {
+                title: "Mojito - Jay Style",
+                artist: "Jay Chou",
+                cover: "https://placehold.co/200x200/1e293b/38bdf8?text=Mojito",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // 示例音频
+            },
+            {
+                title: "Night Code",
+                artist: "Dev",
+                cover: "https://placehold.co/200x200/0f172a/818cf8?text=Code",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+            },
+            {
+                title: "Relaxing Tech",
+                artist: "Unknown",
+                cover: "https://placehold.co/200x200/1e293b/34d399?text=Relax",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            }
+        ];
+
+        // 2. 获取 DOM 元素
         const audio = document.getElementById('audio-element');
         const playBtn = document.getElementById('play-btn');
-        const disc = document.getElementById('cd-disc-container');
-        const icon = playBtn.querySelector('i');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const discContainer = document.getElementById('cd-disc-container');
+        const discCover = document.getElementById('cd-cover');
         const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const songTitle = document.getElementById('song-title');
         const playStatus = document.getElementById('play-status');
-        let isPlaying = false;
+        const currTimeEl = document.getElementById('curr-time');
+        const totalDurationEl = document.getElementById('total-duration');
+        const playIcon = playBtn.querySelector('i');
 
-        function togglePlay() {
-            if (isPlaying) {
-                audio.pause();
-                disc.classList.add('paused');
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
-                playStatus.innerText = "PAUSED";
-                playStatus.classList.remove('text-green-400');
-                playStatus.classList.add('text-tech-blue');
-            } else {
-                audio.play().catch(e => alert("请上传音乐文件或设置 src"));
-                disc.classList.remove('paused');
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-                playStatus.innerText = "PLAYING";
-                playStatus.classList.remove('text-tech-blue');
-                playStatus.classList.add('text-green-400');
-            }
-            isPlaying = !isPlaying;
+        let isPlaying = false;
+        let songIndex = 0;
+
+        // 3. 核心功能函数
+
+        // 加载歌曲
+        function loadSong(song) {
+            songTitle.innerText = song.title;
+            discCover.src = song.cover;
+            audio.src = song.src;
+            // 重置进度条
+            progressBar.style.width = '0%';
+            currTimeEl.innerText = "0:00";
+            totalDurationEl.innerText = "0:00";
         }
 
-        playBtn.addEventListener('click', togglePlay);
-        disc.addEventListener('click', togglePlay);
+        // 播放
+        function playSong() {
+            isPlaying = true;
+            discContainer.classList.remove('paused');
+            playBtn.classList.add('shadow-glow'); // 添加发光效果
+            playIcon.classList.remove('fa-play');
+            playIcon.classList.add('fa-pause');
+            
+            playStatus.innerText = "PLAYING";
+            playStatus.classList.remove('text-tech-blue');
+            playStatus.classList.add('text-tech-green');
+            
+            audio.play().catch(e => console.log("等待交互以播放音频"));
+        }
 
-        // 模拟进度条
-        setInterval(() => {
-            if (isPlaying) {
-                let currentWidth = parseFloat(progressBar.style.width) || 33;
-                if (currentWidth >= 100) currentWidth = 0;
-                progressBar.style.width = (currentWidth + 1) + '%';
+        // 暂停
+        function pauseSong() {
+            isPlaying = false;
+            discContainer.classList.add('paused');
+            playBtn.classList.remove('shadow-glow');
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            
+            playStatus.innerText = "PAUSED";
+            playStatus.classList.remove('text-tech-green');
+            playStatus.classList.add('text-tech-blue');
+            
+            audio.pause();
+        }
+
+        // 上一曲
+        function prevSong() {
+            songIndex--;
+            if (songIndex < 0) {
+                songIndex = playlist.length - 1;
             }
-        }, 1000);
+            loadSong(playlist[songIndex]);
+            if(isPlaying) playSong();
+        }
 
-        // 移动端菜单
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+        // 下一曲
+        function nextSong() {
+            songIndex++;
+            if (songIndex > playlist.length - 1) {
+                songIndex = 0;
+            }
+            loadSong(playlist[songIndex]);
+            if(isPlaying) playSong();
+        }
+
+        // 更新进度条 UI
+        function updateProgress(e) {
+            const { duration, currentTime } = e.srcElement;
+            
+            if (isNaN(duration)) return;
+
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // 更新时间文本
+            currTimeEl.innerText = formatTime(currentTime);
+            totalDurationEl.innerText = formatTime(duration);
+        }
+
+        // 点击进度条跳转 (Seek)
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            
+            if (isNaN(duration)) return;
+
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        // 格式化时间 (秒 -> mm:ss)
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' + sec : sec}`;
+        }
+
+        // 4. 事件监听绑定
+
+        // 初始化加载第一首
+        loadSong(playlist[songIndex]);
+
+        // 按钮点击
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) pauseSong();
+            else playSong();
         });
+
+        // CD封面点击也可以控制播放
+        discContainer.addEventListener('click', () => {
+            if (isPlaying) pauseSong();
+            else playSong();
+        });
+
+        prevBtn.addEventListener('click', prevSong);
+        nextBtn.addEventListener('click', nextSong);
+
+        // Audio 自身事件
+        audio.addEventListener('timeupdate', updateProgress);
+        // 歌曲结束后自动下一首
+        audio.addEventListener('ended', nextSong);
+        // 加载元数据后显示总时长
+        audio.addEventListener('loadedmetadata', () => {
+             totalDurationEl.innerText = formatTime(audio.duration);
+        });
+
+        // 进度条交互
+        progressContainer.addEventListener('click', setProgress);
+
+        /* =========================================
+           移动端菜单逻辑
+           ========================================= */
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
     </script>
 </body>
 </html>
