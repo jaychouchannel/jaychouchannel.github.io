@@ -139,19 +139,19 @@
           </div>
 
           <!-- 分类标签筛选 -->
-          <div class="mb-8 flex flex-wrap gap-2">
-            <a href="#" class="px-4 py-1.5 bg-tech-blue/10 text-tech-blue border border-tech-blue/20 rounded-full text-sm font-medium hover:bg-tech-blue hover:text-white transition-all">全部</a>
-            <a href="#" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all">排序</a>
-            <a href="#" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all">图论</a>
-            <a href="#" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all">动态规划</a>
-            <a href="#" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all">数据结构</a>
+          <div class="mb-8 flex flex-wrap gap-2" role="toolbar" aria-label="文章分类过滤">
+            <button type="button" data-filter="all" class="px-4 py-1.5 bg-tech-blue/10 text-tech-blue border border-tech-blue/20 rounded-full text-sm font-medium hover:bg-tech-blue hover:text-white transition-all" aria-pressed="true">全部</button>
+            <button type="button" data-filter="sort" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">排序</button>
+            <button type="button" data-filter="graph" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">图论</button>
+            <button type="button" data-filter="dp" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">动态规划</button>
+            <button type="button" data-filter="tree" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">数据结构</button>
           </div>
 
           <!-- 文章卡片网格 (Grid Layout) -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             <!-- Card 1 -->
-            <article class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
+            <article data-tags="sort" class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
               <a href="/articles/algorithm-sort.html" class="block h-48 overflow-hidden relative">
                 <img src="https://placehold.co/600x400/1e293b/38bdf8?text=Algorithm+Sort" alt="排序算法" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <div class="absolute top-3 left-3">
@@ -175,7 +175,7 @@
             </article>
 
             <!-- Card 2 -->
-            <article class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
+            <article data-tags="graph" class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
               <a href="/articles/algorithm-graph.html" class="block h-48 overflow-hidden relative">
                 <img src="https://placehold.co/600x400/1e293b/818cf8?text=Graph+Theory" alt="图论" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <div class="absolute top-3 left-3">
@@ -199,7 +199,7 @@
             </article>
 
             <!-- Card 3 -->
-            <article class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
+            <article data-tags="dp" class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
               <a href="/articles/algorithm-dp.html" class="block h-48 overflow-hidden relative">
                 <img src="https://placehold.co/600x400/1e293b/22c55e?text=DP" alt="动态规划" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <div class="absolute top-3 left-3">
@@ -223,7 +223,7 @@
             </article>
 
             <!-- Card 4 -->
-            <article class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
+            <article data-tags="tree" class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
               <a href="/articles/algorithm-tree.html" class="block h-48 overflow-hidden relative">
                 <img src="https://placehold.co/600x400/1e293b/eab308?text=Tree" alt="树结构" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <div class="absolute top-3 left-3">
@@ -247,7 +247,7 @@
             </article>
 
             <!-- Card 5 -->
-            <article class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
+            <article data-tags="search" class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
               <a href="/articles/algorithm-search.html" class="block h-48 overflow-hidden relative">
                 <img src="https://placehold.co/600x400/1e293b/ef4444?text=Search" alt="搜索" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <div class="absolute top-3 left-3">
@@ -271,7 +271,7 @@
             </article>
 
             <!-- Card 6 -->
-            <article class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
+            <article data-tags="greedy" class="group bg-tech-card/50 border border-slate-700/50 rounded-2xl overflow-hidden card-hover transition-all duration-300 flex flex-col h-full">
               <a href="/articles/algorithm-greedy.html" class="block h-48 overflow-hidden relative">
                 <img src="https://placehold.co/600x400/1e293b/ec4899?text=Greedy" alt="贪心" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <div class="absolute top-3 left-3">
@@ -396,6 +396,48 @@
   </footer>
 
   <script>
+    // 分类标签筛选逻辑（客户端）
+    (function(){
+      const filterButtons = document.querySelectorAll('[data-filter]');
+      const cards = document.querySelectorAll('main article[data-tags]');
+
+      function applyFilter(filter) {
+        cards.forEach(card => {
+          const tags = (card.dataset.tags || '').split(',').map(t=>t.trim()).filter(Boolean);
+          if (filter === 'all' || tags.indexOf(filter) !== -1) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      }
+
+      function updateActiveButton(activeBtn) {
+        filterButtons.forEach(b => {
+          b.setAttribute('aria-pressed', 'false');
+          b.classList.remove('bg-tech-blue', 'text-white');
+          b.classList.add('bg-slate-800', 'text-slate-300');
+        });
+        activeBtn.setAttribute('aria-pressed', 'true');
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+        activeBtn.classList.add('bg-tech-blue', 'text-white');
+      }
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const filter = btn.dataset.filter;
+          updateActiveButton(btn);
+          applyFilter(filter);
+        });
+      });
+
+      // 初始化：显示全部
+      if (filterButtons.length > 0) {
+        const active = document.querySelector('[data-filter][aria-pressed="true"]') || filterButtons[0];
+        updateActiveButton(active);
+        applyFilter(active.dataset.filter || 'all');
+      }
+    })();
     // 移动端菜单切换
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');

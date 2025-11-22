@@ -402,23 +402,87 @@
     </section>
 
 
-    <!-- 关于我 -->
-    <section id="about" class="py-20">
+    <!-- 关于我（扩展版：个人信息、社交、技能与教育） -->
+    <section id="about" class="py-28">
         <div class="container mx-auto px-4 lg:px-8">
-            <div class="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-3xl p-8 lg:p-12 flex flex-col md:flex-row items-center gap-12">
-                <div class="md:w-1/3 flex justify-center">
-                    <div class="relative w-48 h-48">
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-3xl p-8 lg:p-12 flex flex-col md:flex-row items-start gap-12">
+                <!-- 左侧：头像与快速联系方式 -->
+                <div class="md:w-1/3 flex flex-col items-center md:items-start">
+                    <div class="relative w-44 h-44 mb-6">
                         <img src="https://placehold.co/300x300/1e293b/ffffff?text=Jaychou" alt="Avatar" class="relative z-10 w-full h-full rounded-full object-cover border-4 border-slate-700 shadow-2xl">
                     </div>
+                    <h3 class="text-2xl font-bold text-white mb-1">Jaychouchannel</h3>
+                    <p class="text-slate-400 text-sm mb-4">前端工程师 · 算法爱好者 · 内容作者</p>
+
+                    <div class="w-full grid grid-cols-2 gap-3 mb-4">
+                        <a href="https://github.com/jaychouchannel" target="_blank" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white transition-all text-sm"><i class="fa-brands fa-github"></i> GitHub</a>
+                        <a href="https://www.linkedin.com/" target="_blank" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-blue-700 text-slate-300 hover:text-white transition-all text-sm"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+                    </div>
+
+                    <div class="w-full space-y-3 text-sm text-slate-300">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-envelope text-tech-blue"></i>
+                            <a href="mailto:hello@jaychouchannel.com" class="hover:text-tech-blue">hello@jaychouchannel.com</a>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-location-dot text-tech-blue"></i>
+                            <span>北京 · 中国</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-calendar-days text-tech-blue"></i>
+                            <span>开放合作 · 技术分享 · 讲座邀请</span>
+                        </div>
+                    </div>
+
+                    <a href="#" class="mt-6 inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-tech-blue to-tech-purple text-white font-medium shadow-lg hover:opacity-95">下载简历</a>
                 </div>
-                <div class="md:w-2/3 text-center md:text-left">
-                    <h2 class="text-3xl font-bold text-white mb-4">关于 <span class="text-tech-blue">Jaychouchannel</span></h2>
+
+                <!-- 右侧：详细介绍、技能与教育 -->
+                <div class="md:w-2/3">
+                    <h2 class="text-3xl font-bold text-white mb-4">关于 <span class="text-tech-blue">我</span></h2>
                     <p class="text-slate-300 mb-6 leading-relaxed">
-                        我是一名热衷于探索新技术的开发者。在这个频道，我记录成长的足迹，分享踩过的坑，也希望能结识更多志同道合的朋友。
+                        我是一名专注于前端工程与算法实现的开发者，热衷于将复杂问题拆解为可复用的解决方案。常年从事单页应用与组件化工程实践，同时将算法与数据结构的学习融入到实际业务场景，撰写了多篇技术与算法相关的文章，帮助读者从原理到实践掌握要点。
                     </p>
-                    <div class="flex justify-center md:justify-start space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-tech-blue hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-blue-400 hover:text-white transition-all"><i class="fa-brands fa-twitter"></i></a>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-white mb-3">技能</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-slate-900 text-slate-300 rounded-full text-sm">JavaScript / TypeScript</span>
+                            <span class="px-3 py-1 bg-slate-900 text-slate-300 rounded-full text-sm">React / Vue</span>
+                            <span class="px-3 py-1 bg-slate-900 text-slate-300 rounded-full text-sm">Tailwind CSS</span>
+                            <span class="px-3 py-1 bg-slate-900 text-slate-300 rounded-full text-sm">算法与数据结构</span>
+                            <span class="px-3 py-1 bg-slate-900 text-slate-300 rounded-full text-sm">前端性能优化</span>
+                            <span class="px-3 py-1 bg-slate-900 text-slate-300 rounded-full text-sm">Node.js / CI</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-4">教育经历</h3>
+                        <ul class="space-y-4 text-slate-300">
+                            <li class="flex">
+                                <div class="w-20 text-sm text-slate-400">2016 - 2020</div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-white">计算机科学学士</div>
+                                    <div class="text-sm text-slate-400">某知名大学 · 主修软件工程与算法</div>
+                                </div>
+                            </li>
+                            <li class="flex">
+                                <div class="w-20 text-sm text-slate-400">2021 - 2022</div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-white">前端进阶实战课程</div>
+                                    <div class="text-sm text-slate-400">机构培训 · 专注大规模前端架构与工程化</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold text-white mb-3">想要合作或交流？</h3>
+                        <p class="text-slate-300 mb-4">我乐于参与开源项目、技术分享与短期顾问合作。欢迎通过邮件或 LinkedIn 与我联系，说明合作意向与预期时间。</p>
+                        <div class="flex items-center gap-3">
+                            <a href="mailto:hello@jaychouchannel.com" class="px-4 py-2 rounded-lg bg-tech-blue text-white text-sm">发送邮件</a>
+                            <a href="https://www.linkedin.com/" target="_blank" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:border-tech-blue hover:text-white transition-all text-sm">在 LinkedIn 上联系</a>
+                        </div>
                     </div>
                 </div>
             </div>
