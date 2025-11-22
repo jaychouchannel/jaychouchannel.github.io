@@ -136,6 +136,24 @@
             background: #475569;
             border-radius: 1px;
         }
+        /* Hero 小装饰卡片 */
+        .floating-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.04);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+            border-radius: 12px;
+            color: #cbd5e1;
+        }
+        .terminal-lines { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace; font-size: 12px; line-height: 1.2; }
+        .code-dot { width:8px; height:8px; border-radius:9999px; display:inline-block; margin-right:6px; }
+        .code-dot.red { background:#fb7185; }
+        .code-dot.yellow { background:#fbbf24; }
+        .code-dot.green { background:#34d399; }
+        @media (max-width: 768px) {
+            .hero-decor { display: none; }
+        }
     </style>
 </head>
 <body class="bg-tech-dark text-slate-200 font-sans min-h-screen selection:bg-tech-blue selection:text-white overflow-x-hidden">
@@ -283,6 +301,30 @@
                     <div class="relative w-full max-w-md mx-auto aspect-square animate-float">
                         <div class="absolute inset-0 bg-gradient-to-tr from-tech-blue to-tech-purple rounded-full blur-[80px] opacity-20"></div>
                         <img src="https://placehold.co/600x600/1e293b/38bdf8?text=Coding+Space" alt="Hero" class="relative z-10 w-full h-full object-cover rounded-3xl border border-slate-700/50 shadow-2xl">
+                    </div>
+                    <!-- Hero 装饰：小终端卡 + 标签卡 (desktop only) -->
+                    <div class="hero-decor">
+                        <div class="absolute left-6 top-6 floating-card p-3 w-44 z-20" style="transform: translateZ(0);">
+                            <div class="flex items-center mb-2">
+                                <span class="code-dot red"></span>
+                                <span class="code-dot yellow"></span>
+                                <span class="code-dot green"></span>
+                            </div>
+                            <div class="terminal-lines text-[12px] text-slate-300">
+                                <div>const greet = () =&gt; {'{'}</div>
+                                <div class="pl-3 text-slate-400">console.log('Hello World')</div>
+                                <div>{'}'}</div>
+                            </div>
+                        </div>
+
+                        <div class="absolute left-6 bottom-20 floating-card p-3 w-36 z-20" style="transform: translateZ(0);">
+                            <div class="text-xs text-slate-300 font-medium mb-2">热门标签</div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-slate-900/70 text-slate-300 rounded-full text-xs">JavaScript</span>
+                                <span class="px-2 py-1 bg-slate-900/70 text-slate-300 rounded-full text-xs">算法</span>
+                                <span class="px-2 py-1 bg-slate-900/70 text-slate-300 rounded-full text-xs">性能</span>
+                            </div>
+                        </div>
                     </div>
                     <!-- 浮动最新文章卡片 -->
                     <div class="absolute right-6 bottom-6 w-64 bg-gradient-to-br from-slate-900/80 to-slate-800/60 border border-slate-700 rounded-xl p-4 shadow-2xl backdrop-blur-sm">
@@ -452,7 +494,11 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-location-dot text-tech-blue"></i>
-                            <span>北京 · 中国</span>
+                            <span>武汉 · 中国</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa fa-address-book text-tech-blue"></i>
+                            <span>Tel : 13419640032</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-calendar-days text-tech-blue"></i>
@@ -546,15 +592,15 @@
                 src: "/music/可愛女人.flac" // 示例音频
             },
             {
-                title: "Night Code",
-                artist: "Dev",
-                cover: "https://placehold.co/200x200/0f172a/818cf8?text=Code",
-                src: "/music/we%20don't%20talk%20any%20more.flac"
+                title: "给我一首歌的时间 - Jaychou",
+                artist: "Jaychou",
+                cover: "/images/cover/魔杰座.png",
+                src: "/music/给我一首歌的时间.flac"
             },
             {
-                title: "Relaxing Tech",
-                artist: "Unknown",
-                cover: "https://placehold.co/200x200/1e293b/34d399?text=Relax",
+                title: "天涯过客 - Jaychou",
+                artist: "Jaychou",
+                cover: "/images/cover/aiyobucuoo.png",
                 src: "/music/天涯过客.flac"
             }
         ];

@@ -168,7 +168,7 @@
                 <p class="text-slate-400 text-sm line-clamp-2 mb-4 flex-grow">介绍冒泡、快速、归并等常见排序算法，分析时间复杂度并提供 JavaScript 示例实现。</p>
                 
                 <div class="pt-4 border-t border-slate-700/30 flex items-center">
-                  <img src="https://placehold.co/50x50/0f172a/ffffff?text=J" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
+                  <img src="/images/avatar.jpg" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
                   <span class="text-xs text-slate-300">Jaychouchannel</span>
                 </div>
               </div>
@@ -192,7 +192,7 @@
                 <p class="text-slate-400 text-sm line-clamp-2 mb-4 flex-grow">从邻接矩阵/邻接表开始，覆盖 BFS/DFS、Dijkstra、Kruskal 等常见算法。</p>
                 
                 <div class="pt-4 border-t border-slate-700/30 flex items-center">
-                  <img src="https://placehold.co/50x50/0f172a/ffffff?text=J" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
+                  <img src="/images/avatar.jpg" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
                   <span class="text-xs text-slate-300">Jaychouchannel</span>
                 </div>
               </div>
@@ -216,7 +216,7 @@
                 <p class="text-slate-400 text-sm line-clamp-2 mb-4 flex-grow">用大量示例帮你练就把递归转化为状态转移方程的能力，覆盖常见题型。</p>
                 
                 <div class="pt-4 border-t border-slate-700/30 flex items-center">
-                  <img src="https://placehold.co/50x50/0f172a/ffffff?text=J" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
+                  <img src="/images/avatar.jpg" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
                   <span class="text-xs text-slate-300">Jaychouchannel</span>
                 </div>
               </div>
@@ -240,7 +240,7 @@
                 <p class="text-slate-400 text-sm line-clamp-2 mb-4 flex-grow">深入解析二叉树的前中后序遍历与重构方法，包含递归与迭代实现。</p>
                 
                 <div class="pt-4 border-t border-slate-700/30 flex items-center">
-                  <img src="https://placehold.co/50x50/0f172a/ffffff?text=J" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
+                  <img src="/images/avatar.jpg" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
                   <span class="text-xs text-slate-300">Jaychouchannel</span>
                 </div>
               </div>
@@ -264,7 +264,7 @@
                 <p class="text-slate-400 text-sm line-clamp-2 mb-4 flex-grow">详解各种搜索算法的适用场景与性能对比，教你如何选择最优搜索策略。</p>
                 
                 <div class="pt-4 border-t border-slate-700/30 flex items-center">
-                  <img src="https://placehold.co/50x50/0f172a/ffffff?text=J" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
+                  <img src="/images/avatar.jpg" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
                   <span class="text-xs text-slate-300">Jaychouchannel</span>
                 </div>
               </div>
@@ -288,7 +288,7 @@
                 <p class="text-slate-400 text-sm line-clamp-2 mb-4 flex-grow">通过经典问题解析贪心算法的设计思路，学习如何证明解法的正确性。</p>
                 
                 <div class="pt-4 border-t border-slate-700/30 flex items-center">
-                  <img src="https://placehold.co/50x50/0f172a/ffffff?text=J" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
+                  <img src="/images/avatar.jpg" alt="Jaychou" class="w-6 h-6 rounded-full mr-2">
                   <span class="text-xs text-slate-300">Jaychouchannel</span>
                 </div>
               </div>
@@ -297,7 +297,7 @@
 
           <!-- 加载更多 -->
           <div class="text-center mt-12">
-            <button class="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-colors text-sm font-medium group">
+            <button id="load-more-btn" class="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-colors text-sm font-medium group">
               加载更多文章 <i class="fa-solid fa-angle-down ml-2 group-hover:translate-y-1 transition-transform"></i>
             </button>
           </div>
@@ -396,20 +396,55 @@
   </footer>
 
   <script>
-    // 分类标签筛选逻辑（客户端）
+    // 分类标签筛选 + 分页（加载更多）逻辑（客户端）
     (function(){
-      const filterButtons = document.querySelectorAll('[data-filter]');
-      const cards = document.querySelectorAll('main article[data-tags]');
+      const filterButtons = Array.from(document.querySelectorAll('[data-filter]'));
+      const cards = Array.from(document.querySelectorAll('main article[data-tags]'));
+      const loadMoreBtn = document.getElementById('load-more-btn');
+
+      const INITIAL_SHOW = 6;
+      const INCREMENT = 6;
+      let itemsToShow = INITIAL_SHOW;
+
+      // 初始化 filterHidden 标记
+      cards.forEach(c => c.dataset.filterHidden = 'false');
+
+      function refreshVisibility() {
+        // 先确定未被筛选掉的卡片
+        const candidates = cards.filter(c => c.dataset.filterHidden === 'false');
+
+        candidates.forEach((card, idx) => {
+          if (idx < itemsToShow) card.classList.remove('hidden');
+          else card.classList.add('hidden');
+        });
+
+        // 所有被筛选掉的卡片一定隐藏
+        cards.filter(c => c.dataset.filterHidden === 'true').forEach(c => c.classList.add('hidden'));
+
+        // 控制“加载更多”按钮的显示/隐藏
+        if (loadMoreBtn) {
+          if (candidates.length > itemsToShow) {
+            loadMoreBtn.classList.remove('hidden');
+            loadMoreBtn.disabled = false;
+          } else {
+            loadMoreBtn.classList.add('hidden');
+            loadMoreBtn.disabled = true;
+          }
+        }
+      }
 
       function applyFilter(filter) {
         cards.forEach(card => {
           const tags = (card.dataset.tags || '').split(',').map(t=>t.trim()).filter(Boolean);
           if (filter === 'all' || tags.indexOf(filter) !== -1) {
-            card.classList.remove('hidden');
+            card.dataset.filterHidden = 'false';
           } else {
-            card.classList.add('hidden');
+            card.dataset.filterHidden = 'true';
           }
         });
+        // 切换筛选时重置分页到初始页
+        itemsToShow = INITIAL_SHOW;
+        refreshVisibility();
       }
 
       function updateActiveButton(activeBtn) {
@@ -423,19 +458,33 @@
         activeBtn.classList.add('bg-tech-blue', 'text-white');
       }
 
+      // 事件绑定：筛选按钮
       filterButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
           const filter = btn.dataset.filter;
           updateActiveButton(btn);
           applyFilter(filter);
+          // 滚回到结果区顶部（可选）
+          const top = document.querySelector('main').offsetTop - 80;
+          window.scrollTo({ top, behavior: 'smooth' });
         });
       });
 
-      // 初始化：显示全部
-      if (filterButtons.length > 0) {
-        const active = document.querySelector('[data-filter][aria-pressed="true"]') || filterButtons[0];
-        updateActiveButton(active);
-        applyFilter(active.dataset.filter || 'all');
+      // 加载更多按钮
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+          itemsToShow += INCREMENT;
+          refreshVisibility();
+        });
+      }
+
+      // 初始化：应用初始筛选（全部）并渲染第一页
+      const initialActive = document.querySelector('[data-filter][aria-pressed="true"]') || filterButtons[0];
+      if (initialActive) {
+        updateActiveButton(initialActive);
+        applyFilter(initialActive.dataset.filter || 'all');
+      } else {
+        refreshVisibility();
       }
     })();
     // 移动端菜单切换
