@@ -209,9 +209,9 @@
     </nav>
 
     <!-- ============================ -->
-    <!-- CD 播放器 (右上角, 左盘右控) -->
+    <!-- CD 播放器 (右上角, 大播放器：仅在 md 及以上可见) -->
     <!-- ============================ -->
-    <div id="cd-player" class="fixed top-20 right-4 md:right-8 z-40 flex flex-row items-center gap-4 transition-all duration-300 hover:translate-y-1 p-2 rounded-xl">
+    <div id="cd-player" class="hidden md:flex fixed top-20 right-4 md:right-8 z-40 flex-row items-center gap-4 transition-all duration-300 hover:translate-y-1 p-2 rounded-xl">
         
         <!-- 1. 左边：CD 唱片主体 -->
         <div id="cd-disc-container" class="relative w-24 h-24 cd-disk shadow-lg animate-spin-slow paused flex-shrink-0 cursor-pointer group border-2 border-slate-700/50" title="点击播放/暂停">
@@ -252,6 +252,22 @@
             </div>
 
             <audio id="audio-element" preload="metadata"></audio>
+        </div>
+    </div>
+
+    <!-- Mini CD Player for Mobile (底部紧凑控件，仅在小屏显示) -->
+    <div id="cd-mini-player" class="fixed bottom-4 left-4 right-4 z-50 md:hidden flex items-center gap-3 p-3 rounded-full bg-slate-900/85 border border-slate-700 shadow-lg">
+        <img id="mini-cover" src="/images/cover/Jay.png" alt="mini cover" class="w-10 h-10 rounded-full object-cover border border-slate-700">
+        <div class="flex-1 min-w-0">
+            <div id="mini-song-title" class="text-sm font-medium text-white truncate">Jaychou's Mix</div>
+            <div id="mini-play-status" class="text-[11px] text-slate-400">PAUSED</div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="mini-prev-btn" class="text-slate-300 hover:text-white p-2"><i class="fa-solid fa-backward-step"></i></button>
+            <button id="mini-play-btn" class="w-10 h-10 rounded-full bg-gradient-to-br from-tech-blue to-tech-purple text-white flex items-center justify-center">
+                <i id="mini-play-icon" class="fa-solid fa-play"></i>
+            </button>
+            <button id="mini-next-btn" class="text-slate-300 hover:text-white p-2"><i class="fa-solid fa-forward-step"></i></button>
         </div>
     </div>
 
@@ -620,6 +636,15 @@
         const totalDurationEl = document.getElementById('total-duration');
         const playIcon = playBtn.querySelector('i');
 
+        // Mini player (mobile) 元素（可能不存在于桌面）
+        const miniPlayBtn = document.getElementById('mini-play-btn');
+        const miniPrevBtn = document.getElementById('mini-prev-btn');
+        const miniNextBtn = document.getElementById('mini-next-btn');
+        const miniPlayIcon = document.getElementById('mini-play-icon');
+        const miniSongTitle = document.getElementById('mini-song-title');
+        const miniPlayStatus = document.getElementById('mini-play-status');
+        const miniCover = document.getElementById('mini-cover');
+
         let isPlaying = false;
         let songIndex = 0;
 
@@ -634,6 +659,9 @@
             progressBar.style.width = '0%';
             currTimeEl.innerText = "0:00";
             totalDurationEl.innerText = "0:00";
+            // 同步迷你播放器（如果存在）
+            if (miniSongTitle) miniSongTitle.innerText = song.title;
+            if (miniCover) miniCover.src = song.cover;
         }
 
         // 播放
@@ -647,6 +675,16 @@
             playStatus.innerText = "PLAYING";
             playStatus.classList.remove('text-tech-blue');
             playStatus.classList.add('text-tech-green');
+            // 同步迷你播放器图标/状态
+            if (miniPlayIcon) {
+                miniPlayIcon.classList.remove('fa-play');
+                miniPlayIcon.classList.add('fa-pause');
+            }
+            if (miniPlayStatus) {
+                miniPlayStatus.innerText = "PLAYING";
+                miniPlayStatus.classList.remove('text-tech-blue');
+                miniPlayStatus.classList.add('text-tech-green');
+            }
             
             audio.play().catch(e => console.log("等待交互以播放音频"));
         }
@@ -662,6 +700,16 @@
             playStatus.innerText = "PAUSED";
             playStatus.classList.remove('text-tech-green');
             playStatus.classList.add('text-tech-blue');
+            // 同步迷你播放器图标/状态
+            if (miniPlayIcon) {
+                miniPlayIcon.classList.remove('fa-pause');
+                miniPlayIcon.classList.add('fa-play');
+            }
+            if (miniPlayStatus) {
+                miniPlayStatus.innerText = "PAUSED";
+                miniPlayStatus.classList.remove('text-tech-green');
+                miniPlayStatus.classList.add('text-tech-blue');
+            }
             
             audio.pause();
         }
@@ -737,6 +785,13 @@
 
         prevBtn.addEventListener('click', prevSong);
         nextBtn.addEventListener('click', nextSong);
+
+        // 绑定迷你播放器按钮（移动端）
+        if (miniPlayBtn) miniPlayBtn.addEventListener('click', () => {
+            if (isPlaying) pauseSong(); else playSong();
+        });
+        if (miniPrevBtn) miniPrevBtn.addEventListener('click', prevSong);
+        if (miniNextBtn) miniNextBtn.addEventListener('click', nextSong);
 
         // Audio 自身事件
         audio.addEventListener('timeupdate', updateProgress);
