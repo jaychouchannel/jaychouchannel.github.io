@@ -8,6 +8,8 @@
     <!-- 外部资源 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     
@@ -154,6 +156,11 @@
         @media (max-width: 768px) {
             .hero-decor { display: none; }
         }
+
+        /* 最终标题逐字符淡入 */
+        .char { display:inline-block; opacity:0; transform: translateY(8px); transition: opacity 360ms ease, transform 360ms ease; }
+        .char.show { opacity:1; transform: translateY(0); }
+        .char.grad { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(90deg, #38bdf8, #818cf8); }
     </style>
 </head>
 <body class="bg-tech-dark text-slate-200 font-sans min-h-screen selection:bg-tech-blue selection:text-white overflow-x-hidden">
@@ -276,26 +283,38 @@
     <section id="home" class="relative min-h-[75vh] flex items-center pt-20 pb-8 overflow-hidden">
         <div class="container mx-auto px-4 lg:px-8 relative z-10">
             <div class="flex flex-col lg:flex-row items-center gap-12">
-                <!-- 文字区 -->
+                <!-- 文字区：动态代码打字动画 -> 最终定格 -->
                 <div class="lg:w-1/2 text-center lg:text-left" data-aos="fade-right">
                     <div class="inline-flex items-center px-3 py-1 rounded-full border border-tech-blue/30 bg-tech-blue/10 text-tech-blue text-xs font-semibold mb-6 animate-pulse">
                         <span class="w-2 h-2 rounded-full bg-tech-blue mr-2"></span> Hello, World!
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
-                        用代码构建<br>
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-tech-blue to-tech-purple">未来的想象力</span>
-                    </h1>
-                    <p class="text-lg text-slate-400 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                        这里是 Jaychouchannel。我专注于分享高质量的算法解析、前沿技术栈实践，以及那些代码之外的随笔与思考。
-                    </p>
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                        <a href="#categories" class="px-8 py-3 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple text-white font-semibold shadow-lg hover:shadow-tech-blue/40 transition-all hover:-translate-y-1">
-                            开始探索
-                        </a>
-                        <a href="#about" class="px-8 py-3 rounded-full border border-slate-600 text-slate-300 hover:text-white hover:border-tech-blue hover:bg-tech-blue/5 transition-all">
-                            关于博主
-                        </a>
+
+                    <div id="dynamic-hero" class="max-w-xl mx-auto lg:mx-0">
+                        <!-- 代码打字区域（初始可见） -->
+                        <div id="code-anim" class="code-anim-container mb-6">
+                            <pre class="code-anim" id="code-lines"></pre>
+                            <span class="typing-cursor" id="code-cursor">|</span>
+                        </div>
+
+                        <!-- 最终定格标题（动画结束后显示） -->
+                        <h1 id="final-heading" class="text-4xl md:text-6xl font-bold text-white leading-tight mb-4 hidden">
+                            用代码构建<br>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-tech-blue to-tech-purple">未来的想象力</span>
+                        </h1>
+                        <p id="final-sub" class="text-lg text-slate-400 mb-8 max-w-xl leading-relaxed hidden">
+                            这里是 Jaychouchannel。我专注于分享高质量的算法解析、前沿技术栈实践，以及那些代码之外的随笔与思考。
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                            <a href="#categories" class="px-8 py-3 rounded-full bg-gradient-to-r from-tech-blue to-tech-purple text-white font-semibold shadow-lg hover:shadow-tech-blue/40 transition-all hover:-translate-y-1">
+                                开始探索
+                            </a>
+                            <a href="#about" class="px-8 py-3 rounded-full border border-slate-600 text-slate-300 hover:text-white hover:border-tech-blue hover:bg-tech-blue/5 transition-all">
+                                关于博主
+                            </a>
+                        </div>
                     </div>
+
                     <!-- 统计徽章 -->
                     <div class="mt-8 flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-6 justify-center lg:justify-start">
                         <div class="px-4 py-3 bg-slate-900/60 border border-slate-700 rounded-lg text-center">
@@ -594,6 +613,110 @@
     <script>
         // 初始化动画库
         AOS.init({ duration: 800, once: true });
+
+        /* =========================================
+           Hero 动态代码打字动画（在结束后定格到最终标题）
+           - 会尊重用户的 prefers-reduced-motion 设置
+           - 支持点击跳过动画直接定格
+           ========================================= */
+        (function(){
+            const root = document.getElementById('dynamic-hero');
+            if (!root) return;
+
+            const codeLines = [
+                "const build = () => {",
+                "  const future = imagine('tech + life');",
+                "  render(future);",
+                "};",
+                "build();"
+            ];
+
+            const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const codeEl = document.getElementById('code-lines');
+            const cursor = document.getElementById('code-cursor');
+            const codeContainer = document.getElementById('code-anim');
+            const finalHeading = document.getElementById('final-heading');
+            const finalSub = document.getElementById('final-sub');
+
+            function showFinal(){
+                if (codeContainer) codeContainer.classList.add('fade-out');
+                if (cursor) cursor.style.display = 'none';
+
+                // 逐字符显示标题（避免重复包装）
+                if (finalHeading) {
+                    finalHeading.classList.remove('hidden');
+                    // Prepare characters only once
+                    if (!finalHeading.dataset.animated) {
+                        finalHeading.dataset.animated = '1';
+                        // 固定两行文本：第一行普通，第二行带渐变
+                        const line1 = '用代码构建';
+                        const line2 = '未来的想象力';
+
+                        // 构建 HTML：每个字符包裹 span.char
+                        const spans1 = Array.from(line1).map((ch,i)=>`<span class="char" data-i="${i}">${ch}</span>`).join('');
+                        const spans2 = Array.from(line2).map((ch,i)=>`<span class="char grad" data-i="${i}">${ch}</span>`).join('');
+                        finalHeading.innerHTML = `${spans1}<br>${spans2}`;
+
+                        // 逐个添加 show class，产生连贯的淡入效果
+                        const allChars = finalHeading.querySelectorAll('.char');
+                        allChars.forEach((el, idx) => {
+                            const delay = 40 + idx * 35; // 基本延迟 + 逐字间隔
+                            setTimeout(()=> el.classList.add('show'), delay);
+                        });
+                    }
+                }
+
+                // 副标题在标题动画后出现，给一点延迟
+                if (finalSub) {
+                    setTimeout(()=>{
+                        finalSub.classList.remove('hidden');
+                        finalSub.classList.add('fade-in');
+                        setTimeout(()=>finalSub.classList.add('show'),20);
+                    }, 600 + (finalHeading ? finalHeading.querySelectorAll('.char').length * 30 : 0));
+                }
+            }
+
+            if (prefersReduced) {
+                // 直接展示最终画面
+                showFinal();
+                return;
+            }
+
+            let lineIndex = 0, charIndex = 0;
+            function typeNext(){
+                if (!codeEl) return;
+                if (lineIndex >= codeLines.length) {
+                    // 结束，稍作停顿后展示最终屏幕
+                    setTimeout(showFinal, 700);
+                    return;
+                }
+                const line = codeLines[lineIndex];
+                if (charIndex < line.length) {
+                    codeEl.textContent += line[charIndex++];
+                    const delay = 20 + Math.random() * 45; // 模拟更自然的打字节奏
+                    setTimeout(typeNext, delay);
+                } else {
+                    // 换行
+                    codeEl.textContent += '\n';
+                    lineIndex++; charIndex = 0;
+                    setTimeout(typeNext, 220);
+                }
+            }
+
+            // 点击可以立即跳到最终画面
+            if (codeContainer) codeContainer.addEventListener('click', showFinal);
+
+            // 启动动画，并在元素可见时开始（避免页面加载时离屏触发）
+            function startWhenVisible(){
+                const rect = root.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                    setTimeout(typeNext, 450);
+                    window.removeEventListener('scroll', startWhenVisible);
+                }
+            }
+            startWhenVisible();
+            window.addEventListener('scroll', startWhenVisible, { passive: true });
+        })();
 
         /* =========================================
            CD 播放器完整逻辑 (Playlist & Controls)
