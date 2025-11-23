@@ -167,6 +167,10 @@
                 </div>
                 <time datetime="2023-06-15" class="flex items-center">
                   <i class="fa-regular fa-calendar mr-2"></i> 2023-06-15
+                  <span id="view-count" class="ml-4 text-sm text-slate-400 flex items-center">
+                    <i class="fa-regular fa-eye mr-2"></i>
+                    <span id="view-count-num">—</span>
+                  </span>
                 </time>
               </div>
             </header>
@@ -416,6 +420,78 @@ function quickSort(arr) {
       const scrolled = (scrollTop / scrollHeight) * 100;
       document.getElementById('reading-progress').style.width = scrolled + '%';
     });
+
+    // 页面浏览量统计：优先使用 Firestore（若可用），否则回退到 localStorage（仅本机可见）
+    (function(){
+      const viewEl = document.getElementById('view-count');
+      if (!viewEl) return;
+
+      const articleId = encodeURIComponent(location.pathname.replace(/\//g,'_'));
+      const localKey = 'views:' + articleId;
+
+      function show(n){
+        const numEl = document.getElementById('view-count-num');
+        if (!numEl) return;
+        // 尝试解析为数字（兼容字符串或 firestore 数字类型）
+        const parsed = (typeof n === 'number') ? n : (n == null ? NaN : Number(n));
+        if (Number.isFinite(parsed)) {
+          // 简单千位分隔显示
+          numEl.textContent = parsed.toLocaleString();
+        } else {
+          numEl.textContent = '—';
+        }
+      }
+
+      // small loader for external scripts if needed
+      function loadScript(src){ return new Promise((res, rej)=>{ if (document.querySelector('script[src="'+src+'"]')) return res(); const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+      // Firestore path: collection 'meta' doc articleId with field 'views'
+      async function incrementRemote(){
+        try{
+          // ensure firebase SDK available
+          if (!(window.firebase && window.firebase.firestore)){
+            if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey){
+              await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+              await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+            } else {
+              return false; // no config
+            }
+          }
+
+          if (!firebase.apps || !firebase.apps.length){
+            try{ firebase.initializeApp(window.FIREBASE_CONFIG); }catch(e){}
+          }
+          const db = firebase.firestore();
+          const docRef = db.collection('meta').doc(articleId);
+          // increment atomically
+          await docRef.set({ views: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+          const snap = await docRef.get();
+          const val = snap.exists && snap.data().views ? snap.data().views : 0;
+          show(val);
+          return true;
+        }catch(err){ console.warn('View counter remote failed', err); return false; }
+      }
+
+      function incrementLocal(){
+        try{
+          const cur = parseInt(localStorage.getItem(localKey) || '0', 10) || 0;
+          const next = cur + 1;
+          localStorage.setItem(localKey, String(next));
+          show(next);
+          return true;
+        }catch(e){ console.warn('View counter local failed', e); show('—'); return false; }
+      }
+
+      // try remote first when FIREBASE_CONFIG is present
+      (async function(){
+        if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey){
+          const ok = await incrementRemote();
+          if (!ok) incrementLocal();
+        } else {
+          incrementLocal();
+        }
+      })();
+    })();
 
     /* 评论逻辑：优先检测全局 FIREBASE_CONFIG（由用户粘贴），若存在则使用 Firebase（匿名登录 + Firestore 实时监听）；否则回退到 localStorage（仅本机可见）
        - 仅修改评论相关逻辑与 DOM，不变更任何样式或页面其他脚本。 */
