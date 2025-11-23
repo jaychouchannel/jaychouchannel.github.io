@@ -11,6 +11,12 @@
   <!-- 引入 FontAwesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
+  <!-- 字体：Cascadia Code（用于代码块；若字体不可用，会回退到系统等宽字体） -->
+  <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Prism 语法高亮：使用 VSCode Dark+ 主题 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/prism-vsc-dark-plus.css">
+
   <!-- 配置 Tailwind 主题 -->
   <script>
     tailwind.config = {
@@ -57,8 +63,26 @@
     .prose h2 { margin-top: 2rem; margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700; color: #f1f5f9; border-left: 4px solid #38bdf8; padding-left: 1rem; }
     .prose h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1.25rem; font-weight: 600; color: #e2e8f0; }
     .prose p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
-    .prose pre { background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid #334155; }
-    .prose code { font-family: monospace; color: #38bdf8; }
+    /* 让 Prism/主题控制语法着色，保留容器样式使其类似 VSCode */
+    .prose pre { background: #0b1020; padding: 1rem 1rem 0.75rem 1rem; border-radius: 0.6rem; overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.03); position: relative; }
+    .prose pre code { font-family: 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace; font-size: 13px; line-height: 1.6; }
+    /* 小范围：行内 code 也使用 Cascadia Code */
+    .prose code { font-family: 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace; }
+    /* 仿 VSCode 顶部小圆点装饰 */
+    .prose pre::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      box-shadow: 14px 0 0 #f59e0b, 28px 0 0 #10b981; /* 黄色、绿色 作为辅助点 */
+      background: #ef4444; /* 红点 */
+      opacity: 0.95;
+    }
+    /* 给代码容器留出顶部空间以显示小圆点 */
+    .prose pre > code { display: block; padding-top: 14px; }
     
     .group:hover .fa-rocket {
       transform: rotate(45deg) translate(-2px, -2px);
@@ -213,10 +237,47 @@ function quickSort(arr) {
             </div>
           </article>
 
-          <div class="mt-8 bg-tech-card/30 border border-slate-800 rounded-2xl p-6">
-            <h3 class="text-lg font-semibold text-white mb-4">评论</h3>
-            <div class="text-slate-500 text-sm text-center py-8">
-              Giscus 评论组件加载区域
+          <div class="mt-8 bg-tech-card/30 border border-slate-800 rounded-2xl p-6" id="local-comments-container">
+            <h3 class="text-lg font-semibold text-white mb-2">评论</h3>
+
+            <div class="text-xs text-slate-400 mb-4">说明：默认使用本地存储（仅在本设备可见）。若要启用跨设备公开评论，请在页面底部定义全局 `FIREBASE_CONFIG`（Firebase Web 配置），并在 Firebase 控制台启用 Firestore 与匿名登录。</div>
+            <!-- 登录 / 认证 控件（仅在启用 Firebase 时可用） -->
+            <div id="auth-controls" class="mb-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
+                <input id="auth-email" type="email" placeholder="邮箱（用于登录/注册）" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none" />
+                <input id="auth-password" type="password" placeholder="密码" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none" />
+                <div class="md:col-span-1 flex items-center gap-2">
+                  <button id="auth-signup" class="px-3 py-2 rounded-lg bg-tech-purple text-white">注册</button>
+                  <button id="auth-signin" class="px-3 py-2 rounded-lg bg-tech-blue text-white">登录</button>
+                  <button id="auth-signout" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300 hidden">登出</button>
+                </div>
+              </div>
+              <div class="text-sm text-slate-400" id="auth-status">当前：未连接（将以匿名身份提交评论）</div>
+            </div>
+
+            <!-- 评论表单（保留原有 ID，便于替换） -->
+            <div id="comment-form" class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <input id="comment-name" type="text" placeholder="昵称 (必填)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none" />
+                <input id="comment-email" type="email" placeholder="邮箱 (用于识别，不公开)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none" />
+                <div class="md:col-span-1 flex items-center">
+                  <button id="save-identity" class="w-full px-4 py-2 rounded-lg bg-tech-blue text-white">保存昵称 & 邮箱</button>
+                </div>
+              </div>
+
+              <textarea id="comment-content" rows="4" placeholder="写下你的评论..." class="w-full px-3 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none mb-3"></textarea>
+
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-slate-400">你的邮箱仅用于识别，不会公开（除非你在 Firebase 中设置可见数据）。</div>
+                <div class="flex items-center gap-3">
+                  <button id="submit-comment" class="px-4 py-2 rounded-lg bg-tech-green text-white">发布评论</button>
+                  <button id="clear-form" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300">清空</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="comments-list" class="space-y-4">
+              <div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>
             </div>
           </div>
         </main>
@@ -319,8 +380,23 @@ function quickSort(arr) {
       <p class="text-slate-500 text-sm">&copy; 2025 Jaychouchannel. 保留所有权利。</p>
     </div>
   </footer>
+  
+  <script>
+    /* Firebase 配置：由用户提供，页面会将其暴露为 window.FIREBASE_CONFIG 供评论脚本检测使用 */
+    window.FIREBASE_CONFIG = {
+      apiKey: "AIzaSyCGLjAF0l7kNlEMeJoNL9oClDVuG1E5-xs",
+      authDomain: "jaychouchannel-comments.firebaseapp.com",
+      projectId: "jaychouchannel-comments",
+      storageBucket: "jaychouchannel-comments.firebasestorage.app",
+      messagingSenderId: "678871957340",
+      appId: "1:678871957340:web:e278852b3d44a7d6ac4b99",
+      measurementId: "G-YPV1JFH668"
+    };
+
+  </script>
 
   <script>
+    // Prism highlight will be initialized after loading Prism scripts below
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     const icon = btn.querySelector('i');
@@ -340,6 +416,243 @@ function quickSort(arr) {
       const scrolled = (scrollTop / scrollHeight) * 100;
       document.getElementById('reading-progress').style.width = scrolled + '%';
     });
+
+    /* 评论逻辑：优先检测全局 FIREBASE_CONFIG（由用户粘贴），若存在则使用 Firebase（匿名登录 + Firestore 实时监听）；否则回退到 localStorage（仅本机可见）
+       - 仅修改评论相关逻辑与 DOM，不变更任何样式或页面其他脚本。 */
+    (function(){
+      const key = 'comments:' + (location.pathname || location.href);
+      const nameEl = document.getElementById('comment-name');
+      const emailEl = document.getElementById('comment-email');
+      const saveBtn = document.getElementById('save-identity');
+      const contentEl = document.getElementById('comment-content');
+      const submitBtn = document.getElementById('submit-comment');
+      const clearBtn = document.getElementById('clear-form');
+      const listEl = document.getElementById('comments-list');
+
+      if (!listEl) return;
+
+      function escapeHtml(s){ return String(s).replace(/[&<>"'`]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;","`":"&#96;"})[c]); }
+
+      /* 本地存储实现（与原来行为一致） */
+      function loadIdentityLocal(){ try{ const raw=localStorage.getItem('comment-identity'); if(raw){const o=JSON.parse(raw); if(o.name) nameEl.value=o.name; if(o.email) emailEl.value=o.email;} }catch(e){} }
+      function saveIdentityLocal(){ try{ localStorage.setItem('comment-identity', JSON.stringify({ name: nameEl.value.trim(), email: emailEl.value.trim() })); alert('已保存'); }catch(e){ console.warn(e);} }
+      function loadCommentsLocal(){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
+      function saveCommentsLocal(arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){ console.warn(e); } }
+
+      function renderLocal(){
+        const items = loadCommentsLocal();
+        listEl.innerHTML = '';
+        if(!items.length){ listEl.innerHTML = '<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; }
+        items.slice().reverse().forEach(c=>{
+          const el = document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4';
+          const time = new Date(c.t).toLocaleString();
+          el.innerHTML = `
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${escapeHtml((c.name||'A').slice(0,1).toUpperCase())}</div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <div class="text-sm text-white font-medium">${escapeHtml(c.name || '匿名')}</div>
+                  <div class="text-xs text-slate-400">${escapeHtml(time)}</div>
+                </div>
+                <div class="mt-2 text-slate-200 text-sm whitespace-pre-wrap">${escapeHtml(c.content)}</div>
+              </div>
+            </div>`;
+
+          try{
+            const ident = JSON.parse(localStorage.getItem('comment-identity') || '{}');
+            if (ident.email && ident.email === c.email){
+              const del = document.createElement('button');
+              del.className = 'mt-3 text-xs text-rose-400 hover:underline bg-transparent';
+              del.innerText = '删除';
+              del.addEventListener('click', ()=>{
+                if (!confirm('确认删除此评论？')) return;
+                const arr = loadCommentsLocal().filter(x=>x.id !== c.id);
+                saveCommentsLocal(arr); renderLocal();
+              });
+              el.querySelector('.flex-1').appendChild(del);
+            }
+          }catch(e){}
+
+          listEl.appendChild(el);
+        });
+      }
+
+      /* Firebase 支持（可选）：检测全局 FIREBASE_CONFIG 对象 */
+      const FIREBASE_CONFIG = (typeof window !== 'undefined' && window.FIREBASE_CONFIG) ? window.FIREBASE_CONFIG : null;
+
+      async function loadScript(src){ return new Promise((res, rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+      if (FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey){
+        // 使用 Firebase（兼容脚本动态加载）
+        (async function(){
+          try{
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js');
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+          }catch(e){ console.warn('加载 Firebase 脚本失败，回退到本地存储', e); initLocalMode(); return; }
+
+          try{
+            firebase.initializeApp(FIREBASE_CONFIG);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            // article id 用于分隔不同文章的集合/文档
+            const articleId = encodeURIComponent(location.pathname.replace(/\//g,'_'));
+            const postsRef = db.collection('comments').doc(articleId).collection('posts');
+
+            // 匿名登录（若未登录）
+            await auth.signInAnonymously().catch(()=>{});
+
+            // 认证控件 DOM（如果存在）
+            const authEmailEl = document.getElementById('auth-email');
+            const authPasswordEl = document.getElementById('auth-password');
+            const authSignupBtn = document.getElementById('auth-signup');
+            const authSigninBtn = document.getElementById('auth-signin');
+            const authSignoutBtn = document.getElementById('auth-signout');
+            const authStatusEl = document.getElementById('auth-status');
+
+            // 更新 UI 根据当前用户状态
+            auth.onAuthStateChanged(user => {
+              if (!authStatusEl) return;
+              if (!user) {
+                authStatusEl.innerText = '当前：未连接';
+                if (authSignoutBtn) authSignoutBtn.classList.add('hidden');
+                return;
+              }
+              if (user.isAnonymous) {
+                authStatusEl.innerText = '当前：以匿名身份 (' + (user.uid ? user.uid.slice(0,6) : '') + ')';
+                if (authSignoutBtn) authSignoutBtn.classList.add('hidden');
+              } else {
+                authStatusEl.innerText = '已登录：' + (user.email || user.uid);
+                if (authSignoutBtn) authSignoutBtn.classList.remove('hidden');
+              }
+            });
+
+            // 绑定认证按钮事件（若元素存在）
+            authSignupBtn && authSignupBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              const email = (authEmailEl && authEmailEl.value || '').trim();
+              const pw = (authPasswordEl && authPasswordEl.value || '').trim();
+              if (!email || !pw) { alert('请输入邮箱与密码进行注册'); return; }
+              try {
+                await auth.createUserWithEmailAndPassword(email, pw);
+                alert('注册并登录成功');
+              } catch (err) { alert('注册失败：' + (err.message || err)); }
+            });
+
+            authSigninBtn && authSigninBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              const email = (authEmailEl && authEmailEl.value || '').trim();
+              const pw = (authPasswordEl && authPasswordEl.value || '').trim();
+              if (!email || !pw) { alert('请输入邮箱和密码登录'); return; }
+              try {
+                await auth.signInWithEmailAndPassword(email, pw);
+                alert('登录成功');
+              } catch (err) { alert('登录失败：' + (err.message || err)); }
+            });
+
+            authSignoutBtn && authSignoutBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              try {
+                await auth.signOut();
+                // 回到匿名身份，保持评论可用性
+                await auth.signInAnonymously().catch(()=>{});
+                alert('已登出，已切换回匿名身份');
+              } catch (err) { alert('登出失败：' + (err.message || err)); }
+            });
+
+            function renderFromSnapshot(docs){
+              listEl.innerHTML = '';
+              if (!docs.length){ listEl.innerHTML = '<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; }
+              docs.forEach(doc => {
+                const c = Object.assign({id: doc.id}, doc.data());
+                const el = document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4';
+                const time = c.t ? new Date(c.t).toLocaleString() : '';
+                el.innerHTML = `
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${escapeHtml((c.name||'A').slice(0,1).toUpperCase())}</div>
+                    <div class="flex-1">
+                      <div class="flex items-center justify-between">
+                        <div class="text-sm text-white font-medium">${escapeHtml(c.name || '匿名')}</div>
+                        <div class="text-xs text-slate-400">${escapeHtml(time)}</div>
+                      </div>
+                      <div class="mt-2 text-slate-200 text-sm whitespace-pre-wrap">${escapeHtml(c.content)}</div>
+                    </div>
+                  </div>`;
+
+                // 如果当前用户为 ownerUid，则显示删除按钮
+                    try{
+                      const me = auth.currentUser;
+                      if (me && c.ownerUid && me.uid === c.ownerUid){
+                        const del = document.createElement('button'); del.className='mt-3 text-xs text-rose-400 hover:underline bg-transparent'; del.innerText='删除';
+                        del.addEventListener('click', ()=>{ if(!confirm('确认删除此评论？')) return; postsRef.doc(doc.id).delete().catch(err=>alert('删除失败：'+err.message)); });
+                        el.querySelector('.flex-1').appendChild(del);
+                      }
+                    }catch(e){}
+
+                listEl.appendChild(el);
+              });
+            }
+
+            // 实时监听（按时间降序）
+            postsRef.orderBy('t','desc').onSnapshot(snap => {
+              renderFromSnapshot(snap.docs);
+            });
+
+            // 绑定表单事件
+            saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
+            clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+
+            submitBtn && submitBtn.addEventListener('click', async (e)=>{
+              e.preventDefault();
+              const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim();
+              if (!name){ alert('请输入昵称'); nameEl.focus(); return; }
+              if (!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; }
+              if (!content){ alert('请输入评论内容'); contentEl.focus(); return; }
+
+              const me = auth.currentUser; const ownerUid = me ? me.uid : null;
+              try{
+                await postsRef.add({ ownerUid, name, email, content, t: Date.now() });
+                localStorage.setItem('comment-identity', JSON.stringify({ name, email }));
+                contentEl.value = '';
+              }catch(err){ alert('提交评论失败：' + (err.message || err)); }
+            });
+
+          }catch(e){ console.warn('Firebase 初始化失败，回退到本地存储', e); initLocalMode(); }
+        })();
+      } else {
+        // 回退到本地实现
+        function initLocalMode(){
+          saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
+          clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+          submitBtn && submitBtn.addEventListener('click', (e)=>{
+            e.preventDefault();
+            const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim();
+            if (!name){ alert('请输入昵称'); nameEl.focus(); return; }
+            if (!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; }
+            if (!content){ alert('请输入评论内容'); contentEl.focus(); return; }
+
+            const arr = loadCommentsLocal();
+            const item = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,8), name, email, content, t: Date.now() };
+            arr.push(item); saveCommentsLocal(arr);
+            localStorage.setItem('comment-identity', JSON.stringify({ name, email }));
+            contentEl.value = '';
+            renderLocal();
+          });
+
+          // init
+          loadIdentityLocal(); renderLocal();
+        }
+
+        initLocalMode();
+      }
+    })();
+  </script>
+
+  <!-- Prism JS（放在页面末尾以加速渲染） -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+  <script>/* 初始化 Prism 语法高亮 */
+    if (window.Prism) Prism.highlightAll();
   </script>
 </body>
 </html>
