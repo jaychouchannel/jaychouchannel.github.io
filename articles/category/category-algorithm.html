@@ -138,13 +138,15 @@
             </a>
           </div>
 
-          <!-- 分类标签筛选 -->
-          <div class="mb-8 flex flex-wrap gap-2" role="toolbar" aria-label="文章分类过滤">
-            <button type="button" data-filter="all" class="px-4 py-1.5 bg-tech-blue/10 text-tech-blue border border-tech-blue/20 rounded-full text-sm font-medium hover:bg-tech-blue hover:text-white transition-all" aria-pressed="true">全部</button>
-            <button type="button" data-filter="sort" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">排序</button>
-            <button type="button" data-filter="graph" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">图论</button>
-            <button type="button" data-filter="dp" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">动态规划</button>
-            <button type="button" data-filter="tree" class="px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">数据结构</button>
+          <!-- 分类标签筛选 (移动端支持横向滚动) -->
+          <div class="mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div class="flex flex-wrap gap-2 overflow-x-auto sm:overflow-visible whitespace-nowrap" role="toolbar" aria-label="文章分类过滤">
+              <button type="button" data-filter="all" class="inline-block px-4 py-1.5 bg-tech-blue/10 text-tech-blue border border-tech-blue/20 rounded-full text-sm font-medium hover:bg-tech-blue hover:text-white transition-all" aria-pressed="true">全部</button>
+              <button type="button" data-filter="sort" class="inline-block px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">排序</button>
+              <button type="button" data-filter="graph" class="inline-block px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">图论</button>
+              <button type="button" data-filter="dp" class="inline-block px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">动态规划</button>
+              <button type="button" data-filter="tree" class="inline-block px-4 py-1.5 bg-slate-800 text-slate-300 border border-slate-700 rounded-full text-sm hover:border-tech-blue hover:text-tech-blue transition-all" aria-pressed="false">数据结构</button>
+            </div>
           </div>
 
           <!-- 文章卡片网格 (Grid Layout) -->
@@ -158,7 +160,7 @@
                    <span class="bg-slate-900/80 backdrop-blur-sm text-tech-blue text-xs px-2 py-1 rounded shadow-sm">算法 · 排序</span>
                 </div>
               </a>
-              <div class="p-5 flex flex-col flex-grow">
+              <div class="p-4 md:p-5 flex flex-col flex-grow">
                 <div class="flex items-center text-xs text-slate-500 mb-3 space-x-2">
                   <span><i class="fa-regular fa-calendar mr-1"></i> 2023-06-15</span>
                   <span>•</span>
@@ -182,7 +184,7 @@
                    <span class="bg-slate-900/80 backdrop-blur-sm text-tech-purple text-xs px-2 py-1 rounded shadow-sm">算法 · 图论</span>
                 </div>
               </a>
-              <div class="p-5 flex flex-col flex-grow">
+              <div class="p-4 md:p-5 flex flex-col flex-grow">
                 <div class="flex items-center text-xs text-slate-500 mb-3 space-x-2">
                   <span><i class="fa-regular fa-calendar mr-1"></i> 2024-02-08</span>
                   <span>•</span>
@@ -206,7 +208,7 @@
                    <span class="bg-slate-900/80 backdrop-blur-sm text-green-400 text-xs px-2 py-1 rounded shadow-sm">算法 · DP</span>
                 </div>
               </a>
-              <div class="p-5 flex flex-col flex-grow">
+              <div class="p-4 md:p-5 flex flex-col flex-grow">
                 <div class="flex items-center text-xs text-slate-500 mb-3 space-x-2">
                   <span><i class="fa-regular fa-calendar mr-1"></i> 2024-11-01</span>
                   <span>•</span>
@@ -230,7 +232,7 @@
                    <span class="bg-slate-900/80 backdrop-blur-sm text-yellow-400 text-xs px-2 py-1 rounded shadow-sm">算法 · 树</span>
                 </div>
               </a>
-              <div class="p-5 flex flex-col flex-grow">
+              <div class="p-4 md:p-5 flex flex-col flex-grow">
                 <div class="flex items-center text-xs text-slate-500 mb-3 space-x-2">
                   <span><i class="fa-regular fa-calendar mr-1"></i> 2024-09-15</span>
                   <span>•</span>
@@ -254,7 +256,7 @@
                    <span class="bg-slate-900/80 backdrop-blur-sm text-red-400 text-xs px-2 py-1 rounded shadow-sm">算法 · 搜索</span>
                 </div>
               </a>
-              <div class="p-5 flex flex-col flex-grow">
+              <div class="p-4 md:p-5 flex flex-col flex-grow">
                 <div class="flex items-center text-xs text-slate-500 mb-3 space-x-2">
                   <span><i class="fa-regular fa-calendar mr-1"></i> 2024-07-22</span>
                   <span>•</span>
@@ -278,7 +280,7 @@
                    <span class="bg-slate-900/80 backdrop-blur-sm text-pink-400 text-xs px-2 py-1 rounded shadow-sm">算法 · 贪心</span>
                 </div>
               </a>
-              <div class="p-5 flex flex-col flex-grow">
+              <div class="p-4 md:p-5 flex flex-col flex-grow">
                 <div class="flex items-center text-xs text-slate-500 mb-3 space-x-2">
                   <span><i class="fa-regular fa-calendar mr-1"></i> 2024-05-30</span>
                   <span>•</span>
@@ -297,7 +299,7 @@
 
           <!-- 加载更多 -->
           <div class="text-center mt-12">
-            <button id="load-more-btn" class="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-colors text-sm font-medium group">
+            <button id="load-more-btn" class="w-full sm:w-auto px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-colors text-sm font-medium group">
               加载更多文章 <i class="fa-solid fa-angle-down ml-2 group-hover:translate-y-1 transition-transform"></i>
             </button>
           </div>
@@ -305,7 +307,7 @@
 
         <!-- 右侧：固定侧边栏 (Sticky) -->
         <aside class="lg:col-span-4">
-          <div class="sticky top-24 space-y-6">
+          <div class="lg:sticky lg:top-24 space-y-6">
             
             <!-- 1. 作者名片 -->
             <div class="bg-tech-card/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-lg">
