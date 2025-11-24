@@ -161,6 +161,15 @@
         .char { display:inline-block; opacity:0; transform: translateY(8px); transition: opacity 360ms ease, transform 360ms ease; }
         .char.show { opacity:1; transform: translateY(0); }
         .char.grad { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(90deg, #38bdf8, #818cf8); }
+        
+        /* 移动端：把 AI 聊天按钮上移，避免与底部播放器重叠 */
+        @media (max-width: 767px) {
+            #ai-assistant-container {
+                bottom: 6.5rem !important; /* 把按钮上移到播放器之上（可调整） */
+                right: 1rem !important;
+                z-index: 60 !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-tech-dark text-slate-200 font-sans min-h-screen selection:bg-tech-blue selection:text-white overflow-x-hidden">
