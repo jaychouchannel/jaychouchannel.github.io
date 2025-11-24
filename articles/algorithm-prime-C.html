@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>C 语言判断质数与练习题 · Jaychouchannel</title>
+  
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 引入 FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- 字体：Cascadia Code（用于代码块） -->
+  <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Prism 语法高亮 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/prism-vsc-dark-plus.css">
+
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { 'tech-dark': '#0f172a', 'tech-card': '#1e293b', 'tech-blue': '#38bdf8' } } }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .glass-nav { background: rgba(15,23,42,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(56,189,248,0.1); }
+    .prose pre { background: #0b1020; padding: 1rem; border-radius: 0.6rem; overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.03); }
+    .prose code { font-family: 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace; }
+  </style>
+</head>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen flex flex-col">
+
+  <!-- 简洁导航（与其他文章页保持一致） -->
+  <nav class="fixed top-0 left-0 w-full z-50 glass-nav" id="navbar">
+    <div class="container mx-auto px-4 lg:px-8 h-16 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-tr from-tech-blue to-purple-500 rounded-full flex items-center justify-center text-white">J</div>
+        <div>
+          <div class="text-lg font-bold">Jaychou<span class="text-tech-blue">channel</span></div>
+          <div class="text-xs text-slate-400">Tech & Algorithm</div>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center space-x-4">
+        <a href="/articles" class="text-slate-300 hover:text-white">文章</a>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden text-slate-300 p-2"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="flex-grow pt-24 pb-12">
+    <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <main class="lg:col-span-8">
+          <article class="bg-tech-card/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 md:p-10 shadow-xl">
+            <header class="mb-8 border-b border-slate-700/50 pb-8">
+              <div class="flex items-center space-x-2 text-tech-blue text-sm font-semibold mb-3">
+                <span class="bg-tech-blue/10 px-2 py-0.5 rounded text-xs uppercase tracking-wider">Algorithm</span>
+                <span class="text-slate-500">•</span>
+                <span class="text-slate-400">10 min read</span>
+              </div>
+              <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">用 C 语言判断质数：方法与练习题</h1>
+              <div class="flex items-center text-sm text-slate-400">
+                <div class="flex items-center mr-6"><div class="w-6 h-6 rounded-full bg-gradient-to-tr from-tech-blue to-purple-500 flex items-center justify-center mr-2 text-white text-xs font-bold">C</div><span>Jaychouchannel</span></div>
+                <time datetime="2025-11-24" class="flex items-center"><i class="fa-regular fa-calendar mr-2"></i> 2025-11-24</time>
+              </div>
+            </header>
+
+            <div class="prose prose-invert max-w-none">
+              <p class="text-lg leading-relaxed text-slate-300">本篇介绍如何用 C 语言实现质数判断（Primality Test），从基础暴力算法到更高效的优化实现，并通过若干例题加深理解。</p>
+
+              <h2>一、什么是质数</h2>
+              <p>质数（prime）是大于 1 且仅能被 1 和自身整除的正整数。</p>
+
+              <h2>二、最简单的判断方法（试除法）</h2>
+              <p>对 n 进行从 2 到 n-1 的试除，若存在能整除的数则非质数。时间复杂度 O(n)。</p>
+
+                <pre><code class="language-c">#include <stdbool.h>
+        #include <stdio.h>
+
+        bool is_prime_simple(int n) {
+          if (n <= 1) return false;
+          for (int i = 2; i < n; i++) {
+            if (n % i == 0) return false;
+          }
+          return true;
+        }
+
+        int main(void) {
+          printf("%d\n", is_prime_simple(97));   /* 1 表示 true */
+          printf("%d\n", is_prime_simple(100));  /* 0 表示 false */
+          return 0;
+        }
+                </code></pre>
+
+              <h2>三、优化：只需试除到 sqrt(n)</h2>
+              <p>若 n 有一个因子 a ≤ b 且 a*b = n，则 a ≤ sqrt(n)。因此只需检查到 sqrt(n)。复杂度 O(sqrt(n))。</p>
+
+                <pre><code class="language-c">#include <stdbool.h>
+        #include <stdio.h>
+
+        bool is_prime_sqrt(int n) {
+          if (n <= 1) return false;
+          if (n == 2) return true;
+          if (n % 2 == 0) return false;
+          for (int i = 3; i * i <= n; i += 2) {
+            if (n % i == 0) return false;
+          }
+          return true;
+        }
+
+        int main(void) {
+          printf("%d\n", is_prime_sqrt(97)); /* 1 */
+          return 0;
+        }
+                </code></pre>
+
+              <h2>四、更高阶：Miller–Rabin（随机化，大数常用）</h2>
+              <p>对大整数判断质数，可使用 Miller–Rabin 作为概率性测试，或结合确定性基对常用上限。</p>
+
+              <h2>练习题</h2>
+              <ol class="list-decimal pl-5 space-y-2 text-slate-300">
+                <li>实现一个函数返回小于等于 N 的质数数量（素数计数）。</li>
+                <li>用线性筛（Euler 筛）实现 1..N 的素数列表。</li>
+                <li>对大于 10^9 的数，尝试用 Miller–Rabin 验证质数性并讨论误判概率。</li>
+              </ol>
+
+              <p class="mt-6 text-slate-400">更多讨论与参考请在评论区留言：</p>
+            </div>
+          </article>
+
+          <!-- 评论区（每篇文章基于 pathname 自动区分） -->
+          <div class="mt-8 bg-tech-card/30 border border-slate-800 rounded-2xl p-6" id="local-comments-container">
+            <h3 class="text-lg font-semibold text-white mb-2">评论</h3>
+            <div class="text-xs text-slate-400 mb-4">说明：支持本地存储与 Firebase（若配置）。评论数据按页面路径隔离，确保每篇文章评论独立。</div>
+            <div id="comment-form" class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <input id="comment-name" type="text" placeholder="昵称 (必填)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200" />
+                <input id="comment-email" type="email" placeholder="邮箱 (用于识别，不公开)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200" />
+                <div class="md:col-span-1 flex items-center">
+                  <button id="save-identity" class="w-full px-4 py-2 rounded-lg bg-tech-blue text-white">保存昵称 & 邮箱</button>
+                </div>
+              </div>
+              <textarea id="comment-content" rows="4" placeholder="写下你的评论..." class="w-full px-3 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 mb-3"></textarea>
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-slate-400">你的邮箱仅用于识别，不会公开。</div>
+                <div class="flex items-center gap-3">
+                  <button id="submit-comment" class="px-4 py-2 rounded-lg bg-tech-green text-white">发布评论</button>
+                  <button id="clear-form" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300">清空</button>
+                </div>
+              </div>
+            </div>
+            <div id="comments-list" class="space-y-4">
+              <div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>
+            </div>
+          </div>
+
+        </main>
+
+        <aside class="lg:col-span-4">
+          <div class="lg:sticky lg:top-24 space-y-6">
+            <div class="bg-tech-card/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-lg">
+              <div class="flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-tech-blue to-purple-600 mb-4">
+                  <img src="/images/avatar.jpg" alt="Avatar" class="w-full h-full rounded-full object-cover border-2 border-slate-900">
+                </div>
+                <h3 class="text-xl font-bold text-white">Jaychouchannel</h3>
+                <p class="text-slate-400 text-sm mt-1 mb-4">前端技术探索 | 算法爱好者</p>
+                
+                <div class="flex justify-center space-x-4 mb-6">
+                  <a href="https://github.com/jaychouchannel" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-tech-blue hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
+                  <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-400 hover:text-white transition-all"><i class="fa-brands fa-twitter"></i></a>
+                  <a href="https://www.linkedin.com/in/ruyi-wen-08980a384" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+
+                <a href="/" class="w-full py-2 px-4 border border-slate-600 text-slate-300 rounded-lg hover:border-tech-blue hover:text-tech-blue hover:bg-tech-blue/5 transition-all text-sm font-medium">
+                  <i class="fa-solid fa-home mr-2"></i>回到主页
+                </a>
+              </div>
+            </div>
+            <!-- 相关推荐 -->
+            <div class="bg-tech-card/30 border border-slate-800 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-white mb-4 border-l-4 border-tech-blue pl-3">相关推荐</h3>
+              <ul class="space-y-4">
+                <li>
+                  <a href="/articles/algorithm-sort.html" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-blue transition-colors line-clamp-2">深入理解 JavaScript 排序算法：从原理到实现</span>
+                    <span class="text-xs text-slate-500 mt-1 block"><i class="fa-solid fa-fire text-red-500 mr-1"></i> 1.2k 阅读</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/articles/algorithm-graph.html" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-blue transition-colors line-clamp-2">图论入门与实战：最短路与联通性</span>
+                    <span class="text-xs text-slate-500 mt-1 block"><i class="fa-solid fa-fire text-red-500 mr-1"></i> 980 阅读</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/articles/algorithm-dp.html" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-blue transition-colors line-clamp-2">动态规划思路拆解：转移方程与状态压缩</span>
+                    <span class="text-xs text-slate-500 mt-1 block"><i class="fa-solid fa-fire text-red-500 mr-1"></i> 720 阅读</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 教程资料 -->
+            <div class="bg-tech-card/30 border border-slate-800 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-white mb-4 border-l-4 border-tech-purple pl-3">教程资料</h3>
+              <ul class="space-y-4">
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-purple transition-colors">MDN Web Docs - JavaScript 教程</span>
+                    <span class="text-xs text-slate-500 mt-1 block">权威的前端开发文档</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-purple transition-colors">JavaScript.info (现代 JavaScript 教程)</span>
+                    <span class="text-xs text-slate-500 mt-1 block">内容详尽的开源教程</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="group block">
+                    <span class="text-sm text-slate-300 group-hover:text-tech-purple transition-colors">LeetCode 算法题库</span>
+                    <span class="text-xs text-slate-500 mt-1 block">算法练习与实战</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-slate-900 border-t border-slate-800 mt-auto">
+    <div class="container mx-auto px-4 py-10 text-center">
+      <p class="text-slate-500 text-sm">&copy; 2025 Jaychouchannel. 保留所有权利。</p>
+    </div>
+  </footer>
+
+  <script>
+    // 评论逻辑与 article 页相同的本地回退实现（简化版）
+    (function(){
+      const key = 'comments:' + (location.pathname || location.href);
+      const nameEl = document.getElementById('comment-name');
+      const emailEl = document.getElementById('comment-email');
+      const saveBtn = document.getElementById('save-identity');
+      const contentEl = document.getElementById('comment-content');
+      const submitBtn = document.getElementById('submit-comment');
+      const clearBtn = document.getElementById('clear-form');
+      const listEl = document.getElementById('comments-list');
+
+      function loadCommentsLocal(){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
+      function saveCommentsLocal(arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){ console.warn(e); } }
+      function loadIdentityLocal(){ try{ const raw=localStorage.getItem('comment-identity'); if(raw){const o=JSON.parse(raw); if(o.name) nameEl.value=o.name; if(o.email) emailEl.value=o.email;} }catch(e){} }
+      function saveIdentityLocal(){ try{ localStorage.setItem('comment-identity', JSON.stringify({ name: nameEl.value.trim(), email: emailEl.value.trim() })); alert('已保存'); }catch(e){ console.warn(e);} }
+
+      function renderLocal(){ const items = loadCommentsLocal(); listEl.innerHTML = ''; if(!items.length){ listEl.innerHTML = '<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; } items.slice().reverse().forEach(c=>{ const el = document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4'; const time = new Date(c.t).toLocaleString(); el.innerHTML = `<div class="flex items-start gap-3"><div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${(c.name||'A').slice(0,1).toUpperCase()}</div><div class="flex-1"><div class="flex items-center justify-between"><div class="text-sm text-white font-medium">${c.name||'匿名'}</div><div class="text-xs text-slate-400">${time}</div></div><div class="mt-2 text-slate-200 text-sm whitespace-pre-wrap">${c.content}</div></div></div>`; listEl.appendChild(el); }); }
+
+      saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
+      clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+      submitBtn && submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim(); if (!name){ alert('请输入昵称'); nameEl.focus(); return; } if (!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; } if (!content){ alert('请输入评论内容'); contentEl.focus(); return; } const arr = loadCommentsLocal(); const item = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,8), name, email, content, t: Date.now() }; arr.push(item); saveCommentsLocal(arr); localStorage.setItem('comment-identity', JSON.stringify({ name, email })); contentEl.value = ''; renderLocal(); });
+
+      loadIdentityLocal(); renderLocal();
+    })();
+  </script>
+  <!-- Prism JS（放在页面末尾以加速渲染） -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js"></script>
+  <script>if (window.Prism) Prism.highlightAll();</script>
+</body>
+</html>

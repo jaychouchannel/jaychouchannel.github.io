@@ -245,6 +245,11 @@ function quickSort(arr) {
             <h3 class="text-lg font-semibold text-white mb-2">评论</h3>
 
             <div class="text-xs text-slate-400 mb-4">说明：默认使用本地存储（仅在本设备可见）。若要启用跨设备公开评论，请在页面底部定义全局 `FIREBASE_CONFIG`（Firebase Web 配置），并在 Firebase 控制台启用 Firestore 与匿名登录。</div>
+            <!-- 当页面回退到本地模式时显示的提示（便于用户知晓并重试） -->
+            <div id="comment-mode-banner" class="hidden mb-4 px-3 py-2 rounded-lg bg-yellow-900/40 text-yellow-200 text-sm">
+              当前评论正在使用 <strong>本地模式</strong>（仅在本设备可见）。若想启用跨设备同步，请确保页面可以访问 Firebase 脚本。
+              <button id="retry-firebase" class="ml-3 inline-block px-2 py-1 rounded bg-yellow-600 text-xs">尝试重新连接云评论</button>
+            </div>
             <!-- 登录 / 认证 控件（仅在启用 Firebase 时可用） -->
             <div id="auth-controls" class="mb-4">
               <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
@@ -698,6 +703,30 @@ function quickSort(arr) {
       } else {
         // 回退到本地实现
         function initLocalMode(){
+          // 显示本地模式提示与重试按钮
+          try{ document.getElementById('comment-mode-banner').classList.remove('hidden'); }catch(e){}
+          const retryBtn = document.getElementById('retry-firebase');
+          if (retryBtn && !retryBtn._bound) {
+            retryBtn.addEventListener('click', async (e)=>{
+              e.preventDefault();
+              retryBtn.disabled = true; retryBtn.textContent = '正在尝试...';
+              // 尝试重新加载 firebase 脚本并初始化远端模式
+              try{
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js');
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+                // 如果加载成功，刷新页面以触发 Firebase 路径（简单可靠），或尝试热初始化
+                location.reload();
+                return;
+              }catch(err){
+                console.warn('重试加载 Firebase 失败', err);
+                alert('无法加载 Firebase 脚本，可能是网络或浏览器拦截导致。请在浏览器设置允许第三方脚本或尝试使用其他网络。');
+              } finally {
+                retryBtn.disabled = false; retryBtn.textContent = '尝试重新连接云评论';
+              }
+            });
+            retryBtn._bound = true;
+          }
           saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
           clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
           submitBtn && submitBtn.addEventListener('click', (e)=>{
