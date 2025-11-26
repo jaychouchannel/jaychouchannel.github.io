@@ -250,19 +250,7 @@ function quickSort(arr) {
               当前评论正在使用 <strong>本地模式</strong>（仅在本设备可见）。若想启用跨设备同步，请确保页面可以访问 Firebase 脚本。
               <button id="retry-firebase" class="ml-3 inline-block px-2 py-1 rounded bg-yellow-600 text-xs">尝试重新连接云评论</button>
             </div>
-            <!-- 登录 / 认证 控件（仅在启用 Firebase 时可用） -->
-            <div id="auth-controls" class="mb-4">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
-                <input id="auth-email" type="email" placeholder="邮箱（用于登录/注册）" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none" />
-                <input id="auth-password" type="password" placeholder="密码" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none" />
-                <div class="md:col-span-1 flex items-center gap-2">
-                  <button id="auth-signup" class="px-3 py-2 rounded-lg bg-tech-purple text-white">注册</button>
-                  <button id="auth-signin" class="px-3 py-2 rounded-lg bg-tech-blue text-white">登录</button>
-                  <button id="auth-signout" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300 hidden">登出</button>
-                </div>
-              </div>
-              <div class="text-sm text-slate-400" id="auth-status">当前：未连接（将以匿名身份提交评论）</div>
-            </div>
+            <!-- 已移除登录/注册控件：仅允许匿名评论 -->
 
             <!-- 评论表单（保留原有 ID，便于替换） -->
             <div id="comment-form" class="mb-6">
@@ -583,63 +571,7 @@ function quickSort(arr) {
             // 匿名登录（若未登录）
             await auth.signInAnonymously().catch(()=>{});
 
-            // 认证控件 DOM（如果存在）
-            const authEmailEl = document.getElementById('auth-email');
-            const authPasswordEl = document.getElementById('auth-password');
-            const authSignupBtn = document.getElementById('auth-signup');
-            const authSigninBtn = document.getElementById('auth-signin');
-            const authSignoutBtn = document.getElementById('auth-signout');
-            const authStatusEl = document.getElementById('auth-status');
-
-            // 更新 UI 根据当前用户状态
-            auth.onAuthStateChanged(user => {
-              if (!authStatusEl) return;
-              if (!user) {
-                authStatusEl.innerText = '当前：未连接';
-                if (authSignoutBtn) authSignoutBtn.classList.add('hidden');
-                return;
-              }
-              if (user.isAnonymous) {
-                authStatusEl.innerText = '当前：以匿名身份 (' + (user.uid ? user.uid.slice(0,6) : '') + ')';
-                if (authSignoutBtn) authSignoutBtn.classList.add('hidden');
-              } else {
-                authStatusEl.innerText = '已登录：' + (user.email || user.uid);
-                if (authSignoutBtn) authSignoutBtn.classList.remove('hidden');
-              }
-            });
-
-            // 绑定认证按钮事件（若元素存在）
-            authSignupBtn && authSignupBtn.addEventListener('click', async (e) => {
-              e.preventDefault();
-              const email = (authEmailEl && authEmailEl.value || '').trim();
-              const pw = (authPasswordEl && authPasswordEl.value || '').trim();
-              if (!email || !pw) { alert('请输入邮箱与密码进行注册'); return; }
-              try {
-                await auth.createUserWithEmailAndPassword(email, pw);
-                alert('注册并登录成功');
-              } catch (err) { alert('注册失败：' + (err.message || err)); }
-            });
-
-            authSigninBtn && authSigninBtn.addEventListener('click', async (e) => {
-              e.preventDefault();
-              const email = (authEmailEl && authEmailEl.value || '').trim();
-              const pw = (authPasswordEl && authPasswordEl.value || '').trim();
-              if (!email || !pw) { alert('请输入邮箱和密码登录'); return; }
-              try {
-                await auth.signInWithEmailAndPassword(email, pw);
-                alert('登录成功');
-              } catch (err) { alert('登录失败：' + (err.message || err)); }
-            });
-
-            authSignoutBtn && authSignoutBtn.addEventListener('click', async (e) => {
-              e.preventDefault();
-              try {
-                await auth.signOut();
-                // 回到匿名身份，保持评论可用性
-                await auth.signInAnonymously().catch(()=>{});
-                alert('已登出，已切换回匿名身份');
-              } catch (err) { alert('登出失败：' + (err.message || err)); }
-            });
+            // 仅使用匿名身份（anonymous）提交评论；移除登录/注册事件处理
 
             function renderFromSnapshot(docs){
               listEl.innerHTML = '';
