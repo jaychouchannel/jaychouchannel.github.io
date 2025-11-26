@@ -1,0 +1,86 @@
+/* 简洁的评论区样式，适合深色主题，可按需调整或合并到站点全局样式 */
+
+.comments-widget {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(148,163,184,0.06);
+  padding: 1rem;
+  border-radius: 12px;
+  color: #e6eef8;
+  font-family: Inter, system-ui, -apple-system, "Helvetica Neue", "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+}
+
+.comments-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #fff;
+}
+.comments-header .comments-sub {
+  font-size: 12px;
+  color: #9aa6b8;
+  margin-top: 4px;
+}
+
+.comments-form {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+#cw-form .cw-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+#cw-form input[type="text"], #cw-form input[type="email"], #cw-form textarea {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148,163,184,0.06);
+  color: #e6eef8;
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.95rem;
+}
+#cw-form input { flex: 1 1 auto; min-width: 0; }
+#cw-form textarea { width: 100%; resize: vertical; margin-bottom: 0.6rem; min-height: 84px; }
+
+.cw-actions { display:flex; justify-content:space-between; align-items:center; gap:0.75rem; }
+.cw-note { color: #9aa6b8; font-size: 12px; }
+
+.cw-btn {
+  background: transparent;
+  border: 1px solid rgba(148,163,184,0.06);
+  color: #cfe8ff;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.cw-btn.primary {
+  background: linear-gradient(90deg,#38bdf8,#818cf8);
+  border: none;
+  color: #042028;
+  font-weight: 600;
+}
+.cw-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.comments-list { margin-top: 0.75rem; }
+.cw-empty { text-align: center; color: #9aa6b8; padding: 1rem 0; }
+.cw-item { padding: 0.75rem; border-radius: 8px; background: rgba(2,6,23,0.35); margin-bottom: 0.6rem; border: 1px solid rgba(148,163,184,0.02); }
+.cw-meta { display:flex; justify-content:space-between; gap: 0.5rem; align-items:baseline; margin-bottom:0.45rem; }
+.cw-author { font-weight: 600; color: #e7f8ff; font-size: 0.95rem; }
+.cw-time { font-size: 12px; color: #9aa6b8; }
+.cw-body { color: #dbeeff; line-height: 1.5; font-size: 0.95rem; white-space: pre-wrap; word-break: break-word; }
+
+/* 简单 toast */
+.cw-toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  bottom: 20px;
+  padding: 0.6rem 1rem;
+  background: rgba(10, 20, 30, 0.9);
+  color: #e6eef8;
+  border-radius: 10px;
+  opacity: 0;
+  transition: transform 260ms ease, opacity 260ms ease;
+  z-index: 9999;
+}
+.cw-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }

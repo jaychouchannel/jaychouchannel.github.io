@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>something · Jaychouchannel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/prism-vsc-dark-plus.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tech-dark': '#0f172a',
+            'tech-card': '#1e293b',
+            'tech-blue': '#38bdf8',
+            'tech-purple': '#818cf8',
+          },
+          fontFamily: { sans: ['Inter','system-ui','-apple-system','sans-serif'] },
+          boxShadow: { 'glow': '0 0 15px rgba(56, 189, 248, 0.5)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .glass-nav { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(56, 189, 248, 0.1); }
+    .prose pre { background: #0b1020; padding: 1rem; border-radius: 0.6rem; overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.03); }
+    .prose pre code { font-family: 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace; font-size:13px; }
+  </style>
+</head>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen flex flex-col">
+
+  <nav class="fixed top-0 left-0 w-full z-50 glass-nav" id="navbar">
+    <div class="container mx-auto px-4 lg:px-8 h-16 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-tech-blue to-tech-purple rounded-full flex items-center justify-center">
+          <i class="fa-solid fa-rocket text-white"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-lg font-bold">Jaychouchannel</span>
+          <span class="text-xs text-slate-400">Travel & Thoughts</span>
+        </div>
+      </a>
+
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="/" class="text-sm text-slate-300">首页</a>
+        <a href="/articles" class="text-sm text-slate-300">文章</a>
+        <a href="/articles/category/category-travel.html" class="text-sm font-semibold text-tech-blue">旅行</a>
+        <a href="/#about" class="text-sm text-slate-300">关于我</a>
+      </div>
+
+      <button id="mobile-menu-btn" class="md:hidden text-slate-300 p-2"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="flex-grow pt-24 pb-12">
+    <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <main class="lg:col-span-8">
+          <article class="bg-tech-card/50 border border-slate-700/50 rounded-2xl p-6 md:p-10 shadow-xl">
+            <header class="mb-8 border-b border-slate-700/50 pb-8">
+              <div class="flex items-center text-sm text-slate-400 mb-3">
+                <span class="px-2 py-1 bg-slate-800 rounded text-tech-blue">旅行随笔</span>
+              </div>
+              <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">二十六日晨有感</h1>
+              <div class="flex items-center text-sm text-slate-400">
+                <div class="mr-4">2025-11-26</div>
+                <div id="view-count" class="ml-2">浏览：<span id="view-count-num">-</span></div>
+              </div>
+            </header>
+
+            <div class="prose prose-invert max-w-none">
+              <p class="text-lg text-slate-300">金猴奋起千钧棒，玉宇澄清万里埃 ——— 毛泽东 《七律 · 和郭沫若同志》</p>
+
+              <br>
+              <p>&emsp;&emsp;
+                算至今日，我已经很久没有写过一篇像样的随笔了。还记得小学的时候，应试教育的氛围不重，我们的语文老师给我们布置的作业是出去春游写游记，我带着满心欢喜，踏春归来，在小小的方格纸上歪歪扭扭地写下几个字。那时候，老师会让我们反复斟酌与咀嚼自己写的段落，不厌其烦地修改，最后才会让我们工整地誊写在作文本上并上交。
+                <br>
+                <br>
+                &emsp;&emsp;
+                那时候的我认为，文章就应该这样，历经雕琢，玉汝于成。后来随着升学，学业压力的增大，中学老师对待作文的态度变了许多，我们在考试之外练习写作的机会少之又少，更谈不上一遍遍修改了。我们为了六十分的作文，去背套路和模版，逐渐失去了灵光乍现的感受。写散文的机会更是渺茫，大家每天对着试卷上的论题展开无休止的论证，令人唏嘘。
+                <br>
+                <br>
+                &emsp;&emsp;
+                那时候的我认为，人生也应该这样，随心奔跑，放任自由。后来随着长大，开始认真观察周围的人与事，才后知后觉童年时期的美好。大家以一种奇怪的方式交谈着，以一种奇怪的方式聚集着，以一种奇怪的方式生活着，或者说被一种奇怪的生活方式推着走；我不懂社会学，我也没学过，但我想大概率是因为，时代发展到这里了。
+                <br>
+                <br>
+                &emsp;&emsp;
+                夜深时，我偶尔觉得，人生有太多束缚，大家都被定死在一个方格里，几乎逃离不出这个框架。我们学的东西是千万人嚼烂过后的甘蔗，我们把时间浪费在无意义的交流与幻想中，我们的人生轨迹似乎只有几条赶不到尽头的黑暗的路。
+                <br>
+                <br>
+                &emsp;&emsp;
+                而且，我似乎已经很久没有收获到成功的喜悦了（苦笑），每忆及此，内心不由得一阵抽痛，然后逐渐陷入不堪回首的记忆。2024年，我本以为拿下了一次较为重要的考试，于是我去上海游玩放松，戏剧性的一幕是，当我逛玩城隍庙回酒店入住的路上，我收到了我考砸的消息，而且是史上最糟糕的一次。我愣在原地，望着周围的高楼和外滩奢靡的气息，在无尽的黑夜里陷入深思。我已经忘了当时的心路历程，但我敢肯定，那种滋味我这辈子不想再感受一次。
+                <br>
+                <br>
+                &emsp;&emsp;
+                所以，人生太多太多不确定，太多太多烦心事，太多太多人情世故，历史是一位好老师，当你不懂时，她不介意再教你一次。现在的我仍然被条条框框束缚，仍然被时代的浪潮所裹挟，仍然在人与人，人与事之间斡旋。但，又何须惧怕呢，失败是人生的主旋律，从来没有什么战无不胜。若还心存理想，请到中流击水，浪遏飞舟。
+                <br>
+                <br>
+                &emsp;&emsp;有诗云：<br>
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;一从大地起风雷，便有精生白骨堆。<br>
+
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;僧是愚氓犹可训，妖为鬼蜮必成灾。<br>
+
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;金猴奋起千钧棒，玉宇澄清万里埃。<br>
+
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;今日欢呼孙大圣，只缘妖雾又重来。<br>
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;——— 毛泽东 《七律 · 和郭沫若同志》
+              </p>
+
+
+            
+              <figure class="my-6">
+                <img src="/images/cover/placeholder-travel.jpg" alt="旅行照片占位" class="rounded-lg shadow-lg border border-slate-700 w-full" onerror="this.style.display='none'">
+                <figcaption class="text-center text-sm text-slate-500 mt-2">图：示例照片（请替换）</figcaption>
+              </figure>
+
+              <h2>小结</h2>
+              <p>旅行的感受、对读者的建议与下一步计划。</p>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-slate-700/50 flex flex-wrap gap-2">
+              <a href="#" class="px-3 py-1 bg-slate-800 text-tech-blue text-sm rounded-full">#旅行</a>
+              <a href="#" class="px-3 py-1 bg-slate-800 text-tech-blue text-sm rounded-full">#随笔</a>
+            </div>
+          </article>
+
+          <div class="mt-8 bg-tech-card/30 border border-slate-800 rounded-2xl p-6" id="local-comments-container">
+            <h3 class="text-lg font-semibold text-white mb-2">评论</h3>
+            <div class="text-xs text-slate-400 mb-4">默认使用本地存储评论；可配置全局 `FIREBASE_CONFIG` 启用云端评论。</div>
+            <div id="comment-form" class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <input id="comment-name" type="text" placeholder="昵称 (必填)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200" />
+                <input id="comment-email" type="email" placeholder="邮箱 (用于识别，不公开)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200" />
+                <div class="md:col-span-1 flex items-center"><button id="save-identity" class="w-full px-4 py-2 rounded-lg bg-tech-blue text-white">保存昵称 & 邮箱</button></div>
+              </div>
+
+              <textarea id="comment-content" rows="4" placeholder="写下你的评论..." class="w-full px-3 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 mb-3"></textarea>
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-slate-400">你的邮箱仅用于识别，不会公开。</div>
+                <div class="flex items-center gap-3"><button id="submit-comment" class="px-4 py-2 rounded-lg bg-tech-green text-white">发布评论</button><button id="clear-form" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300">清空</button></div>
+              </div>
+            </div>
+
+            <div id="comments-list" class="space-y-4"><div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div></div>
+          </div>
+        </main>
+
+        <aside class="lg:col-span-4">
+          <div class="sticky top-24 space-y-6">
+            <div class="bg-tech-card/50 rounded-2xl p-6">
+              <div class="text-center">
+                <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-tech-blue to-purple-600 mb-4 flex items-center justify-center mx-auto">
+                  <img src="/images/avatar.jpg" alt="Avatar" class="w-full h-full rounded-full object-cover object-center block border-2 border-slate-900">
+                </div>
+                <p class="text-slate-400 text-sm mt-1">旅行记录与随想</p>
+              </div>
+            </div>
+
+            <div class="bg-tech-card/30 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-white mb-4">推荐阅读</h3>
+              <ul class="space-y-3 text-slate-300">
+                <li><a href="#" class="hover:text-tech-blue">瑞士阿尔卑斯徒步心得</a></li>
+                <li><a href="#" class="hover:text-tech-blue">城市旅行：慢游指南</a></li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-slate-900 border-t border-slate-800 mt-auto">
+    <div class="container mx-auto px-4 py-10 text-center"><p class="text-slate-500 text-sm">&copy; 2025 Jaychouchannel. 保留所有权利。</p></div>
+  </footer>
+
+  <script>
+    // 简化的浏览量与评论本地逻辑，复制自算法模板的本地回退实现
+    (function(){
+      const viewEl = document.getElementById('view-count-num');
+      if (!viewEl) return;
+      const articleId = encodeURIComponent(location.pathname.replace(/\//g,'_'));
+      const localKey = 'views:' + articleId;
+      try{ const cur = parseInt(localStorage.getItem(localKey)||'0',10)||0; const next = cur+1; localStorage.setItem(localKey,String(next)); viewEl.textContent = next.toLocaleString(); }catch(e){ viewEl.textContent='—'; }
+    })();
+
+    (function(){
+      const key = 'comments:' + (location.pathname || location.href);
+      const nameEl = document.getElementById('comment-name');
+      const emailEl = document.getElementById('comment-email');
+      const saveBtn = document.getElementById('save-identity');
+      const contentEl = document.getElementById('comment-content');
+      const submitBtn = document.getElementById('submit-comment');
+      const clearBtn = document.getElementById('clear-form');
+      const listEl = document.getElementById('comments-list');
+      if(!listEl) return;
+      function loadCommentsLocal(){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
+      function saveCommentsLocal(arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){} }
+      function render(){ const items = loadCommentsLocal(); listEl.innerHTML=''; if(!items.length){ listEl.innerHTML='<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; } items.slice().reverse().forEach(c=>{ const el=document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4'; el.innerHTML=`<div class="flex items-start gap-3"><div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${(c.name||'A').slice(0,1).toUpperCase()}</div><div class="flex-1"><div class="text-sm font-semibold text-white">${c.name}</div><div class="text-xs text-slate-400">${new Date(c.t).toLocaleString()}</div><div class="mt-2 text-slate-300">${c.content}</div></div></div>`; listEl.appendChild(el); }); }
+      saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); try{ localStorage.setItem('comment-identity', JSON.stringify({ name:nameEl.value.trim(), email:emailEl.value.trim() })); alert('已保存'); }catch(e){}});
+      clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+      submitBtn && submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim(); if(!name){ alert('请输入昵称'); nameEl.focus(); return; } if(!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; } if(!content){ alert('请输入评论内容'); contentEl.focus(); return; } const arr = loadCommentsLocal(); const item = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,8), name, email, content, t: Date.now() }; arr.push(item); saveCommentsLocal(arr); localStorage.setItem('comment-identity', JSON.stringify({ name, email })); contentEl.value=''; render(); });
+      (function loadIdentity(){ try{ const raw = localStorage.getItem('comment-identity'); if(raw){ const o = JSON.parse(raw); if(o.name) nameEl.value = o.name; if(o.email) emailEl.value = o.email; } }catch(e){} })();
+      render();
+    })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+</body>
+</html>
