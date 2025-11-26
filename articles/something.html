@@ -176,7 +176,7 @@
   </footer>
 
   <script>
-    // 简化的浏览量与评论本地逻辑，复制自算法模板的本地回退实现
+    // 浏览量统计（localStorage 回退）
     (function(){
       const viewEl = document.getElementById('view-count-num');
       if (!viewEl) return;
@@ -184,7 +184,23 @@
       const localKey = 'views:' + articleId;
       try{ const cur = parseInt(localStorage.getItem(localKey)||'0',10)||0; const next = cur+1; localStorage.setItem(localKey,String(next)); viewEl.textContent = next.toLocaleString(); }catch(e){ viewEl.textContent='—'; }
     })();
+  </script>
 
+  <script>
+    /* Firebase 配置（与算法页保持一致，可按需替换） */
+    window.FIREBASE_CONFIG = {
+      apiKey: "AIzaSyCGLjAF0l7kNlEMeJoNL9oClDVuG1E5-xs",
+      authDomain: "jaychouchannel-comments.firebaseapp.com",
+      projectId: "jaychouchannel-comments",
+      storageBucket: "jaychouchannel-comments.firebasestorage.app",
+      messagingSenderId: "678871957340",
+      appId: "1:678871957340:web:e278852b3d44a7d6ac4b99",
+      measurementId: "G-YPV1JFH668"
+    };
+  </script>
+
+  <script>
+    /* 评论逻辑：优先检测全局 FIREBASE_CONFIG（由用户粘贴），若存在则使用 Firebase（匿名登录 + Firestore 实时监听）；否则回退到 localStorage（仅本机可见） */
     (function(){
       const key = 'comments:' + (location.pathname || location.href);
       const nameEl = document.getElementById('comment-name');
@@ -194,15 +210,216 @@
       const submitBtn = document.getElementById('submit-comment');
       const clearBtn = document.getElementById('clear-form');
       const listEl = document.getElementById('comments-list');
-      if(!listEl) return;
+
+      if (!listEl) return;
+
+      function escapeHtml(s){ return String(s).replace(/[&<>"'`]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;","`":"&#96;"})[c]); }
+
+      /* 本地存储实现 */
+      function loadIdentityLocal(){ try{ const raw=localStorage.getItem('comment-identity'); if(raw){const o=JSON.parse(raw); if(o.name) nameEl.value=o.name; if(o.email) emailEl.value=o.email;} }catch(e){} }
+      function saveIdentityLocal(){ try{ localStorage.setItem('comment-identity', JSON.stringify({ name: nameEl.value.trim(), email: emailEl.value.trim() })); alert('已保存'); }catch(e){ console.warn(e);} }
       function loadCommentsLocal(){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
-      function saveCommentsLocal(arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){} }
-      function render(){ const items = loadCommentsLocal(); listEl.innerHTML=''; if(!items.length){ listEl.innerHTML='<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; } items.slice().reverse().forEach(c=>{ const el=document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4'; el.innerHTML=`<div class="flex items-start gap-3"><div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${(c.name||'A').slice(0,1).toUpperCase()}</div><div class="flex-1"><div class="text-sm font-semibold text-white">${c.name}</div><div class="text-xs text-slate-400">${new Date(c.t).toLocaleString()}</div><div class="mt-2 text-slate-300">${c.content}</div></div></div>`; listEl.appendChild(el); }); }
-      saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); try{ localStorage.setItem('comment-identity', JSON.stringify({ name:nameEl.value.trim(), email:emailEl.value.trim() })); alert('已保存'); }catch(e){}});
-      clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
-      submitBtn && submitBtn.addEventListener('click', (e)=>{ e.preventDefault(); const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim(); if(!name){ alert('请输入昵称'); nameEl.focus(); return; } if(!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; } if(!content){ alert('请输入评论内容'); contentEl.focus(); return; } const arr = loadCommentsLocal(); const item = { id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,8), name, email, content, t: Date.now() }; arr.push(item); saveCommentsLocal(arr); localStorage.setItem('comment-identity', JSON.stringify({ name, email })); contentEl.value=''; render(); });
-      (function loadIdentity(){ try{ const raw = localStorage.getItem('comment-identity'); if(raw){ const o = JSON.parse(raw); if(o.name) nameEl.value = o.name; if(o.email) emailEl.value = o.email; } }catch(e){} })();
-      render();
+      function saveCommentsLocal(arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){ console.warn(e); } }
+
+      function renderLocal(){
+        const items = loadCommentsLocal();
+        listEl.innerHTML = '';
+        if(!items.length){ listEl.innerHTML = '<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; }
+        items.slice().reverse().forEach(c=>{
+          const el = document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4';
+          const time = new Date(c.t).toLocaleString();
+          el.innerHTML = `
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${escapeHtml((c.name||'A').slice(0,1).toUpperCase())}</div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <div class="text-sm text-white font-medium">${escapeHtml(c.name || '匿名')}</div>
+                  <div class="text-xs text-slate-400">${escapeHtml(time)}</div>
+                </div>
+                <div class="mt-2 text-slate-200 text-sm whitespace-pre-wrap">${escapeHtml(c.content)}</div>
+              </div>
+            </div>`;
+
+          try{
+            const ident = JSON.parse(localStorage.getItem('comment-identity') || '{}');
+            if (ident.email && ident.email === c.email){
+              const del = document.createElement('button');
+              del.className = 'mt-3 text-xs text-rose-400 hover:underline bg-transparent';
+              del.innerText = '删除';
+              del.addEventListener('click', ()=>{
+                if (!confirm('确认删除此评论？')) return;
+                const arr = loadCommentsLocal().filter(x=>x.id !== c.id);
+                saveCommentsLocal(arr); renderLocal();
+              });
+              el.querySelector('.flex-1').appendChild(del);
+            }
+          }catch(e){}
+
+          listEl.appendChild(el);
+        });
+      }
+
+      /* Firebase 支持（可选）：检测全局 FIREBASE_CONFIG 对象 */
+      const FIREBASE_CONFIG = (typeof window !== 'undefined' && window.FIREBASE_CONFIG) ? window.FIREBASE_CONFIG : null;
+
+      async function loadScript(src){ return new Promise((res, rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+      if (FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey){
+        // 使用 Firebase（兼容脚本动态加载）
+        (async function(){
+          try{
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js');
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+          }catch(e){ console.warn('加载 Firebase 脚本失败，回退到本地存储', e); initLocalMode(); return; }
+
+          try{
+            firebase.initializeApp(FIREBASE_CONFIG);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            const articleId = encodeURIComponent(location.pathname.replace(/\//g,'_'));
+            const postsRef = db.collection('comments').doc(articleId).collection('posts');
+
+            await auth.signInAnonymously().catch(()=>{});
+
+            const authEmailEl = document.getElementById('auth-email');
+            const authPasswordEl = document.getElementById('auth-password');
+            const authSignupBtn = document.getElementById('auth-signup');
+            const authSigninBtn = document.getElementById('auth-signin');
+            const authSignoutBtn = document.getElementById('auth-signout');
+            const authStatusEl = document.getElementById('auth-status');
+
+            auth.onAuthStateChanged(user => {
+              if (!authStatusEl) return;
+              if (!user) {
+                authStatusEl.innerText = '当前：未连接';
+                if (authSignoutBtn) authSignoutBtn.classList.add('hidden');
+                return;
+              }
+              if (user.isAnonymous) {
+                authStatusEl.innerText = '当前：以匿名身份 (' + (user.uid ? user.uid.slice(0,6) : '') + ')';
+                if (authSignoutBtn) authSignoutBtn.classList.add('hidden');
+              } else {
+                authStatusEl.innerText = '已登录：' + (user.email || user.uid);
+                if (authSignoutBtn) authSignoutBtn.classList.remove('hidden');
+              }
+            });
+
+            authSignupBtn && authSignupBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              const email = (authEmailEl && authEmailEl.value || '').trim();
+              const pw = (authPasswordEl && authPasswordEl.value || '').trim();
+              if (!email || !pw) { alert('请输入邮箱与密码进行注册'); return; }
+              try { await auth.createUserWithEmailAndPassword(email, pw); alert('注册并登录成功'); } catch (err) { alert('注册失败：' + (err.message || err)); }
+            });
+
+            authSigninBtn && authSigninBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              const email = (authEmailEl && authEmailEl.value || '').trim();
+              const pw = (authPasswordEl && authPasswordEl.value || '').trim();
+              if (!email || !pw) { alert('请输入邮箱和密码登录'); return; }
+              try { await auth.signInWithEmailAndPassword(email, pw); alert('登录成功'); } catch (err) { alert('登录失败：' + (err.message || err)); }
+            });
+
+            authSignoutBtn && authSignoutBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              try { await auth.signOut(); await auth.signInAnonymously().catch(()=>{}); alert('已登出，已切换回匿名身份'); } catch (err) { alert('登出失败：' + (err.message || err)); }
+            });
+
+            function renderFromSnapshot(docs){
+              listEl.innerHTML = '';
+              if (!docs.length){ listEl.innerHTML = '<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; }
+              docs.forEach(doc => {
+                const c = Object.assign({id: doc.id}, doc.data());
+                const el = document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4';
+                const time = c.t ? new Date(c.t).toLocaleString() : '';
+                el.innerHTML = `
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${escapeHtml((c.name||'A').slice(0,1).toUpperCase())}</div>
+                    <div class="flex-1">
+                      <div class="flex items-center justify-between">
+                        <div class="text-sm text-white font-medium">${escapeHtml(c.name || '匿名')}</div>
+                        <div class="text-xs text-slate-400">${escapeHtml(time)}</div>
+                      </div>
+                      <div class="mt-2 text-slate-200 text-sm whitespace-pre-wrap">${escapeHtml(c.content)}</div>
+                    </div>
+                  </div>`;
+
+                try{
+                  const me = auth.currentUser;
+                  if (me && c.ownerUid && me.uid === c.ownerUid){
+                    const del = document.createElement('button'); del.className='mt-3 text-xs text-rose-400 hover:underline bg-transparent'; del.innerText='删除';
+                    del.addEventListener('click', ()=>{ if(!confirm('确认删除此评论？')) return; postsRef.doc(doc.id).delete().catch(err=>alert('删除失败：'+err.message)); });
+                    el.querySelector('.flex-1').appendChild(del);
+                  }
+                }catch(e){}
+
+                listEl.appendChild(el);
+              });
+            }
+
+            postsRef.orderBy('t','desc').onSnapshot(snap => { renderFromSnapshot(snap.docs); });
+
+            saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
+            clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+
+            submitBtn && submitBtn.addEventListener('click', async (e)=>{
+              e.preventDefault();
+              const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim();
+              if (!name){ alert('请输入昵称'); nameEl.focus(); return; }
+              if (!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; }
+              if (!content){ alert('请输入评论内容'); contentEl.focus(); return; }
+
+              const me = auth.currentUser; const ownerUid = me ? me.uid : null;
+              try{ await postsRef.add({ ownerUid, name, email, content, t: Date.now() }); localStorage.setItem('comment-identity', JSON.stringify({ name, email })); contentEl.value = ''; }catch(err){ alert('提交评论失败：' + (err.message || err)); }
+            });
+
+          }catch(e){ console.warn('Firebase 初始化失败，回退到本地存储', e); initLocalMode(); }
+        })();
+      } else {
+        // 本地回退实现
+        function initLocalMode(){
+          try{ document.getElementById('comment-mode-banner') && document.getElementById('comment-mode-banner').classList.remove('hidden'); }catch(e){}
+          const retryBtn = document.getElementById('retry-firebase');
+          if (retryBtn && !retryBtn._bound) {
+            retryBtn.addEventListener('click', async (e)=>{
+              e.preventDefault();
+              retryBtn.disabled = true; retryBtn.textContent = '正在尝试...';
+              try{
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js');
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+                location.reload();
+                return;
+              }catch(err){
+                console.warn('重试加载 Firebase 失败', err);
+                alert('无法加载 Firebase 脚本，可能是网络或浏览器拦截导致。');
+              } finally { retryBtn.disabled = false; retryBtn.textContent = '尝试重新连接云评论'; }
+            });
+            retryBtn._bound = true;
+          }
+          saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
+          clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+          submitBtn && submitBtn.addEventListener('click', (e)=>{
+            e.preventDefault();
+            const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim();
+            if (!name){ alert('请输入昵称'); nameEl.focus(); return; }
+            if (!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; }
+            if (!content){ alert('请输入评论内容'); contentEl.focus(); return; }
+
+            const arr = loadCommentsLocal();
+            const item = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,8), name, email, content, t: Date.now() };
+            arr.push(item); saveCommentsLocal(arr);
+            localStorage.setItem('comment-identity', JSON.stringify({ name, email }));
+            contentEl.value = '';
+            renderLocal();
+          });
+
+          loadIdentityLocal(); renderLocal();
+        }
+
+        initLocalMode();
+      }
     })();
   </script>
 
