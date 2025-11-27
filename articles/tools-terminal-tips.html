@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>终端使用技巧：PowerShell 与 Bash 必备命令 · Jaychouchannel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: { colors: { 'tech-dark':'#0f172a','tech-card':'#1e293b','tech-blue':'#38bdf8' }, fontFamily:{ sans:['Inter','system-ui','-apple-system','sans-serif'] } } } }
+  </script>
+  <style>
+    .glass-nav{ background: rgba(15,23,42,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom:1px solid rgba(56,189,248,0.1); }
+    .prose pre{ background:#0b1020; padding:1rem; border-radius:.6rem; overflow-x:auto; }
+  </style>
+</head>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen flex flex-col">
+  <nav class="fixed top-0 left-0 w-full z-50 glass-nav">
+    <div class="container mx-auto px-4 lg:px-8 h-16 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-3"><div class="w-10 h-10 bg-gradient-to-br from-tech-blue to-purple-600 rounded-full flex items-center justify-center"><i class="fa-solid fa-rocket text-white"></i></div><div class="flex flex-col"><span class="text-lg font-bold">Jaychouchannel</span><span class="text-xs text-slate-400">Tools & Productivity</span></div></a>
+      <div class="hidden md:flex items-center space-x-6"><a href="/" class="text-sm text-slate-300">首页</a><a href="/articles" class="text-sm text-slate-300">文章</a><a href="/articles/category/category-tools.html" class="text-sm font-semibold text-tech-blue">工具</a><a href="/#about" class="text-sm text-slate-300">关于我</a></div>
+      <button id="mobile-menu-btn" class="md:hidden text-slate-300 p-2"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="flex-grow pt-24 pb-12">
+    <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <main class="lg:col-span-8">
+          <article class="bg-tech-card/50 border border-slate-700/50 rounded-2xl p-6 md:p-10 shadow-xl">
+            <header class="mb-8 border-b border-slate-700/50 pb-8">
+              <div class="flex items-center text-sm text-slate-400 mb-3"><span class="px-2 py-1 bg-slate-800 rounded text-tech-blue">工具</span></div>
+              <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">终端使用技巧：PowerShell 与 Bash 必备命令</h1>
+              <div class="flex items-center text-sm text-slate-400"><div class="mr-4">2025-05-22</div><div id="view-count" class="ml-2">浏览：<span id="view-count-num">-</span></div></div>
+            </header>
+
+            <div class="prose prose-invert max-w-none">
+              <p class="text-lg text-slate-300">终端效率对日常开发极为重要。本文列出常用别名、快捷命令与脚本，让你在不同平台都能提高效率。</p>
+              <h2>常用别名示例</h2>
+              <pre><code>alias gs='git status'
+alias ll='ls -alF'</code></pre>
+              <h2>跨平台注意点</h2>
+              <p>在 Windows 上推荐使用 PowerShell/Windows Terminal，在 macOS/Linux 使用 Bash 或 Zsh，并配置常用别名与函数。</p>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-slate-700/50 flex flex-wrap gap-2"><a href="#" class="px-3 py-1 bg-slate-800 text-tech-blue text-sm rounded-full">#终端</a><a href="#" class="px-3 py-1 bg-slate-800 text-tech-blue text-sm rounded-full">#脚本</a></div>
+          </article>
+
+          <div class="mt-8 bg-tech-card/30 border border-slate-800 rounded-2xl p-6" id="local-comments-container">
+            <h3 class="text-lg font-semibold text-white mb-2">评论</h3>
+            <div class="text-xs text-slate-400 mb-4">默认使用本地存储，支持全局 `FIREBASE_CONFIG` 启用云端评论。</div>
+            <div id="comment-form" class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <input id="comment-name" type="text" placeholder="昵称 (必填)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200" />
+                <input id="comment-email" type="email" placeholder="邮箱 (用于识别，不公开)" class="md:col-span-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200" />
+                <div class="md:col-span-1 flex items-center"><button id="save-identity" class="w-full px-4 py-2 rounded-lg bg-tech-blue text-white">保存昵称 & 邮箱</button></div>
+              </div>
+              <textarea id="comment-content" rows="4" placeholder="写下你的评论..." class="w-full px-3 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 mb-3"></textarea>
+              <div class="flex items-center justify-between"><div class="text-sm text-slate-400">你的邮箱仅用于识别，不会公开。</div><div class="flex items-center gap-3"><button id="submit-comment" class="px-4 py-2 rounded-lg bg-tech-blue text-white">发布评论</button><button id="clear-form" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-300">清空</button></div></div>
+            </div>
+            <div id="comments-list" class="space-y-4"><div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div></div>
+          </div>
+        </main>
+
+        <aside class="lg:col-span-4">
+          <div class="sticky top-24 space-y-6">
+            <div class="bg-tech-card/50 rounded-2xl p-6">
+              <div class="text-center"><div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-tech-blue to-purple-600 mb-4 flex items-center justify-center mx-auto"><img src="/images/avatar.jpg" alt="Avatar" class="w-full h-full rounded-full object-cover object-center block border-2 border-slate-900"></div><p class="text-slate-400 text-sm mt-1">工具与工作流笔记</p></div>
+            </div>
+            <div class="bg-tech-card/30 rounded-2xl p-6"><h3 class="text-lg font-bold text-white mb-4">推荐阅读</h3><ul class="space-y-3 text-slate-300"><li><a href="/articles/tools-vscode-plugins.html" class="hover:text-tech-blue">VSCode 必备插件推荐</a></li><li><a href="/articles/tools-terminal-tips.html" class="hover:text-tech-blue">终端使用技巧</a></li></ul></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-slate-900 border-t border-slate-800 mt-auto"><div class="container mx-auto px-4 py-10 text-center"><p class="text-slate-500 text-sm">&copy; 2025 Jaychouchannel. 保留所有权利。</p></div></footer>
+
+  <script>
+    (function(){ const viewEl=document.getElementById('view-count-num'); if(!viewEl) return; const articleId=encodeURIComponent(location.pathname.replace(/\//g,'_')); const localKey='views:'+articleId; try{ const cur=parseInt(localStorage.getItem(localKey)||'0',10)||0; const next=cur+1; localStorage.setItem(localKey,String(next)); viewEl.textContent=next.toLocaleString(); }catch(e){ if(viewEl) viewEl.textContent='—'; }})();
+  </script>
+
+<script>
+    /* Firebase 配置：由用户提供，页面会将其暴露为 window.FIREBASE_CONFIG 供评论脚本检测使用 */
+    window.FIREBASE_CONFIG = {
+      apiKey: "AIzaSyCGLjAF0l7kNlEMeJoNL9oClDVuG1E5-xs",
+      authDomain: "jaychouchannel-comments.firebaseapp.com",
+      projectId: "jaychouchannel-comments",
+      storageBucket: "jaychouchannel-comments.firebasestorage.app",
+      messagingSenderId: "678871957340",
+      appId: "1:678871957340:web:e278852b3d44a7d6ac4b99",
+      measurementId: "G-YPV1JFH668"
+    };
+
+  </script>
+
+  <script>
+    // Prism highlight will be initialized after loading Prism scripts below
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const icon = btn.querySelector('i');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+      if (menu.classList.contains('hidden')) {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      } else {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      }
+    });
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      document.getElementById('reading-progress').style.width = scrolled + '%';
+    });
+
+    // 页面浏览量统计：优先使用 Firestore（若可用），否则回退到 localStorage（仅本机可见）
+    (function(){
+      const viewEl = document.getElementById('view-count');
+      if (!viewEl) return;
+
+      const articleId = encodeURIComponent(location.pathname.replace(/\//g,'_'));
+      const localKey = 'views:' + articleId;
+
+      function show(n){
+        const numEl = document.getElementById('view-count-num');
+        if (!numEl) return;
+        // 尝试解析为数字（兼容字符串或 firestore 数字类型）
+        const parsed = (typeof n === 'number') ? n : (n == null ? NaN : Number(n));
+        if (Number.isFinite(parsed)) {
+          // 简单千位分隔显示
+          numEl.textContent = parsed.toLocaleString();
+        } else {
+          numEl.textContent = '—';
+        }
+      }
+
+      // small loader for external scripts if needed
+      function loadScript(src){ return new Promise((res, rej)=>{ if (document.querySelector('script[src="'+src+'"]')) return res(); const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+      // Firestore path: collection 'meta' doc articleId with field 'views'
+      async function incrementRemote(){
+        try{
+          // ensure firebase SDK available
+          if (!(window.firebase && window.firebase.firestore)){
+            if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey){
+              await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+              await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+            } else {
+              return false; // no config
+            }
+          }
+
+          if (!firebase.apps || !firebase.apps.length){
+            try{ firebase.initializeApp(window.FIREBASE_CONFIG); }catch(e){}
+          }
+          const db = firebase.firestore();
+          const docRef = db.collection('meta').doc(articleId);
+          // increment atomically
+          await docRef.set({ views: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+          const snap = await docRef.get();
+          const val = snap.exists && snap.data().views ? snap.data().views : 0;
+          show(val);
+          return true;
+        }catch(err){ console.warn('View counter remote failed', err); return false; }
+      }
+
+      function incrementLocal(){
+        try{
+          const cur = parseInt(localStorage.getItem(localKey) || '0', 10) || 0;
+          const next = cur + 1;
+          localStorage.setItem(localKey, String(next));
+          show(next);
+          return true;
+        }catch(e){ console.warn('View counter local failed', e); show('—'); return false; }
+      }
+
+      // try remote first when FIREBASE_CONFIG is present
+      (async function(){
+        if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey){
+          const ok = await incrementRemote();
+          if (!ok) incrementLocal();
+        } else {
+          incrementLocal();
+        }
+      })();
+    })();
+
+    /* 评论逻辑：优先检测全局 FIREBASE_CONFIG（由用户粘贴），若存在则使用 Firebase（匿名登录 + Firestore 实时监听）；否则回退到 localStorage（仅本机可见）
+       - 仅修改评论相关逻辑与 DOM，不变更任何样式或页面其他脚本。 */
+    (function(){
+      const key = 'comments:' + (location.pathname || location.href);
+      const nameEl = document.getElementById('comment-name');
+      const emailEl = document.getElementById('comment-email');
+      const saveBtn = document.getElementById('save-identity');
+      const contentEl = document.getElementById('comment-content');
+      const submitBtn = document.getElementById('submit-comment');
+      const clearBtn = document.getElementById('clear-form');
+      const listEl = document.getElementById('comments-list');
+
+      if (!listEl) return;
+
+      function escapeHtml(s){ return String(s).replace(/[&<>"'`]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;","`":"&#96;"})[c]); }
+
+      /* 本地存储实现（与原来行为一致） */
+      function loadIdentityLocal(){ try{ const raw=localStorage.getItem('comment-identity'); if(raw){const o=JSON.parse(raw); if(o.name) nameEl.value=o.name; if(o.email) emailEl.value=o.email;} }catch(e){} }
+      function saveIdentityLocal(){ try{ localStorage.setItem('comment-identity', JSON.stringify({ name: nameEl.value.trim(), email: emailEl.value.trim() })); alert('已保存'); }catch(e){ console.warn(e);} }
+      function loadCommentsLocal(){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
+      function saveCommentsLocal(arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){ console.warn(e); } }
+
+      function renderLocal(){
+        const items = loadCommentsLocal();
+        listEl.innerHTML = '';
+        if(!items.length){ listEl.innerHTML = '<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; }
+        items.slice().reverse().forEach(c=>{
+          const el = document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4';
+          const time = new Date(c.t).toLocaleString();
+          el.innerHTML = `
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${escapeHtml((c.name||'A').slice(0,1).toUpperCase())}</div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <div class="text-sm text-white font-medium">${escapeHtml(c.name || '匿名')}</div>
+                  <div class="text-xs text-slate-400">${escapeHtml(time)}</div>
+                </div>
+                <div class="mt-2 text-slate-200 text-sm whitespace-pre-wrap">${escapeHtml(c.content)}</div>
+              </div>
+            </div>`;
+
+          try{
+            const ident = JSON.parse(localStorage.getItem('comment-identity') || '{}');
+            if (ident.email && ident.email === c.email){
+              const del = document.createElement('button');
+              del.className = 'mt-3 text-xs text-rose-400 hover:underline bg-transparent';
+              del.innerText = '删除';
+              del.addEventListener('click', ()=>{
+                if (!confirm('确认删除此评论？')) return;
+                const arr = loadCommentsLocal().filter(x=>x.id !== c.id);
+                saveCommentsLocal(arr); renderLocal();
+              });
+              el.querySelector('.flex-1').appendChild(del);
+            }
+          }catch(e){}
+
+          listEl.appendChild(el);
+        });
+      }
+
+      /* Firebase 支持（可选）：检测全局 FIREBASE_CONFIG 对象 */
+      const FIREBASE_CONFIG = (typeof window !== 'undefined' && window.FIREBASE_CONFIG) ? window.FIREBASE_CONFIG : null;
+
+      async function loadScript(src){ return new Promise((res, rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+      if (FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey){
+        // 使用 Firebase（兼容脚本动态加载）
+        (async function(){
+          try{
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js');
+            await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+          }catch(e){ console.warn('加载 Firebase 脚本失败，回退到本地存储', e); initLocalMode(); return; }
+
+          try{
+            firebase.initializeApp(FIREBASE_CONFIG);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            // article id 用于分隔不同文章的集合/文档
+            const articleId = encodeURIComponent(location.pathname.replace(/\//g,'_'));
+            const postsRef = db.collection('comments').doc(articleId).collection('posts');
+
+            // 匿名登录（若未登录）
+            await auth.signInAnonymously().catch(()=>{});
+
+            // 仅使用匿名身份（anonymous）提交评论；移除登录/注册事件处理
+
+            function renderFromSnapshot(docs){
+              listEl.innerHTML = '';
+              if (!docs.length){ listEl.innerHTML = '<div class="text-slate-500 text-sm text-center py-6">还没有评论，成为第一个评论的人吧！</div>'; return; }
+              docs.forEach(doc => {
+                const c = Object.assign({id: doc.id}, doc.data());
+                const el = document.createElement('div'); el.className='bg-slate-900/40 border border-slate-700 rounded-lg p-4';
+                const time = c.t ? new Date(c.t).toLocaleString() : '';
+                el.innerHTML = `
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-semibold">${escapeHtml((c.name||'A').slice(0,1).toUpperCase())}</div>
+                    <div class="flex-1">
+                      <div class="flex items-center justify-between">
+                        <div class="text-sm text-white font-medium">${escapeHtml(c.name || '匿名')}</div>
+                        <div class="text-xs text-slate-400">${escapeHtml(time)}</div>
+                      </div>
+                      <div class="mt-2 text-slate-200 text-sm whitespace-pre-wrap">${escapeHtml(c.content)}</div>
+                    </div>
+                  </div>`;
+
+                // 如果当前用户为 ownerUid，则显示删除按钮
+                    try{
+                      const me = auth.currentUser;
+                      if (me && c.ownerUid && me.uid === c.ownerUid){
+                        const del = document.createElement('button'); del.className='mt-3 text-xs text-rose-400 hover:underline bg-transparent'; del.innerText='删除';
+                        del.addEventListener('click', ()=>{ if(!confirm('确认删除此评论？')) return; postsRef.doc(doc.id).delete().catch(err=>alert('删除失败：'+err.message)); });
+                        el.querySelector('.flex-1').appendChild(del);
+                      }
+                    }catch(e){}
+
+                listEl.appendChild(el);
+              });
+            }
+
+            // 实时监听（按时间降序）
+            postsRef.orderBy('t','desc').onSnapshot(snap => {
+              renderFromSnapshot(snap.docs);
+            });
+
+            // 绑定表单事件
+            saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
+            clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+
+            submitBtn && submitBtn.addEventListener('click', async (e)=>{
+              e.preventDefault();
+              const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim();
+              if (!name){ alert('请输入昵称'); nameEl.focus(); return; }
+              if (!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; }
+              if (!content){ alert('请输入评论内容'); contentEl.focus(); return; }
+
+              const me = auth.currentUser; const ownerUid = me ? me.uid : null;
+              try{
+                await postsRef.add({ ownerUid, name, email, content, t: Date.now() });
+                localStorage.setItem('comment-identity', JSON.stringify({ name, email }));
+                contentEl.value = '';
+              }catch(err){ alert('提交评论失败：' + (err.message || err)); }
+            });
+
+          }catch(e){ console.warn('Firebase 初始化失败，回退到本地存储', e); initLocalMode(); }
+        })();
+      } else {
+        // 回退到本地实现
+        function initLocalMode(){
+          // 显示本地模式提示与重试按钮
+          try{ document.getElementById('comment-mode-banner').classList.remove('hidden'); }catch(e){}
+          const retryBtn = document.getElementById('retry-firebase');
+          if (retryBtn && !retryBtn._bound) {
+            retryBtn.addEventListener('click', async (e)=>{
+              e.preventDefault();
+              retryBtn.disabled = true; retryBtn.textContent = '正在尝试...';
+              // 尝试重新加载 firebase 脚本并初始化远端模式
+              try{
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js');
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js');
+                await loadScript('https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js');
+                // 如果加载成功，刷新页面以触发 Firebase 路径（简单可靠），或尝试热初始化
+                location.reload();
+                return;
+              }catch(err){
+                console.warn('重试加载 Firebase 失败', err);
+                alert('无法加载 Firebase 脚本，可能是网络或浏览器拦截导致。请在浏览器设置允许第三方脚本或尝试使用其他网络。');
+              } finally {
+                retryBtn.disabled = false; retryBtn.textContent = '尝试重新连接云评论';
+              }
+            });
+            retryBtn._bound = true;
+          }
+          saveBtn && saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); saveIdentityLocal(); });
+          clearBtn && clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); nameEl.value=''; emailEl.value=''; contentEl.value=''; });
+          submitBtn && submitBtn.addEventListener('click', (e)=>{
+            e.preventDefault();
+            const name = nameEl.value.trim(); const email = emailEl.value.trim(); const content = contentEl.value.trim();
+            if (!name){ alert('请输入昵称'); nameEl.focus(); return; }
+            if (!email || !/.+@.+\..+/.test(email)){ alert('请输入有效邮箱'); emailEl.focus(); return; }
+            if (!content){ alert('请输入评论内容'); contentEl.focus(); return; }
+
+            const arr = loadCommentsLocal();
+            const item = { id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,8), name, email, content, t: Date.now() };
+            arr.push(item); saveCommentsLocal(arr);
+            localStorage.setItem('comment-identity', JSON.stringify({ name, email }));
+            contentEl.value = '';
+            renderLocal();
+          });
+
+          // init
+          loadIdentityLocal(); renderLocal();
+        }
+
+        initLocalMode();
+      }
+    })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+</body>
+</html>
