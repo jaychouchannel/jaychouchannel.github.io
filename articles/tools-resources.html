@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>工具资源：电子书与视频课程推荐 · Jaychouchannel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: { colors: { 'tech-dark': '#0f172a', 'tech-card': '#1e293b', 'tech-blue': '#38bdf8' } } } }
+  </script>
+  <style>
+    .prose pre { background: #0b1020; padding: 1rem; border-radius: 0.6rem; overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.03); }
+    .prose code { font-family: 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace; }
+  </style>
+</head>
+<body class="bg-tech-dark text-gray-200 font-sans min-h-screen flex flex-col">
+
+  <nav class="fixed top-0 left-0 w-full z-50 bg-gradient-to-tr from-slate-900/75 to-slate-900/40 border-b border-slate-800/50">
+    <div class="container mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-tech-blue to-purple-500 flex items-center justify-center text-white">J</div>
+        <div>
+          <div class="text-lg font-bold">Jaychou<span class="text-tech-blue">channel</span></div>
+          <div class="text-xs text-slate-400">Tools & Resources</div>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center space-x-4 text-slate-300">
+        <a href="/articles" class="hover:text-white">文章</a>
+        <a href="/articles/category/category-tools.html" class="text-tech-blue">工具分类</a>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden text-slate-300 p-2"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="flex-grow pt-24 pb-12">
+    <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <main class="lg:col-span-8">
+          <article class="bg-tech-card/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 md:p-10 shadow-xl">
+            <header class="mb-6 border-b border-slate-700/50 pb-6">
+              <div class="flex items-center space-x-2 text-tech-blue text-sm font-semibold mb-3">
+                <span class="bg-tech-blue/10 px-2 py-0.5 rounded text-xs uppercase tracking-wider">Tools</span>
+                <span class="text-slate-500">•</span>
+                <span class="text-slate-400">资源汇总</span>
+              </div>
+              <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">精选电子书与视频课程（可下载的 PDF 链接已占位）</h1>
+              <p class="text-slate-400 text-sm">在下面填入你想推荐的电子书与课程链接，我已把结构、下载按钮与示例占位都准备好。</p>
+            </header>
+
+            <div class="prose prose-invert max-w-none">
+              <section id="intro" class="mb-6">
+                <h2>说明</h2>
+                <p>这里收集适合开发者与设计师的电子书（PDF）与视频课程。每本电子书都配有下载按钮（可替换为站内文件或外部直链）。请确保你拥有分享或分发该资料的权限。</p>
+              </section>
+
+              <section id="ebooks" class="mb-8">
+                <h2 class="text-xl font-semibold text-white mb-4">电子书（PDF）</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- 示例电子书项：复制 / 替换以下块用于新增更多书籍 -->
+                  <div class="bg-slate-800/40 border border-slate-700 rounded-lg p-4 flex gap-4">
+                    <img src="/images/cover/ebook-placeholder.png" alt="封面" class="w-24 h-32 bg-slate-900 rounded-md object-cover">
+                    <div class="flex-1">
+                      <h3 class="text-lg font-semibold text-white">示例电子书：前端进阶指南</h3>
+                      <p class="text-sm text-slate-400 mt-1">作者：张三 / 适合：中高级前端工程师</p>
+                      <p class="text-sm text-slate-300 mt-2">简短描述：本书覆盖现代前端性能优化、构建工具与工程化实践。</p>
+                      <div class="mt-4 flex items-center gap-3">
+                        <!-- 占位下载链接：替换 href 为实际 PDF 路径。若为同站点文件，可在 a 上使用 download 属性 -->
+                        <a href="/downloads/example-frontend-guide.pdf" download class="inline-flex items-center px-4 py-2 bg-tech-blue text-black rounded-lg font-medium hover:opacity-90">
+                          <i class="fa-solid fa-download mr-2"></i> 下载 PDF
+                        </a>
+                        <a href="/downloads/example-frontend-guide.pdf" target="_blank" class="text-sm text-slate-300 hover:text-white">在新窗口打开</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-800/40 border border-slate-700 rounded-lg p-4 flex gap-4">
+                    <img src="/images/cover/ebook-placeholder.png" alt="封面" class="w-24 h-32 bg-slate-900 rounded-md object-cover">
+                    <div class="flex-1">
+                      <h3 class="text-lg font-semibold text-white">示例电子书：数据结构与算法</h3>
+                      <p class="text-sm text-slate-400 mt-1">作者：李四 / 适合：算法入门至进阶</p>
+                      <p class="text-sm text-slate-300 mt-2">简短描述：系统讲解常用数据结构与算法题型，含习题与解析。</p>
+                      <div class="mt-4 flex items-center gap-3">
+                        <a href="https://example.com/ebook-dsa.pdf" target="_blank" class="inline-flex items-center px-4 py-2 bg-tech-blue text-black rounded-lg font-medium hover:opacity-90">
+                          <i class="fa-solid fa-download mr-2"></i> 外站下载 / 打开
+                        </a>
+                        <span class="text-xs text-slate-400">注：外部链接需保证可下载且合法。</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-6 text-sm text-slate-400">要添加更多书籍：复制上述 `.bg-slate-800/40` 块并替换封面、标题、作者与 `href`。</div>
+              </section>
+
+              <section id="videos" class="mb-8">
+                <h2 class="text-xl font-semibold text-white mb-4">视频课程</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="bg-slate-800/40 border border-slate-700 rounded-lg p-4">
+                    <div class="flex gap-4">
+                      <img src="/images/cover/video-placeholder.png" alt="缩略图" class="w-36 h-24 object-cover rounded-md bg-slate-900">
+                      <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-white">示例课程：现代 JavaScript 从入门到实战</h3>
+                        <p class="text-sm text-slate-400 mt-1">平台：示例课堂 / 时长：8 小时</p>
+                        <p class="text-sm text-slate-300 mt-2">简短描述：从语言基础到模块化构建与实战项目。</p>
+                        <div class="mt-3">
+                          <a href="https://example.com/course-js" target="_blank" class="inline-flex items-center px-3 py-2 bg-tech-blue text-black rounded-lg font-medium"><i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> 查看课程</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-800/40 border border-slate-700 rounded-lg p-4">
+                    <div class="flex gap-4">
+                      <img src="/images/cover/video-placeholder.png" alt="缩略图" class="w-36 h-24 object-cover rounded-md bg-slate-900">
+                      <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-white">示例课程：系统设计入门</h3>
+                        <p class="text-sm text-slate-400 mt-1">平台：示例学院 / 时长：6 小时</p>
+                        <p class="text-sm text-slate-300 mt-2">简短描述：系统设计常见模式、可扩展性与性能优化。</p>
+                        <div class="mt-3">
+                          <a href="https://example.com/course-arch" target="_blank" class="inline-flex items-center px-3 py-2 bg-tech-blue text-black rounded-lg font-medium"><i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> 查看课程</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="notes" class="mb-8">
+                <h2 class="text-xl font-semibold text-white mb-3">注意事项</h2>
+                <ul class="list-disc pl-5 text-slate-400 space-y-2">
+                  <li>确保你有权分发或提供下载：对于受版权保护的资料，请只放置你有权分享的副本或使用官方授权链接。</li>
+                  <li>本站提供的 <code>download</code> 属性只在同源或服务器返回附件头时生效，外部站点可能会在新窗口中打开文件。</li>
+                  <li>如果你要上传 PDF 到本站，请把文件放到 `/downloads/` 目录，并把链接替换为相对路径，如：`/downloads/yourbook.pdf`。</li>
+                </ul>
+              </section>
+
+              <section id="comments" class="mt-6">
+                <h2 class="text-lg font-semibold text-white mb-2">评论</h2>
+                <div class="bg-tech-card/30 border border-slate-800 rounded-2xl p-4" id="local-comments-container">
+                  <div class="text-xs text-slate-400 mb-3">说明：当前为预置评论区域占位。你可以在此页底部添加 `window.FIREBASE_CONFIG` 来启用云端评论（若已配置）。</div>
+                  <div id="comments-list" class="space-y-3 text-slate-300">评论占位：请在此填写或保持默认本地实现。</div>
+                </div>
+              </section>
+            </div>
+          </article>
+        </main>
+
+        <aside class="lg:col-span-4">
+          <div class="lg:sticky lg:top-24 space-y-6">
+            <div class="bg-tech-card/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-lg text-center">
+              <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-tech-blue to-purple-600 mb-4 flex items-center justify-center">
+                <img src="/images/avatar.jpg" alt="Avatar" class="w-full h-full rounded-full object-cover object-center block border-2 border-slate-900">
+              </div>
+              <h3 class="text-xl font-bold text-white">Jaychouchannel</h3>
+              <p class="text-slate-400 text-sm mt-1">工具资源与学习资料推荐</p>
+              <a href="/articles/category/category-tools.html" class="mt-4 inline-block px-4 py-2 border border-slate-600 rounded-lg text-slate-300 hover:text-tech-blue">更多工具文章</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-slate-900 border-t border-slate-800 mt-auto">
+    <div class="container mx-auto px-4 py-10 text-center">
+      <p class="text-slate-500 text-sm">&copy; 2025 Jaychouchannel. 保留所有权利。</p>
+    </div>
+  </footer>
+
+  <script>
+    // 简单交互：移动端菜单切换（占位，按需扩展）
+    const btn = document.getElementById('mobile-menu-btn');
+    if (btn) btn.addEventListener('click', ()=>{ /* no-op placeholder */ });
+  </script>
+</body>
+</html>
